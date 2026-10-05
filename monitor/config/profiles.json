@@ -1,0 +1,37 @@
+{
+  "default": "free",
+  "note": "One value switches everything: PROFILE=free or PROFILE=paid (env var, or --profile on the CLI). Retailers listed here stay configured when disabled; the reason is printed by `node run.js --status` and written to the run activity line.",
+  "profiles": {
+    "free": {
+      "description": "EUR 0. Runs from GitHub Actions datacenter IPs. No residential proxy, no paid unblocker, no bot-wall evasion. Only shops that answered plain HTTP in RECON.md are scraped; everything else is fed by affiliate product feeds once approved, or stays off.",
+      "proxy": "never",
+      "retailers": {
+        "psdirect": { "scrape": true, "feed": false, "note": "SAP Commerce JSON API, 5 KB. Datacenter behaviour unverified: read the first run's [blocked:...] tag." },
+        "nvidia": { "scrape": true, "feed": false, "note": "Search JSON API, 2 KB. No bot wall seen. Datacenter behaviour unverified." },
+        "mueller": { "scrape": true, "feed": false, "note": "JSON-LD page, no bot wall seen. Datacenter behaviour unverified." },
+        "alternate": { "scrape": true, "feed": true, "note": "JSON-LD page, no bot wall seen. Awin feed (11731) is the fallback if the page gets blocked: set prefer to feed." },
+        "amazon": { "scrape": false, "feed": false, "reason": "Needs a residential proxy, and the Amazon Associates licence forbids scraping. Use the PA-API once 3 qualifying sales exist." },
+        "mediamarkt": { "scrape": false, "feed": false, "reason": "Cloudflare (Turnstile). Needs a residential proxy. Its affiliate network is closed to deal channels, so no feed either." },
+        "saturn": { "scrape": false, "feed": false, "reason": "Same platform as MediaMarkt: Cloudflare, needs a residential proxy, no feed available to deal channels." },
+        "galaxus": { "scrape": false, "feed": true, "reason": "Akamai Bot Manager, needs a residential proxy. Prices and stock come from the Tradedoubler product feed once approved." },
+        "otto": { "scrape": false, "feed": false, "reason": "Kasada. Needs a paid browser unblocker (1 to 3 USD per 1,000 requests). Awin feed not requested: OTTO pays deal channels only 1%." },
+        "notebooksbilliger": { "scrape": false, "feed": false, "reason": "Akamai. Even a residential IP got the error page. Needs a paid browser unblocker." },
+        "cyberport": { "scrape": false, "feed": true, "reason": "Cloudflare, 403 even from a residential IP. Prices and stock come from the Awin product feed once approved." },
+        "proshop": { "scrape": false, "feed": true, "reason": "Never checked from a datacenter IP. Prices and stock come from the Awin product feed (18501) once approved." },
+        "computeruniverse": { "scrape": false, "feed": true, "reason": "Never checked from a datacenter IP. Prices and stock come from the Awin product feed (11355) once approved." },
+        "caseking": { "scrape": false, "feed": true, "reason": "Never checked from a datacenter IP. Prices and stock come from the Awin product feed (28817) once approved." },
+        "expert": { "scrape": false, "feed": false, "reason": "Cloudflare, and the price loads client side: nothing to parse from the HTML." },
+        "euronics": { "scrape": false, "feed": false, "reason": "Price and stock load through JavaScript: nothing to parse from the HTML." },
+        "smyths": { "scrape": false, "feed": false, "reason": "Three fetch attempts failed on 2026-10-04." },
+        "*": { "scrape": false, "feed": true, "reason": "Not verified to answer a datacenter IP. Add a rule for it here after a manual test, or give it a product feed." }
+      }
+    },
+    "paid": {
+      "description": "Everything on, with the proxy or unblocker each adapter declares (PROXY_URL or PROXY_API_TEMPLATE). Costs money: see RECON.md for GB and request prices.",
+      "proxy": "allowed",
+      "retailers": {
+        "*": { "scrape": true, "feed": true }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "lagerfunk-runner",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "status": "node deploy/run.mjs --mode status"
+  }
+}

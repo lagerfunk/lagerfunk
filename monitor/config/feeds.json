@@ -1,0 +1,18 @@
+{
+  "note": "Product feeds replace scraping for shops that block datacenter IPs. A feed is switched on by setting its URL as a secret, e.g. FEED_URL_PROSHOP. Feed URLs contain API keys: they live in GitHub Secrets, never in this file and never in the state branch. Advertiser ids come from watchlist/WATCHLIST.md.",
+  "defaults": {
+    "intervalSec": 3600,
+    "minIntervalSec": 1800,
+    "timeoutSec": 600,
+    "maxBytes": 1500000000,
+    "minRowsRatio": 0.5
+  },
+  "feeds": {
+    "proshop": { "name": "Proshop", "network": "awin", "advertiserId": 18501 },
+    "computeruniverse": { "name": "computeruniverse", "network": "awin", "advertiserId": 11355 },
+    "cyberport": { "name": "Cyberport", "network": "awin", "advertiserId": 11657 },
+    "caseking": { "name": "Caseking", "network": "awin", "advertiserId": 28817 },
+    "alternate": { "name": "ALTERNATE", "network": "awin", "advertiserId": 11731 },
+    "galaxus": { "name": "Galaxus", "network": "tradedoubler", "programId": 302027 }
+  }
+}

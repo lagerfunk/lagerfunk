@@ -1,0 +1,1184 @@
+{
+ "items": [
+  {
+   "productKey": "ps5-pro",
+   "retailer": "psdirect",
+   "url": "https://direct.playstation.com/de-de/buy-consoles/playstation5-pro-console-2-tb",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 60,
+   "sku": "1000050720-DE"
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "mediamarkt",
+   "url": "https://www.mediamarkt.de/de/product/_sony-playstationr5-pro-2-tb-konsole-3018022.html",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 60
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "saturn",
+   "url": "https://www.saturn.de/de/product/_sony-playstationr5-pro-2-tb-konsole-3018022.html",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 60
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DHSV68YZ",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 60
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "mueller",
+   "url": "https://www.mueller.de/p/playstation5-pro-konsole-2-tb-IPN3068364/",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 120
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "notebooksbilliger",
+   "url": "https://www.notebooksbilliger.de/sony+playstation+5+pro+konsole+866576",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 120
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/sony-playstation-5-pro-2-tb-spielkonsole-49618254",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 120
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "otto",
+   "url": "https://www.otto.de/p/playstation-5-playstation-5-pro-2tb-playstation-5-pro-konsole-C1914416905/",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 180
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "expert",
+   "url": "https://www.expert.de/shop/unsere-produkte/gaming-freizeit/sony-playstation/playstation-konsolen/11364201744-playstation-5-pro.html",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 300,
+   "enabled": false
+  },
+  {
+   "productKey": "ps5-pro",
+   "retailer": "euronics",
+   "url": "https://www.euronics.de/spiele-und-konsolen-film-und-musik/spiele-und-konsolen/playstation-5/spielekonsole/playstation-5-pro-konsole-4065465034645",
+   "threshold": 989.99,
+   "listPrice": 899.99,
+   "listPriceType": "uvp",
+   "intervalSec": 300,
+   "enabled": false
+  },
+  {
+   "productKey": "rtx-5090-fe",
+   "retailer": "nvidia",
+   "url": "https://marketplace.nvidia.com/de-de/consumer/graphics-cards/nvidia-geforce-rtx-5090/",
+   "threshold": 2099,
+   "listPrice": 2099,
+   "intervalSec": 60,
+   "sku": "PROFESHOP5090"
+  },
+  {
+   "productKey": "gta6-ps5",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0GZHLKPGL",
+   "intervalSec": 300
+  },
+  {
+   "productKey": "gta6-ps5",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/gaming/games/playstation-5/pdp/7C08-3HU/Grand-Theft-Auto-VI--GTA-6----inkl--Vorbesteller-Bonus---PS5.html",
+   "intervalSec": 600
+  },
+  {
+   "productKey": "ps5-slim-disc",
+   "url": "https://www.alternate.de/Sony-Interactive-Entertainment/PlayStation-5-Slim-E-Chassis-Spielkonsole/html/product/100155463",
+   "intervalSec": 300
+  },
+  {
+   "productKey": "gpu-rtx5090-asus-tuf-oc",
+   "retailer": "caseking",
+   "url": "https://www.caseking.de/asus-tuf-geforce-rtx-5090-oc-edition-32768-mb-gddr7/GCAS-652.html",
+   "threshold": 5639.06,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5090-asus-tuf-oc",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/2E07-A3D",
+   "threshold": 5639.06,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5090-asus-tuf-oc",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/nvidia-fuer-gaming/asus/pdp/2e07-a3d/asus-tuf-gaming-geforce-rtx-5090-oc-tuf-rtx5090-o32g-gaming-grafikkarte-32-017578125-gb.html",
+   "threshold": 5639.06,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5090-asus-tuf-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DTHWSR1X",
+   "threshold": 5639.06,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5090-asus-tuf-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/en/s1/product/asus-tuf-gaming-geforce-rtx-5090-oc-32-gb-gddr7-graphics-card-54200104",
+   "threshold": 5639.06,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-asus-tuf-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DS65KD1C",
+   "threshold": 1578.26,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5080 OC 16GB (90YV0M30-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-asus-tuf-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/asus-tuf-gaming-geforce-rtx-5080-oc-16-gb-gddr7-grafikkarte-53888924",
+   "threshold": 1578.26,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5080 OC 16GB (90YV0M30-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-asus-tuf-oc",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/ASUS/GeForce-RTX-5080-TUF-GAMING-OC-Grafikkarte/html/product/100108177",
+   "threshold": 1578.26,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5080 OC 16GB (90YV0M30-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-asus-tuf-oc",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Grafikkarte/ASUS-GeForce-RTX-5080-TUF-OC-16GB-GDDR7-RAM-Grafikkarte/3326549",
+   "threshold": 1578.26,
+   "intervalSec": 900,
+   "title": "ASUS TUF Gaming GeForce RTX 5080 OC 16GB (90YV0M30-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-asus-prime-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/en/s1/product/asus-prime-geforce-rtx-5080-oc-16-gb-gddr7-graphics-card-53888927",
+   "threshold": 1503.06,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5080 OC 16GB (90YV0LX0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-asus-prime-oc",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/ASUS/GeForce-RTX-5080-PRIME-OC-Grafikkarte/html/product/100108203",
+   "threshold": 1503.06,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5080 OC 16GB (90YV0LX0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-asus-prime-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DS65VMC6",
+   "threshold": 1503.06,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5080 OC 16GB (90YV0LX0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-asus-prime-oc",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/nvidia-fuer-gaming/asus/pdp/2e07-a39/asus-prime-geforce-rtx-5080-oc-prime-rtx5080-o16g-grafikkarte-16-gb.html",
+   "threshold": 1503.06,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5080 OC 16GB (90YV0LX0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5080-gigabyte-windforce-oc-sff",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/gigabyte-geforce-rtx-5080-windforce-oc-sff-16-gb-gddr7-grafikkarte-53969806",
+   "threshold": 1503.06,
+   "intervalSec": 900,
+   "title": "GIGABYTE GeForce RTX 5080 Windforce OC SFF 16G (GV-N5080WF3OC-16GD)"
+  },
+  {
+   "productKey": "gpu-rtx5080-gigabyte-windforce-oc-sff",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/GIGABYTE/GeForce-RTX-5080-WINDFORCE-OC-SFF-16G-Grafikkarte/html/product/100108949",
+   "threshold": 1503.06,
+   "intervalSec": 900,
+   "title": "GIGABYTE GeForce RTX 5080 Windforce OC SFF 16G (GV-N5080WF3OC-16GD)"
+  },
+  {
+   "productKey": "gpu-rtx5080-gigabyte-windforce-oc-sff",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Grafikkarte/GIGABYTE-GeForce-RTX-5080-WindForce-3-OC-16GB-GDDR7-RAM-Grafikkarte/3330171",
+   "threshold": 1503.06,
+   "intervalSec": 900,
+   "title": "GIGABYTE GeForce RTX 5080 Windforce OC SFF 16G (GV-N5080WF3OC-16GD)"
+  },
+  {
+   "productKey": "gpu-rtx5080-gigabyte-windforce-oc-sff",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DS2R7N4F",
+   "threshold": 1503.06,
+   "intervalSec": 900,
+   "title": "GIGABYTE GeForce RTX 5080 Windforce OC SFF 16G (GV-N5080WF3OC-16GD)"
+  },
+  {
+   "productKey": "gpu-rtx5080-msi-gaming-trio-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/msi-geforce-rtx-5080-gaming-trio-oc-16-gb-gddr7-grafikkarte-53920085",
+   "threshold": 1597.06,
+   "intervalSec": 900,
+   "title": "MSI GeForce RTX 5080 16G Gaming Trio OC"
+  },
+  {
+   "productKey": "gpu-rtx5080-msi-gaming-trio-oc",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/2E12-3QL",
+   "threshold": 1597.06,
+   "intervalSec": 900,
+   "title": "MSI GeForce RTX 5080 16G Gaming Trio OC"
+  },
+  {
+   "productKey": "gpu-rtx5080-msi-gaming-trio-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DSXNXTSS",
+   "threshold": 1597.06,
+   "intervalSec": 900,
+   "title": "MSI GeForce RTX 5080 16G Gaming Trio OC"
+  },
+  {
+   "productKey": "gpu-rtx5070ti-asus-prime-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/asus-prime-geforce-rtx-5070-ti-oc-16-gb-gddr7-grafikkarte-54606768",
+   "threshold": 1185.34,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5070 Ti OC 16GB (PRIME-RTX5070TI-O16G)"
+  },
+  {
+   "productKey": "gpu-rtx5070ti-asus-prime-oc",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/ASUS/GeForce-RTX-5070-Ti-PRIME-GAMING-OC-Grafikkarte/html/product/100110152",
+   "threshold": 1185.34,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5070 Ti OC 16GB (PRIME-RTX5070TI-O16G)"
+  },
+  {
+   "productKey": "gpu-rtx5070ti-asus-prime-oc",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Grafikkarte/ASUS-GeForce-RTX-5070-Ti-Prime-OC-16GB-GDDR7-RAM-Grafikkarte/3331055",
+   "threshold": 1185.34,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5070 Ti OC 16GB (PRIME-RTX5070TI-O16G)"
+  },
+  {
+   "productKey": "gpu-rtx5070ti-asus-prime-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DVGVZZYY",
+   "threshold": 1185.34,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5070 Ti OC 16GB (PRIME-RTX5070TI-O16G)"
+  },
+  {
+   "productKey": "gpu-rtx5070ti-msi-gaming-trio-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/msi-geforce-rtx-5070-ti-gaming-trio-oc-16-gb-gddr7-grafikkarte-56469454",
+   "threshold": 1236.1,
+   "intervalSec": 900,
+   "title": "MSI GeForce RTX 5070 Ti 16G Gaming Trio OC"
+  },
+  {
+   "productKey": "gpu-rtx5070ti-msi-gaming-trio-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0F1NJF1K4",
+   "threshold": 1236.1,
+   "intervalSec": 900,
+   "title": "MSI GeForce RTX 5070 Ti 16G Gaming Trio OC"
+  },
+  {
+   "productKey": "gpu-rtx5070ti-msi-gaming-trio-oc",
+   "retailer": "caseking",
+   "url": "https://www.caseking.de/msi-geforce-rtx-5070-ti-16g-gaming-trio-oc-16384-mb-gddr7/GCMC-426.html",
+   "threshold": 1236.1,
+   "intervalSec": 900,
+   "title": "MSI GeForce RTX 5070 Ti 16G Gaming Trio OC"
+  },
+  {
+   "productKey": "gpu-rtx5070ti-msi-gaming-trio-oc",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/nvidia-fuer-gaming/msi/pdp/2e12-3rc/msi-geforce-rtx-5070-ti-gaming-trio-oc-grafikkarte-16-gb.html",
+   "threshold": 1236.1,
+   "intervalSec": 900,
+   "title": "MSI GeForce RTX 5070 Ti 16G Gaming Trio OC"
+  },
+  {
+   "productKey": "gpu-rtx5070-asus-prime-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DYPFY7JG",
+   "threshold": 735.99,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5070 OC 12GB (90YV0M10-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5070-asus-prime-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/asus-prime-geforce-rtx-5070-oc-12-gb-gddr7-grafikkarte-55066624",
+   "threshold": 735.99,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5070 OC 12GB (90YV0M10-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5070-asus-prime-oc",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/ASUS/GeForce-RTX-5070-PRIME-OC-Grafikkarte/html/product/100117271",
+   "threshold": 735.99,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5070 OC 12GB (90YV0M10-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5070-asus-prime-oc",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/2E07-A3U",
+   "threshold": 735.99,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5070 OC 12GB (90YV0M10-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5060ti-16gb-asus-dual-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/asus-dual-geforce-rtx-5060-ti-oc-16-gb-gddr7-grafikkarte-57354052",
+   "threshold": 651.69,
+   "intervalSec": 900,
+   "title": "ASUS Dual GeForce RTX 5060 Ti OC 16GB (90YV0MH0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5060ti-16gb-asus-dual-oc",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/nvidia-fuer-gaming/asus/pdp/2e07-a44/asus-dual-geforce-rtx-5060-ti-oc-dual-rtx5060ti-o16g-grafikkarte-16-gb.html",
+   "threshold": 651.69,
+   "intervalSec": 900,
+   "title": "ASUS Dual GeForce RTX 5060 Ti OC 16GB (90YV0MH0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5060ti-16gb-asus-dual-oc",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/2E07-A44",
+   "threshold": 651.69,
+   "intervalSec": 900,
+   "title": "ASUS Dual GeForce RTX 5060 Ti OC 16GB (90YV0MH0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5060ti-16gb-asus-dual-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0F4DVKSZ4",
+   "threshold": 651.69,
+   "intervalSec": 900,
+   "title": "ASUS Dual GeForce RTX 5060 Ti OC 16GB (90YV0MH0-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rtx5060-asus-prime-oc-8gb",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0CSFMYN1W",
+   "threshold": 379.99,
+   "intervalSec": 900,
+   "title": "ASUS Prime GeForce RTX 5060 OC 8GB (90YV0N10-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-sapphire-pulse",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DRPRZMK2",
+   "threshold": 766.8,
+   "intervalSec": 900,
+   "title": "Sapphire Pulse Radeon RX 9070 XT 16GB (11348-03-20G)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-sapphire-pulse",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/sapphire-pulse-radeon-rx-9070-xt-16-gb-gddr6-grafikkarte-55629520",
+   "threshold": 766.8,
+   "intervalSec": 900,
+   "title": "Sapphire Pulse Radeon RX 9070 XT 16GB (11348-03-20G)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-sapphire-pulse",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Grafikkarte/Sapphire-Radeon-RX-9070-XT-Pulse-16GB-GDDR6-RAM-Grafikkarte/3331614",
+   "threshold": 766.8,
+   "intervalSec": 900,
+   "title": "Sapphire Pulse Radeon RX 9070 XT 16GB (11348-03-20G)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-sapphire-pulse",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/amd-fuer-gaming/sapphire/pdp/2e01-7l5/sapphire-pulse-amd-radeon-rx-9070-xt-gaming-grafikkarte-16-gb.html",
+   "threshold": 766.8,
+   "intervalSec": 900,
+   "title": "Sapphire Pulse Radeon RX 9070 XT 16GB (11348-03-20G)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-sapphire-nitro-plus",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DRPPXB5X",
+   "threshold": 846.92,
+   "intervalSec": 900,
+   "title": "Sapphire Nitro+ Radeon RX 9070 XT Gaming OC 16GB (11348-01-20G)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-sapphire-nitro-plus",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/en/s1/product/sapphire-nitro-radeon-rx-9070-xt-16-gb-gddr6-graphics-card-55651370",
+   "threshold": 846.92,
+   "intervalSec": 900,
+   "title": "Sapphire Nitro+ Radeon RX 9070 XT Gaming OC 16GB (11348-01-20G)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-sapphire-nitro-plus",
+   "retailer": "caseking",
+   "url": "https://www.caseking.de/en/sapphire-nitro-radeon-rx-9070-xt-gaming-oc-graphics-card-16384-mb-gddr6/GCSP-264.html",
+   "threshold": 846.92,
+   "intervalSec": 900,
+   "title": "Sapphire Nitro+ Radeon RX 9070 XT Gaming OC 16GB (11348-01-20G)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-sapphire-nitro-plus",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/2E01-7L3",
+   "threshold": 846.92,
+   "intervalSec": 900,
+   "title": "Sapphire Nitro+ Radeon RX 9070 XT Gaming OC 16GB (11348-01-20G)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-asus-prime-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DSG52H7D",
+   "threshold": 752.47,
+   "intervalSec": 900,
+   "title": "ASUS Prime Radeon RX 9070 XT OC 16GB (90YV0L71-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-asus-prime-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/en/s1/product/asus-prime-rx-9070-xt-oc-16-gb-gddr6-graphics-card-54521730",
+   "threshold": 752.47,
+   "intervalSec": 900,
+   "title": "ASUS Prime Radeon RX 9070 XT OC 16GB (90YV0L71-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-asus-prime-oc",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/2E07-A3N",
+   "threshold": 752.47,
+   "intervalSec": 900,
+   "title": "ASUS Prime Radeon RX 9070 XT OC 16GB (90YV0L71-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-asus-prime-oc",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/amd-fuer-gaming/asus/pdp/2e07-a3n/asus-prime-radeon-rx-9070-xt-oc-edition-prime-rx9070xt-o16g-grafikkarte-16-gb.html",
+   "threshold": 752.47,
+   "intervalSec": 900,
+   "title": "ASUS Prime Radeon RX 9070 XT OC 16GB (90YV0L71-M0NA00)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-gigabyte-gaming-oc",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Grafikkarte/GIGABYTE-Radeon-RX-9070-XT-GAMING-OC-16GB-GDDR6-RAM-Grafikkarte/3331581",
+   "threshold": 784.93,
+   "intervalSec": 900,
+   "title": "GIGABYTE Radeon RX 9070 XT Gaming OC 16G (GV-R9070XTGAMING OC-16GD)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-gigabyte-gaming-oc",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/gigabyte-radeon-rx-9070-xt-gaming-oc-16g-16-gb-gddr6-grafikkarte-54089509",
+   "threshold": 784.93,
+   "intervalSec": 900,
+   "title": "GIGABYTE Radeon RX 9070 XT Gaming OC 16G (GV-R9070XTGAMING OC-16GD)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-gigabyte-gaming-oc",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/2E21-59A",
+   "threshold": 784.93,
+   "intervalSec": 900,
+   "title": "GIGABYTE Radeon RX 9070 XT Gaming OC 16G (GV-R9070XTGAMING OC-16GD)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-gigabyte-gaming-oc",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DT7B79K9",
+   "threshold": 784.93,
+   "intervalSec": 900,
+   "title": "GIGABYTE Radeon RX 9070 XT Gaming OC 16G (GV-R9070XTGAMING OC-16GD)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-xfx-swift-triple",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/xfx-swift-radeon-rx-9070-xt-triple-fan-gaming-edition-16-gb-gddr6-grafikkarte-55651815",
+   "threshold": 735.08,
+   "intervalSec": 900,
+   "title": "XFX Swift Radeon RX 9070 XT Triple Fan Gaming Edition (RX-97TSWF3B9)"
+  },
+  {
+   "productKey": "gpu-rx9070xt-xfx-swift-triple",
+   "retailer": "caseking",
+   "url": "https://www.caseking.de/xfx-swift-radeon-rx-9070-xt-triple-fan-gaming-edition-16384-mb-gddr6/GCXF-166.html",
+   "threshold": 735.08,
+   "intervalSec": 900,
+   "title": "XFX Swift Radeon RX 9070 XT Triple Fan Gaming Edition (RX-97TSWF3B9)"
+  },
+  {
+   "productKey": "gpu-rx9070-asrock-challenger",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/asrock-radeon-rx-9070-challenger-16-gb-gddr6-grafikkarte-55673271",
+   "threshold": 606.28,
+   "intervalSec": 900,
+   "title": "ASRock Radeon RX 9070 Challenger 16GB (90-GA5NZZ-00UANF)"
+  },
+  {
+   "productKey": "gpu-rx9070-asrock-challenger",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/amd-fuer-gaming/asrock/pdp/2e33-01k/asrock-radeon-rx-9070-challenger-grafikkarte-16-gb.html",
+   "threshold": 606.28,
+   "intervalSec": 900,
+   "title": "ASRock Radeon RX 9070 Challenger 16GB (90-GA5NZZ-00UANF)"
+  },
+  {
+   "productKey": "gpu-rx9070-asrock-challenger",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Grafikkarte/ASRock-Radeon-RX-9070-Challenger-16GB-GDDR6-RAM-Grafikkarte/3348384",
+   "threshold": 606.28,
+   "intervalSec": 900,
+   "title": "ASRock Radeon RX 9070 Challenger 16GB (90-GA5NZZ-00UANF)"
+  },
+  {
+   "productKey": "gpu-rx9060xt-16gb-sapphire-pulse",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/sapphire-pulse-radeon-rx-9060-xt-16-gb-gddr6-grafikkarte-59129890",
+   "threshold": 494.87,
+   "intervalSec": 900,
+   "title": "Sapphire Pulse Radeon RX 9060 XT 16GB (11350-03-20G)"
+  },
+  {
+   "productKey": "gpu-rx9060xt-16gb-sapphire-pulse",
+   "retailer": "caseking",
+   "url": "https://www.caseking.de/sapphire-pulse-radeon-rx-9060-xt-gaming-oc-grafikkarte-16384-mb-gddr6/GCSP-272.html",
+   "threshold": 494.87,
+   "intervalSec": 900,
+   "title": "Sapphire Pulse Radeon RX 9060 XT 16GB (11350-03-20G)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-kingston-fury-beast-6000-cl30",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/kingston-fury-beast-2-x-32gb-6000-mhz-ddr5-ram-dimm-ram-44173697",
+   "threshold": 1061.1,
+   "intervalSec": 1800,
+   "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-kingston-fury-beast-6000-cl30",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0CYHC9FQB",
+   "threshold": 1061.1,
+   "intervalSec": 1800,
+   "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-kingston-fury-beast-6000-cl30",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/2424-0CW",
+   "threshold": 1061.1,
+   "intervalSec": 1800,
+   "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-kingston-fury-beast-6000-cl30",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/pc-systeme/zubehoer/kingston/pdp/2424-0cw/64gb-2x32gb-kingston-fury-beast-ddr5-6000-cl30-ram-gaming-arbeitsspeicher.html",
+   "threshold": 1061.1,
+   "intervalSec": 1800,
+   "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-corsair-vengeance-6000-cl30",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0C5M7J967",
+   "threshold": 1036.6,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance DDR5-6000 CL30 64GB kit (CMK64GX5M2B6000Z30)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-corsair-vengeance-6000-cl30",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/RAM/Corsair-Vengeance-DDR5-6000-64GB-CL30-Dual-Channel-2-pcs-AMD-EXPO-Intel-XMP-Grau/3170567",
+   "threshold": 1036.6,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance DDR5-6000 CL30 64GB kit (CMK64GX5M2B6000Z30)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-corsair-vengeance-6000-cl30",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/corsair-dimm-32-gb-ddr5-6000-2-x-16gb-6000-mhz-ddr5-ram-dimm-ram-37109897",
+   "threshold": 535.5,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance DDR5-6000 CL30 32GB kit (CMK32GX5M2B6000Z30)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-corsair-vengeance-6000-cl30",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/RAM/Corsair-Vengeance-DDR5-6000-32GB-CL30-Dual-Channel-2-pcs-AMD-EXPO-Intel-XMP-Grau/3189081",
+   "threshold": 535.5,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance DDR5-6000 CL30 32GB kit (CMK32GX5M2B6000Z30)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-corsair-vengeance-6000-cl30",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0CBRJ63RT",
+   "threshold": 535.5,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance DDR5-6000 CL30 32GB kit (CMK32GX5M2B6000Z30)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-corsair-vengeance-rgb-6000-cl30",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0BPTKD797",
+   "threshold": 529.11,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance RGB DDR5-6000 CL30 32GB kit (CMH32GX5M2B6000Z30K)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-corsair-vengeance-rgb-6000-cl30",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/corsair-vengeance-rgb-32gb-ddr5-kit-2x16gb-6000mhz-cl30-amd-expo-ddr-ram-ram-23715429",
+   "threshold": 529.11,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance RGB DDR5-6000 CL30 32GB kit (CMH32GX5M2B6000Z30K)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-corsair-vengeance-rgb-6000-cl30",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Corsair/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1887078",
+   "threshold": 529.11,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance RGB DDR5-6000 CL30 32GB kit (CMH32GX5M2B6000Z30K)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-corsair-vengeance-rgb-6000-cl30",
+   "retailer": "caseking",
+   "url": "https://www.caseking.de/corsair-vengeance-rgb-ddr5-6000-ram-cl30-expo-32-gb-dual-kit-grau/MECS-528.html",
+   "threshold": 529.11,
+   "intervalSec": 1800,
+   "title": "Corsair Vengeance RGB DDR5-6000 CL30 32GB kit (CMH32GX5M2B6000Z30K)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-kingston-fury-beast-6000-cl30",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/en/s1/product/kingston-32gb-ddr5-6000mts-cl30-dimm-2-x-16gb-6000-mhz-dimm-ram-44173421",
+   "threshold": 580.02,
+   "intervalSec": 1800,
+   "title": "Kingston FURY Beast DDR5-6000 CL30 32GB kit (KF560C30BBEK2-32)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-kingston-fury-beast-6000-cl30",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Kingston-FURY/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/100052230",
+   "threshold": 580.02,
+   "intervalSec": 1800,
+   "title": "Kingston FURY Beast DDR5-6000 CL30 32GB kit (KF560C30BBEK2-32)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-kingston-fury-beast-6000-cl30",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0CYHC58P6",
+   "threshold": 580.02,
+   "intervalSec": 1800,
+   "title": "Kingston FURY Beast DDR5-6000 CL30 32GB kit (KF560C30BBEK2-32)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-gskill-tz5-neo-rgb-6000-cl30",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/G-Skill/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1868812",
+   "threshold": 494.1,
+   "intervalSec": 1800,
+   "title": "G.Skill Trident Z5 Neo RGB DDR5-6000 CL30 32GB kit (F5-6000J3038F16GX2-TZ5NR)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-gskill-tz5-neo-rgb-6000-cl30",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/RAM/GSkill-Trident-Z5-Neo-RGB-DDR5-6000-32GB-CL30-Dual-Channel-2-pcs-AMD-EXPO-Intel-XMP-Schwarz-mit-RGB/3110528",
+   "threshold": 494.1,
+   "intervalSec": 1800,
+   "title": "G.Skill Trident Z5 Neo RGB DDR5-6000 CL30 32GB kit (F5-6000J3038F16GX2-TZ5NR)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-crucial-pro-oc-6000-cl36",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0CTHXMYL8",
+   "threshold": 405,
+   "intervalSec": 1800,
+   "title": "Crucial Pro Overclocking DDR5-6000 CL36 32GB kit (CP2K16G60C36U5B)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-4tb",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0CBYZ6DD1",
+   "threshold": 535.92,
+   "intervalSec": 1800,
+   "title": "Samsung 990 PRO 4TB NVMe (MZ-V9P4T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-4tb",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/samsung-990-pro-4000-gb-m2-2280-ssd-37073751",
+   "threshold": 535.92,
+   "intervalSec": 1800,
+   "title": "Samsung 990 PRO 4TB NVMe (MZ-V9P4T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-9100pro-2tb",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/samsung-9100-pro-2000-gb-m2-2280-ssd-54423175",
+   "threshold": 368.72,
+   "intervalSec": 1800,
+   "title": "Samsung 9100 PRO 2TB PCIe 5.0 (MZ-VAP2T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-9100pro-2tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/9100-PRO-2-TB-SSD/html/product/100118132",
+   "threshold": 368.72,
+   "intervalSec": 1800,
+   "title": "Samsung 9100 PRO 2TB PCIe 5.0 (MZ-VAP2T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-2tb",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/samsung-990-pro-2000-gb-m2-2280-ssd-22097721",
+   "threshold": 302.63,
+   "intervalSec": 1800,
+   "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-2tb",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0B9C4DKKG",
+   "threshold": 302.63,
+   "intervalSec": 1800,
+   "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-2tb",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/3306-06Y",
+   "threshold": 302.63,
+   "intervalSec": 1800,
+   "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-2tb",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/festplatten-ssds/ssd-solid-state-disk/samsung/pdp/3306-06y/samsung-990-pro-nvme-ssd-2-tb-m-2-pcie-4-0-3d-nand-tlc.html",
+   "threshold": 302.63,
+   "intervalSec": 1800,
+   "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
+  },
+  {
+   "productKey": "ssd-wd-black-sn850x-2tb",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0B7CMZ3QH",
+   "threshold": 299.19,
+   "intervalSec": 1800,
+   "title": "WD_BLACK SN850X 2TB NVMe (WDS200T2X0E)"
+  },
+  {
+   "productKey": "ssd-wd-black-sn850x-2tb",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/SSD/SANDISK-WD-Black-SN850X-SSD-2TB-M2-2280-PCIe-40-Without-heatsink/3097426",
+   "threshold": 299.19,
+   "intervalSec": 1800,
+   "title": "WD_BLACK SN850X 2TB NVMe (WDS200T2X0E)"
+  },
+  {
+   "productKey": "ssd-samsung-990evo-plus-2tb",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/festplatten-ssds/ssd-solid-state-disk/samsung/pdp/3306-07j/samsung-990-evo-plus-nvme-2-0-ssd-2-tb-m-2-2280-tlc.html",
+   "threshold": 263.12,
+   "intervalSec": 1800,
+   "title": "Samsung 990 EVO Plus 2TB NVMe (MZ-V9S2T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990evo-plus-2tb",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0DGHB9V34",
+   "threshold": 263.12,
+   "intervalSec": 1800,
+   "title": "Samsung 990 EVO Plus 2TB NVMe (MZ-V9S2T0BW)"
+  },
+  {
+   "productKey": "mon-asus-rog-strix-xg27aqwmg",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/asus-rog-strix-oled-xg27aqwmg-2560-x-1440-pixel-2650-monitor-64742547",
+   "threshold": 433.25,
+   "intervalSec": 1800,
+   "title": "ASUS ROG Strix OLED XG27AQWMG 27in QHD 280Hz"
+  },
+  {
+   "productKey": "mon-asus-rog-strix-xg27aqwmg",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Bildschirm/265-ASUS-ROG-Strix-XG27AQWMG-2560x1440-280Hz-WOLED/3420137",
+   "threshold": 433.25,
+   "intervalSec": 1800,
+   "title": "ASUS ROG Strix OLED XG27AQWMG 27in QHD 280Hz"
+  },
+  {
+   "productKey": "mon-asus-rog-strix-xg27aqwmg",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/monitore/gaming-monitore/asus/pdp/6135-0qa/asus-rog-strix-xg27aqwmg-26-5-zoll-wqhd-woled-panel-16-9-280-hz-gaming-monitor.html",
+   "threshold": 433.25,
+   "intervalSec": 1800,
+   "title": "ASUS ROG Strix OLED XG27AQWMG 27in QHD 280Hz"
+  },
+  {
+   "productKey": "mon-asus-rog-strix-xg27aqwmg",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/ASUS/ROG-Strix-XG27AQWMG-OLED-Gaming-Monitor/html/product/100165597",
+   "threshold": 433.25,
+   "intervalSec": 1800,
+   "title": "ASUS ROG Strix OLED XG27AQWMG 27in QHD 280Hz"
+  },
+  {
+   "productKey": "mon-dell-alienware-aw3426dw",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/6137-02Z",
+   "threshold": 675.8,
+   "listPrice": 829,
+   "intervalSec": 1800,
+   "title": "Dell Alienware AW3426DW 34in QD-OLED 280Hz"
+  },
+  {
+   "productKey": "mon-dell-alienware-aw3426dw",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/monitore/gaming-monitore/dell/pdp/6137-02z/dell-alienware-aw3426dw-34-zoll-wqhd-qd-oled-panel-21-9-280-hz-curved-gaming-monitor.html",
+   "threshold": 675.8,
+   "listPrice": 829,
+   "intervalSec": 1800,
+   "title": "Dell Alienware AW3426DW 34in QD-OLED 280Hz"
+  },
+  {
+   "productKey": "mon-dell-alienware-aw3426dw",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0HCDLB2P5",
+   "threshold": 675.8,
+   "listPrice": 829,
+   "intervalSec": 1800,
+   "title": "Dell Alienware AW3426DW 34in QD-OLED 280Hz"
+  },
+  {
+   "productKey": "mon-dell-alienware-aw3426dw",
+   "retailer": "notebooksbilliger",
+   "url": "https://www.notebooksbilliger.de/dell+alienware+aw3426dw+34+zoll+gaming+monitor+928669",
+   "threshold": 675.8,
+   "listPrice": 829,
+   "intervalSec": 1800,
+   "title": "Dell Alienware AW3426DW 34in QD-OLED 280Hz"
+  },
+  {
+   "productKey": "mon-asus-rog-strix-xg27aqdmg-gen2",
+   "retailer": "caseking",
+   "url": "https://www.caseking.de/asus-rog-strix-oled-xg27aqdmg-gen2-26-5-zoll-wqhd-oled-gaming-monitor-240hz-oled-g-sync-compatible/TFAS-331.html",
+   "threshold": 381.65,
+   "intervalSec": 1800,
+   "title": "ASUS ROG Strix OLED XG27AQDMG Gen2 27in QHD 240Hz"
+  },
+  {
+   "productKey": "mon-asus-rog-strix-xg27aqdmg-gen2",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/asus-rog-strix-xg27aqdmg-gen2-2560-x-1440-pixel-2650-monitor-62772145",
+   "threshold": 381.65,
+   "intervalSec": 1800,
+   "title": "ASUS ROG Strix OLED XG27AQDMG Gen2 27in QHD 240Hz"
+  },
+  {
+   "productKey": "mon-asus-rog-strix-xg27aqdmg-gen2",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B09CD32DNH",
+   "threshold": 381.65,
+   "intervalSec": 1800,
+   "title": "ASUS ROG Strix OLED XG27AQDMG Gen2 27in QHD 240Hz"
+  },
+  {
+   "productKey": "mon-lg-ultragear-27gx704a",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0FTPCP6S1",
+   "threshold": 329.8,
+   "listPrice": 599,
+   "intervalSec": 1800,
+   "title": "LG UltraGear OLED 27GX704A-B 27in QHD 240Hz"
+  },
+  {
+   "productKey": "mon-lg-ultragear-27gx704a",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Bildschirm/27-LG-UltraGear-27GX704A-B-2560x1440-QHD-240Hz-OLED/3424447",
+   "threshold": 329.8,
+   "listPrice": 599,
+   "intervalSec": 1800,
+   "title": "LG UltraGear OLED 27GX704A-B 27in QHD 240Hz"
+  },
+  {
+   "productKey": "mon-samsung-odyssey-oled-g5-g50sf",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/monitore/gaming-monitore/samsung/pdp/6110-4gt/samsung-odyssey-g50sf-ls27fg506suxen-27-zoll-wqhd-quantum-dot-panel-16-9-180-hz-gaming-monitor.html",
+   "threshold": 274.9,
+   "intervalSec": 1800,
+   "title": "Samsung Odyssey OLED G5 G50SF 27in QHD 180Hz"
+  },
+  {
+   "productKey": "mon-samsung-odyssey-oled-g5-g50sf",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/samsung-odyssey-oled-g5-g50sf-2560-x-1440-pixel-27-monitor-63948891",
+   "threshold": 274.9,
+   "intervalSec": 1800,
+   "title": "Samsung Odyssey OLED G5 G50SF 27in QHD 180Hz"
+  },
+  {
+   "productKey": "mon-samsung-odyssey-oled-g5-g50sf",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0FZC6S38Q",
+   "threshold": 274.9,
+   "intervalSec": 1800,
+   "title": "Samsung Odyssey OLED G5 G50SF 27in QHD 180Hz"
+  },
+  {
+   "productKey": "con-ps5-pro-2tb",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/sony-playstation-5-pro-2-tb-spielkonsole-49618254",
+   "threshold": 899.99,
+   "listPrice": 899.99,
+   "intervalSec": 180,
+   "title": "Sony PlayStation 5 Pro 2TB"
+  },
+  {
+   "productKey": "con-ps5-pro-2tb",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0FRYBZR91",
+   "threshold": 899.99,
+   "listPrice": 899.99,
+   "intervalSec": 180,
+   "title": "Sony PlayStation 5 Pro 2TB"
+  },
+  {
+   "productKey": "con-ps5-pro-2tb",
+   "retailer": "otto",
+   "url": "https://www.otto.de/p/playstation-5-playstation-5-pro-2tb-playstation-5-pro-konsole-C1914416905/",
+   "threshold": 899.99,
+   "listPrice": 899.99,
+   "intervalSec": 180,
+   "title": "Sony PlayStation 5 Pro 2TB"
+  },
+  {
+   "productKey": "con-ps5-slim-disc-1tb",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/sony-playstation-5-slim-disc-edition-spielkonsole-39726201",
+   "threshold": 649,
+   "listPrice": 649.99,
+   "intervalSec": 300,
+   "title": "Sony PlayStation 5 Slim Disc 1TB (1000040586)"
+  },
+  {
+   "productKey": "con-ps5-slim-disc-1tb",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Spielkonsolen/Sony-PlayStation-5-Slim-Disc-Edition/3213235",
+   "threshold": 649,
+   "listPrice": 649.99,
+   "intervalSec": 300,
+   "title": "Sony PlayStation 5 Slim Disc 1TB (1000040586)"
+  },
+  {
+   "productKey": "con-ps5-slim-disc-1tb",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0CLT54ZNZ",
+   "threshold": 649,
+   "listPrice": 649.99,
+   "intervalSec": 300,
+   "title": "Sony PlayStation 5 Slim Disc 1TB (1000040586)"
+  },
+  {
+   "productKey": "con-ps5-slim-disc-1tb",
+   "retailer": "otto",
+   "url": "https://www.otto.de/p/sony-playstation-5-slim-disc-edition-e-chassis-1-tb-spielkonsole-weiss-C2027935296/",
+   "threshold": 649,
+   "listPrice": 649.99,
+   "intervalSec": 300,
+   "title": "Sony PlayStation 5 Slim Disc 1TB (1000040586)"
+  },
+  {
+   "productKey": "con-switch2",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/nintendo-switch-2-spielkonsole-57348152",
+   "threshold": 414,
+   "intervalSec": 300,
+   "title": "Nintendo Switch 2 (10015151)"
+  },
+  {
+   "productKey": "con-switch2",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0F2J4SYJ2",
+   "threshold": 414,
+   "intervalSec": 300,
+   "title": "Nintendo Switch 2 (10015151)"
+  },
+  {
+   "productKey": "con-switch2",
+   "retailer": "computeruniverse",
+   "url": "https://www.computeruniverse.net/de/p/7D09-02T",
+   "threshold": 414,
+   "intervalSec": 300,
+   "title": "Nintendo Switch 2 (10015151)"
+  },
+  {
+   "productKey": "con-switch2",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Spielkonsolen/Nintendo-Switch-2/3346797",
+   "threshold": 414,
+   "intervalSec": 300,
+   "title": "Nintendo Switch 2 (10015151)"
+  },
+  {
+   "productKey": "con-switch2-mario-kart-world-bundle",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/nintendo-switch-2-mario-kart-world-set-spielkonsole-57348159",
+   "threshold": 512.05,
+   "intervalSec": 300,
+   "title": "Nintendo Switch 2 + Mario Kart World bundle (10015920)"
+  },
+  {
+   "productKey": "con-switch2-mario-kart-world-bundle",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/Spielkonsolen/Nintendo-Switch-2-Mario-Kart-World/3360042",
+   "threshold": 512.05,
+   "intervalSec": 300,
+   "title": "Nintendo Switch 2 + Mario Kart World bundle (10015920)"
+  },
+  {
+   "productKey": "cpu-ryzen7-9800x3d",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/amd-ryzen-7-9800x3d-am5-470-ghz-8-core-prozessor-52410996",
+   "threshold": 358.67,
+   "intervalSec": 1800,
+   "title": "AMD Ryzen 7 9800X3D boxed (100-100001084WOF)"
+  },
+  {
+   "productKey": "cpu-ryzen7-9800x3d",
+   "retailer": "proshop",
+   "url": "https://www.proshop.de/CPU/AMD-Ryzen-7-9800X3D-CPU-8-Kerne-47-GHz-AMD-AM5-AMD-Boxed-ohne-Kuehler/3310690",
+   "threshold": 358.67,
+   "intervalSec": 1800,
+   "title": "AMD Ryzen 7 9800X3D boxed (100-100001084WOF)"
+  },
+  {
+   "productKey": "cpu-ryzen7-9800x3d",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/AMD/Ryzen-7-9800X3D-Prozessor/html/product/100093605",
+   "threshold": 358.67,
+   "intervalSec": 1800,
+   "title": "AMD Ryzen 7 9800X3D boxed (100-100001084WOF)"
+  },
+  {
+   "productKey": "cpu-ryzen7-9800x3d",
+   "retailer": "cyberport",
+   "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/prozessoren-cpu/amd/pdp/2001-740/amd-ryzen-7-9800x3d-8-kern-cpu-sockel-am5-boxed-ohne-kuehler-.html",
+   "threshold": 358.67,
+   "intervalSec": 1800,
+   "title": "AMD Ryzen 7 9800X3D boxed (100-100001084WOF)"
+  },
+  {
+   "productKey": "hs-steelseries-arctis-nova-pro-wireless",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/steelseries-arctis-nova-pro-wireless-kabellos-gaming-headset-20796801",
+   "threshold": 191.2,
+   "intervalSec": 3600,
+   "title": "SteelSeries Arctis Nova Pro Wireless (61520)"
+  },
+  {
+   "productKey": "hs-steelseries-arctis-nova-pro-wireless",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B09ZLRCH1H",
+   "threshold": 191.2,
+   "intervalSec": 3600,
+   "title": "SteelSeries Arctis Nova Pro Wireless (61520)"
+  },
+  {
+   "productKey": "hs-razer-blackshark-v3-pro",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B0F93TKTGY",
+   "threshold": 151.2,
+   "intervalSec": 3600,
+   "title": "Razer BlackShark V3 Pro black (RZ04-05400100-R3M1)"
+  },
+  {
+   "productKey": "hs-razer-blackshark-v3-pro",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/razer-blackshark-v3-pro-kabelgebunden-kabellos-gaming-headset-60453927",
+   "threshold": 151.2,
+   "intervalSec": 3600,
+   "title": "Razer BlackShark V3 Pro black (RZ04-05400100-R3M1)"
+  },
+  {
+   "productKey": "hs-razer-blackshark-v3-pro",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Razer/BlackShark-V3-Pro-Gaming-Headset/html/product/100145937",
+   "threshold": 151.2,
+   "intervalSec": 3600,
+   "title": "Razer BlackShark V3 Pro black (RZ04-05400100-R3M1)"
+  },
+  {
+   "productKey": "hs-logitech-g-pro-x-2-lightspeed",
+   "retailer": "amazon",
+   "url": "https://www.amazon.de/dp/B07W6H7PY2",
+   "threshold": 127.86,
+   "intervalSec": 3600,
+   "title": "Logitech G Pro X 2 Lightspeed black (981-001263)"
+  },
+  {
+   "productKey": "hs-logitech-g-pro-x-2-lightspeed",
+   "retailer": "galaxus",
+   "url": "https://www.galaxus.de/de/s1/product/logitech-g-pro-x-2-lightspeed-kabelgebunden-kabellos-gaming-headset-35835163",
+   "threshold": 127.86,
+   "intervalSec": 3600,
+   "title": "Logitech G Pro X 2 Lightspeed black (981-001263)"
+  }
+ ]
+}

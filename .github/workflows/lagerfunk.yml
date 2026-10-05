@@ -1,0 +1,89 @@
+# Lagerfunk monitor + Telegram bot on GitHub Actions. EUR 0: this repository must be PUBLIC, because standard
+# GitHub-hosted runners are free and unlimited for public repositories (a private repository on the Free plan gets 2,000
+# minutes a month, and this schedule needs about 5,000). See deploy/README.md for the arithmetic and the limits.
+#
+# Every action is pinned to a full commit SHA (the version is in the comment), because this job holds the Telegram bot
+# token and a moving tag could run changed code with it. Same pins as the private agency repository's CI.
+name: lagerfunk
+
+on:
+  schedule:
+    # PS5 list and every shop that answers without a proxy: every 10 minutes. Minutes are offset away from :00,
+    # the start of the hour is when GitHub is busiest and scheduled jobs get delayed or dropped.
+    - cron: '4,14,24,34,44,54 * * * *'
+    # Product feeds (Proshop, Cyberport, computeruniverse, Galaxus): once an hour, at :29.
+    - cron: '29 * * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'What to run'
+        type: choice
+        options: [watch, feeds, all, status]
+        default: all
+      dry_run:
+        description: 'Dry run: check, print, post nothing, save nothing'
+        type: boolean
+        default: false
+      silent:
+        description: 'Learn only: check and save state, post nothing (use for the very first run)'
+        type: boolean
+        default: false
+      force:
+        description: 'Download feeds even if one was fetched recently'
+        type: boolean
+        default: false
+
+# The job token may push the "state" branch and nothing else.
+permissions:
+  contents: write
+
+# One run at a time. A run that waits is replaced by a newer one, which is what we want for a poller.
+concurrency:
+  group: lagerfunk
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: Run
+        run: node deploy/run.mjs
+        env:
+          MODE: ${{ inputs.mode || (github.event.schedule == '29 * * * *' && 'feeds' || 'watch') }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          SILENT: ${{ inputs.silent }}
+          FORCE: ${{ inputs.force }}
+          PROFILE: free
+          # Telegram. FREE_CHAT_ID, BRAND and the links default to brand.json (@lagerfunk).
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          ADMIN_IDS: ${{ secrets.ADMIN_IDS }}
+          # Affiliate. AWIN_MIDS looks like "proshop=18501,cyberport=11657". Feed links are already tracked.
+          AWIN_AFFILIATE_ID: ${{ secrets.AWIN_AFFILIATE_ID }}
+          AWIN_MIDS: ${{ secrets.AWIN_MIDS }}
+          # Product feeds: a feed is on as soon as its secret exists.
+          FEED_URL_PROSHOP: ${{ secrets.FEED_URL_PROSHOP }}
+          FEED_URL_COMPUTERUNIVERSE: ${{ secrets.FEED_URL_COMPUTERUNIVERSE }}
+          FEED_URL_CYBERPORT: ${{ secrets.FEED_URL_CYBERPORT }}
+          FEED_URL_CASEKING: ${{ secrets.FEED_URL_CASEKING }}
+          FEED_URL_ALTERNATE: ${{ secrets.FEED_URL_ALTERNATE }}
+          FEED_URL_GALAXUS: ${{ secrets.FEED_URL_GALAXUS }}
+          FEED_FORMAT_CYBERPORT: ${{ vars.FEED_FORMAT_CYBERPORT }}
+          FEED_FORMAT_PROSHOP: ${{ vars.FEED_FORMAT_PROSHOP }}
+          FEED_FORMAT_COMPUTERUNIVERSE: ${{ vars.FEED_FORMAT_COMPUTERUNIVERSE }}
+          FEED_FORMAT_CASEKING: ${{ vars.FEED_FORMAT_CASEKING }}
+          FEED_FORMAT_ALTERNATE: ${{ vars.FEED_FORMAT_ALTERNATE }}
+          AWIN_PUBLISHER_ID: ${{ vars.AWIN_PUBLISHER_ID }}
+          AWIN_API_TOKEN: ${{ secrets.AWIN_API_TOKEN }}
+      - name: Keep the state if saving failed
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lagerfunk-state-${{ github.run_id }}
+          path: deploy/out/
+          retention-days: 7
+          if-no-files-found: ignore

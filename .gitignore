@@ -1,0 +1,3 @@
+deploy/out/
+node_modules/
+.env
