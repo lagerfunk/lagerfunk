@@ -6,6 +6,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "status": "node deploy/run.mjs --mode status"
+    "status": "node deploy/run.mjs --mode status",
+    "smoke": "node deploy/smoke.mjs offline",
+    "ops": "node deploy/ops.mjs"
   }
 }

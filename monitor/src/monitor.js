@@ -298,17 +298,19 @@ export function createMonitor({
      * `since` (ms, e.g. the time of the previous run read from the store) replaces the remembered last tick, so a
      * short-lived process such as a scheduled job misses no slot even when its schedule runs late.
      * `source` "scrape" or "feed" limits the tick to one kind of item.
+     * `skip` (Set or array of retailer ids) leaves those retailers out entirely, e.g. while a circuit breaker is open.
      */
-    async tick({ tickMs = 60000, since = null, source = null } = {}) {
+    async tick({ tickMs = 60000, since = null, source = null, skip = null } = {}) {
       await ensureLoaded();
       const t = now();
       const prevT = Number.isFinite(since) && since < t ? since : prevTick ?? t - tickMs;
       prevTick = t;
-      const due = items.filter((it) => isDue(it, t, prevT) && !health.isPaused(it.retailer, t));
+      const skipped = new Set(skip ?? []);
+      const due = items.filter((it) => isDue(it, t, prevT) && !health.isPaused(it.retailer, t) && !skipped.has(it.retailer));
       const scraped = source === 'feed' ? { checks: [], alerts: [] } : await runItems(due);
       if (!feedReader || source === 'scrape') return scraped;
       const fed = await runFeeds({
-        due: (retailer) => isDue({ retailer, productKey: 'feed', url: `feed:${retailer}`, intervalSec: feedReader.config(retailer)?.intervalSec ?? 3600 }, t, prevT),
+        due: (retailer) => !skipped.has(retailer) && isDue({ retailer, productKey: 'feed', url: `feed:${retailer}`, intervalSec: feedReader.config(retailer)?.intervalSec ?? 3600 }, t, prevT),
       });
       return merge(scraped, fed);
     },

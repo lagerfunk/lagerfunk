@@ -4,6 +4,10 @@
 #
 # Every action is pinned to a full commit SHA (the version is in the comment), because this job holds the Telegram bot
 # token and a moving tag could run changed code with it. Same pins as the private agency repository's CI.
+#
+# Production runs the code at the tag last-known-good, not whatever is newest on main. The smoke workflow moves that
+# tag only after a change passed (fail closed). Rollback = move the tag back (ops workflow, action "rollback").
+# Until the first smoke test passes there is no tag, and main runs.
 name: lagerfunk
 
 on:
@@ -32,6 +36,10 @@ on:
         description: 'Download feeds even if one was fetched recently'
         type: boolean
         default: false
+      release_held:
+        description: 'Post the posts a circuit breaker held (only those under an hour old)'
+        type: boolean
+        default: false
 
 # The job token may push the "state" branch and nothing else.
 permissions:
@@ -51,6 +59,16 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
+      - name: Use the last known good version
+        run: |
+          echo "MAIN_COMMIT_TS=$(git log -1 --format=%ct HEAD)" >> "$GITHUB_ENV"
+          echo "MAIN_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          if git fetch --quiet --no-tags --depth=1 origin +refs/tags/last-known-good:refs/tags/last-known-good 2>/dev/null; then
+            git -c advice.detachedHead=false checkout --quiet --detach last-known-good
+          else
+            echo "::notice::no last-known-good tag yet (no smoke test has passed): running main"
+          fi
+          echo "CODE_SHA=$(git rev-parse --short=7 HEAD)" >> "$GITHUB_ENV"
       - name: Run
         run: node deploy/run.mjs
         env:
@@ -58,13 +76,21 @@ jobs:
           DRY_RUN: ${{ inputs.dry_run }}
           SILENT: ${{ inputs.silent }}
           FORCE: ${{ inputs.force }}
+          RELEASE_HELD: ${{ inputs.release_held }}
           PROFILE: free
+          # Where posts go: "staging" (the private test channel, the default until promoted) or "public".
+          LAGERFUNK_CHANNEL: ${{ vars.LAGERFUNK_CHANNEL || 'staging' }}
+          # Any value here holds every post (checks go on). For incidents: Settings, Variables, LAGERFUNK_PAUSE = 1.
+          LAGERFUNK_PAUSE: ${{ vars.LAGERFUNK_PAUSE }}
           # Telegram. FREE_CHAT_ID, BRAND and the links default to brand.json (@lagerfunk).
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_STAGING: ${{ secrets.TELEGRAM_CHAT_ID_STAGING }}
+          TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
           ADMIN_IDS: ${{ secrets.ADMIN_IDS }}
           # Affiliate. AWIN_MIDS looks like "proshop=18501,cyberport=11657". Feed links are already tracked.
           AWIN_AFFILIATE_ID: ${{ secrets.AWIN_AFFILIATE_ID }}
           AWIN_MIDS: ${{ secrets.AWIN_MIDS }}
+          TRADEDOUBLER_SITE_ID: ${{ secrets.TRADEDOUBLER_SITE_ID }}
           # Product feeds: a feed is on as soon as its secret exists.
           FEED_URL_PROSHOP: ${{ secrets.FEED_URL_PROSHOP }}
           FEED_URL_COMPUTERUNIVERSE: ${{ secrets.FEED_URL_COMPUTERUNIVERSE }}

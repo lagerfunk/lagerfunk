@@ -1,0 +1,64 @@
+# The watchdog: a separate workflow, so a failing or stopped runner can never skip it.
+#   - every hour on its own schedule (minute 17, between the runner's minutes),
+#   - right after any runner run that did not succeed (workflow_run), so a failure is looked at within minutes.
+# It reads the heartbeat in status.json on the state branch and alerts the owner's private admin chat
+# (TELEGRAM_ADMIN_CHAT_ID) when there was no good run for 40 minutes, posts a recovery notice when runs are good
+# again, re-enables a schedule that GitHub switched off, keeps the 60-day inactivity clock from running out, backs up
+# the state once a day and sends the daily digest. Thresholds: deploy/config/breakers.json. Code: deploy/lib/watchdog.mjs.
+# When an alert cannot reach Telegram (for example the bot token was revoked), this run fails on purpose so GitHub
+# e-mails the owner instead (at most every 6 hours).
+name: lagerfunk-watchdog
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_run:
+    workflows: [lagerfunk]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      digest:
+        description: 'Send the daily digest now'
+        type: boolean
+        default: false
+
+# contents: the ops branch (watchdog memory, backups) and a keepalive commit on main if ever needed.
+# actions: read the workflows' state and switch a disabled schedule back on.
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: lagerfunk-ops
+  cancel-in-progress: false
+
+jobs:
+  watchdog:
+    # after a runner run only when it did not succeed; the hourly schedule covers the rest
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: Use the last known good version
+        run: |
+          echo "MAIN_COMMIT_TS=$(git log -1 --format=%ct HEAD)" >> "$GITHUB_ENV"
+          echo "MAIN_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          if git fetch --quiet --no-tags --depth=1 origin +refs/tags/last-known-good:refs/tags/last-known-good 2>/dev/null; then
+            git -c advice.detachedHead=false checkout --quiet --detach last-known-good
+          fi
+          echo "CODE_SHA=$(git rev-parse --short=7 HEAD)" >> "$GITHUB_ENV"
+      - name: Watch
+        run: node deploy/watchdog.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          DIGEST_NOW: ${{ inputs.digest }}
+          LAGERFUNK_CHANNEL: ${{ vars.LAGERFUNK_CHANNEL || 'staging' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
+          AWIN_API_TOKEN: ${{ secrets.AWIN_API_TOKEN }}
+          AWIN_PUBLISHER_ID: ${{ vars.AWIN_PUBLISHER_ID }}

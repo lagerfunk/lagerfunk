@@ -12,6 +12,7 @@ import { priceFacts } from './pricing.js';
 import { renderAlertPost, renderDailyReport, delayText } from './format.js';
 import { startText, channelDescription, pinnedPost } from './copy.js';
 import { createTelegram, createDiscord, SendError, visibleLength } from './telegram.js';
+import { guardLink } from './linkcheck.js';
 
 const PRIORITY = { instant: 0, free: 1, discord: 2 };
 const KINDS = new Set(['restock', 'price_drop', 'lowest_30d', 'ships_before']);
@@ -32,7 +33,7 @@ function emptyState() {
 function slimAlert(a) {
   const pick = ['key', 'kind', 'productKey', 'retailer', 'title', 'url', 'price', 'listPrice', 'lowest30d', 'detectedAt',
     'imageUrl', 'inStock', 'stockText', 'listPriceType', 'lowest30dSource', 'historyDays', 'firstSeenAt',
-    'deliveryEstimate', 'deliveryAssumed', 'isPreorder', 'isBackorder', 'shipsBy', 'soldBy'];
+    'deliveryEstimate', 'deliveryAssumed', 'isPreorder', 'isBackorder', 'shipsBy', 'soldBy', 'shopUrl'];
   const o = {};
   for (const k of pick) if (a[k] !== undefined && a[k] !== null) o[k] = a[k];
   o.title = truncate(o.title || a.productKey || 'Produkt', 200);
@@ -46,13 +47,25 @@ function plainFromHtml(html) {
     .replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 }
 
-export function createEngine({ store, monitorStore = null, config, env, fetch: fetchImpl = globalThis.fetch?.bind(globalThis), clock = realClock, log = console, owner } = {}) {
+export function createEngine({ store, monitorStore = null, config, env, fetch: fetchImpl = globalThis.fetch?.bind(globalThis), clock = realClock, log = console, owner, linkGuard = guardLink } = {}) {
   if (!store) throw new Error('createEngine: store is required');
   const cfg = config ?? loadConfig(env ?? {});
   const KEY = `${cfg.storePrefix}state`;
   const me = owner || `run-${Math.random().toString(36).slice(2, 10)}`;
   const tg = createTelegram({ token: cfg.telegramToken, apiBase: cfg.telegramApiBase, fetch: fetchImpl, timeoutMs: cfg.httpTimeoutMs });
   const discord = cfg.discordWebhookUrl ? createDiscord({ url: cfg.discordWebhookUrl, fetch: fetchImpl, timeoutMs: cfg.httpTimeoutMs, username: cfg.brand }) : null;
+
+  // Links that failed the affiliate check in this run (the post went out with the plain shop link instead).
+  let linkEvents = [];
+  function checkedLink(link, alert, retailer, where) {
+    const out = linkGuard(link, { alert, retailer, cfg });
+    if (!out) {
+      linkEvents.push({ key: alert.key ?? where, retailer: retailer?.id ?? null, reason: 'link:none', action: 'dropped' });
+      return null;
+    }
+    if (out.checked === 'fallback') linkEvents.push({ key: alert.key ?? where, retailer: retailer?.id ?? null, reason: out.reason, action: 'plain' });
+    return out;
+  }
 
   // ---------- serialisation inside one process/isolate ----------
   let chain = Promise.resolve();
@@ -225,7 +238,8 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
     const prices = new Map(); // per product: lowest price seen today across shops
     for (const e of entries) {
       const retailer = resolveRetailer({ retailer: e.r, url: e.u }, cfg);
-      const link = buildLink(e.u, retailer, cfg, { privateChannel: isPrivate(t) });
+      const link = checkedLink(buildLink(e.u, retailer, cfg, { privateChannel: isPrivate(t) }), { url: e.u }, retailer, `report:${e.id}`);
+      if (!link) continue;
       const facts = priceFacts({ url: e.u, price: e.p }, retailer, cfg, e.at);
       const row = {
         title: e.ti, retailer: retailer.name, link, at: e.at, price: facts.pricesHidden ? null : facts.price,
@@ -324,9 +338,11 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
 
   function render(job, now) {
     if (job.kind === 'report') return job.p;
-    const a = job.a;
+    let a = job.a;
     const retailer = resolveRetailer(a, cfg);
-    const link = buildLink(a.url, retailer, cfg, { privateChannel: isPrivate(job.t) });
+    const link = checkedLink(buildLink(a.url, retailer, cfg, { privateChannel: isPrivate(job.t) }), a, retailer, job.k);
+    if (!link) throw new SendError('link: no clean link for this post', { status: 0, retryable: false, description: 'link' });
+    if (link.checked === 'fallback') a = { ...a, url: link.url }; // the preview must not use the failed tracked link either
     const facts = priceFacts(a, retailer, cfg, now);
     const tier = tierOf(job.t);
     return renderAlertPost(a, {
@@ -397,14 +413,14 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
       attempts++;
       const sentAt = clock.now();
       try {
-        await deliver(ctx, best, sentAt);
+        const delivered = await deliver(ctx, best, sentAt);
         delete best.inf;
         removeJob(ctx, best);
         markSent(ctx, best.t, sentAt);
         bumpCount(ctx, sentAt, best.t);
         releaseWaiters(ctx, best, sentAt);
         ctx.state.lastPost = { at: sentAt, t: best.t };
-        res.sent.push({ target: best.t, key: best.k, at: sentAt });
+        res.sent.push({ target: best.t, key: best.k, at: sentAt, messageId: delivered?.message_id ?? null });
       } catch (err) {
         delete best.inf;
         best.n = (best.n || 0) + 1;
@@ -419,7 +435,7 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
           (ctx.state.rate[best.t] ??= { ts: [], pause: 0 }).pause = sentAt + ms;
           best.nx = sentAt + ms;
           recordError(ctx, sentAt, label, `429, warte ${e.retryAfter} s`);
-          res.failed.push({ target: best.t, key: best.k, error: e.message, retry: true });
+          res.failed.push({ target: best.t, key: best.k, error: e.message, retry: true, status: e.status, retryAfter: e.retryAfter });
         } else if (e.status === 400 && best.tried === 'photo') {
           best.m = 'text';
           best.nx = 0;
@@ -430,14 +446,14 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
           recordError(ctx, sentAt, label, `HTML abgelehnt, sende als Klartext: ${e.description || e.message}`);
         } else if (e.unknownOutcome && !cfg.retryUnknownOutcome) {
           dropJob(ctx, best, sentAt, `Zeitüberschreitung, Zustellung unklar, nicht erneut gesendet (${e.message})`);
-          res.failed.push({ target: best.t, key: best.k, error: e.message, retry: false });
+          res.failed.push({ target: best.t, key: best.k, error: e.message, retry: false, status: e.status, unknownOutcome: true });
         } else if (e.retryable && best.n < cfg.maxAttempts) {
           best.nx = sentAt + backoffMs(best.n);
           recordError(ctx, sentAt, label, `Versuch ${best.n} fehlgeschlagen: ${e.message}`);
-          res.failed.push({ target: best.t, key: best.k, error: e.message, retry: true });
+          res.failed.push({ target: best.t, key: best.k, error: e.message, retry: true, status: e.status });
         } else {
           dropJob(ctx, best, sentAt, e.message);
-          res.failed.push({ target: best.t, key: best.k, error: e.message, retry: false });
+          res.failed.push({ target: best.t, key: best.k, error: e.message, retry: false, status: e.status });
         }
         ctx.dirty = true;
       }
@@ -449,7 +465,8 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
     return serial(async () => {
       const t0 = clock.now();
       const ctx = await load();
-      const res = { accepted: [], skipped: [], sent: [], failed: [], reports: 0, queued: 0, nextDueAt: null, mode: paid() ? 'paid' : 'launch' };
+      linkEvents = [];
+      const res = { accepted: [], skipped: [], sent: [], failed: [], reports: 0, queued: 0, nextDueAt: null, mode: paid() ? 'paid' : 'launch', links: linkEvents };
       try {
         prune(ctx, t0);
         const ing = ingest(ctx, alerts, t0);

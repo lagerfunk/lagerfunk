@@ -5,20 +5,35 @@
 //   node deploy/run.mjs --mode all       both (manual runs)
 //   node deploy/run.mjs --mode status    print what the profile switches on and off, no network, no state
 //
-// Order of work: read state, check, post alerts through the bot, write state back. The state is written exactly once,
-// at the end, as one commit on the "state" branch together with the activity line for the dashboard.
+// Order of work: read state, check, guard (circuit breakers, price sanity, surge, dedupe), checkpoint, post through
+// the bot, write state back. The state is written as one commit on the "state" branch together with the activity line
+// and status.json (which carries the heartbeat the watchdog reads). When there is something to post, the state is
+// saved once BEFORE posting too (the checkpoint): if the final save then fails, the next run starts from the
+// checkpoint, sees the products as already announced and never posts them twice.
 import { readFileSync, existsSync, mkdirSync, writeFileSync, appendFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createMonitor } from '../../monitor/src/monitor.js';
 import { resolveProfile } from '../../monitor/src/profile.js';
 import { feedsFromEnv } from '../../monitor/src/feeds/index.js';
+import { historyKey } from '../../monitor/src/history.js';
+import { stateKey } from '../../monitor/src/rules.js';
 import { createEngine } from '../../bot/src/engine.js';
 import { loadConfig } from '../../bot/src/config.js';
 import { createStateStore, serializeState, parseState } from './store.mjs';
 import { collectSecrets, scrub } from './secrets.mjs';
 import { buildActivity, appendActivity, parseActivity, buildStatus } from './activity.mjs';
 import { createGit, fetchState, pushState } from './gitstate.mjs';
+import { loadOpsConfig } from './config.mjs';
+import { createJsonLog, personalValues, scrubPersonal } from './log.mjs';
+import { createAdmin, loadAdminState } from './admin.mjs';
+import { resolveChannel } from './stage.mjs';
+import { readBranch, OPS_BRANCH } from './opsbranch.mjs';
+import {
+  BREAKERS_KEY, LEDGER_KEY, HELD_KEY, loadBreakers, retailerPlan, pickProbe, collectRetailerResults, updateRetailers, openRetailers,
+  surgeCheck, priceVerdict, telegramPlan, telegramAfterProbe, telegramUpdate, dedupe, ledgerRecord, ledgerMarkSent, ledgerPrune,
+  holdAlerts, releasable,
+} from './breakers.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.resolve(here, '..', '..');
@@ -26,8 +41,12 @@ export const MODES = ['watch', 'feeds', 'all', 'status'];
 const TICK_MS = 10 * 60000;
 const MAX_SINCE_MS = 2 * 3600000;
 export const IDLE_WARN_DAYS = 45; // GitHub switches scheduled workflows off in a public repo after 60 days without activity
+export const ADMIN_KEY = 'runner:admin';
+export const SILENT_ONCE_KEY = 'runner:silentOnce';
+const STALE_AFTER_MS = 3600000; // the bot refuses alerts older than this (STALE_AFTER_SEC default)
 
 const truthy = (v) => /^(1|true|yes|on)$/i.test(String(v ?? '').trim());
+const hhmm = (ms) => new Date(ms).toISOString().slice(11, 16);
 
 export function parseArgs(argv = [], env = {}, root = ROOT) {
   const has = (n) => argv.includes(n);
@@ -43,6 +62,8 @@ export function parseArgs(argv = [], env = {}, root = ROOT) {
     silent: has('--silent') || truthy(env.SILENT),
     noPush: has('--no-push') || truthy(env.NO_PUSH),
     force: has('--force') || truthy(env.FORCE),
+    releaseHeld: has('--release-held') || truthy(env.RELEASE_HELD),
+    pause: truthy(env.LAGERFUNK_PAUSE),
     stateDir: val('--state-dir') ?? env.STATE_DIR ?? null,
     watchlistPath: path.resolve(root, val('--watchlist') ?? env.WATCHLIST_FILE ?? 'watchlist.json'),
     outDir: path.resolve(root, val('--out') ?? env.OUT_DIR ?? 'deploy/out'),
@@ -103,6 +124,13 @@ export async function repoIdleDays(git, nowMs) {
   }
 }
 
+/** Days since a unix timestamp (seconds), e.g. MAIN_COMMIT_TS: the workflow records main's newest commit before it
+ * switches to the last-known-good tag, so the 60-day clock is measured on main, not on the tag. */
+export function idleDaysFrom(tsSec, nowMs) {
+  const sec = Number(tsSec);
+  return Number.isFinite(sec) && sec > 0 ? Math.max(0, Math.floor((nowMs - sec * 1000) / 86400000)) : null;
+}
+
 function clampSince(last, t0) {
   if (!Number.isFinite(last) || last <= 0) return t0 - TICK_MS;
   return Math.max(last, t0 - MAX_SINCE_MS);
@@ -113,8 +141,24 @@ function readBrand(root) {
   return null;
 }
 
+/** Expected affiliate ids for the link check, from monitor/config/feeds.json (public advertiser and programme ids). */
+export function linkExpectations(root, env = {}) {
+  const out = { awinMids: {}, tdPrograms: {}, tdSiteId: env.TRADEDOUBLER_SITE_ID || null };
+  try {
+    const f = JSON.parse(readFileSync(path.join(root, 'monitor/config/feeds.json'), 'utf8'));
+    for (const [id, c] of Object.entries(f.feeds ?? {})) {
+      if (c.network === 'awin' && c.advertiserId) out.awinMids[id] = c.advertiserId;
+      if (c.network === 'tradedoubler' && c.programId) out.tdPrograms[id] = c.programId;
+    }
+  } catch {
+    /* no feeds config: the link check then uses AWIN_MIDS only */
+  }
+  return out;
+}
+
 /**
- * @param {object} opts  everything injectable for tests: env, argv, fetch, now, sleep, backend, git, root, out, jitterMs
+ * @param {object} opts  everything injectable for tests: env, argv, fetch, now, sleep, backend, git, root, out, jitterMs,
+ *                       clock (the bot's), opsConfig (thresholds instead of deploy/config/breakers.json)
  * @returns {Promise<{ ok: boolean, activity: object|null, alerts: object[], bot: object|null, files: object, error?: Error }>}
  */
 export async function runOnce(opts = {}) {
@@ -123,7 +167,9 @@ export async function runOnce(opts = {}) {
   const cfg = parseArgs(opts.argv ?? [], env, root);
   const now = opts.now ?? (() => Date.now());
   const sleep = opts.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)));
-  const out = opts.out ?? ((line) => console.log(line));
+  const personal = personalValues(env);
+  const rawOut = opts.out ?? ((line) => console.log(line));
+  const out = (line) => rawOut(scrubPersonal(line, personal));
   const t0 = now();
   const notes = [];
   const note = (level, msg) => {
@@ -148,14 +194,22 @@ export async function runOnce(opts = {}) {
     return { ok: true, activity: null, alerts: [], bot: null, files: {}, status: st };
   }
 
+  // Bad configuration fails here, before any state is read or written.
+  const ops = opts.opsConfig ?? loadOpsConfig({ root });
+  const channel = resolveChannel(env);
+  const jlog = createJsonLog({ out, secrets, personal, base: { run: env.GITHUB_RUN_ID ?? null, mode: cfg.mode }, now });
+
   // Posting without a bot token would consume the state transitions and lose the alerts. Fail before touching anything.
   const posting = !cfg.dryRun && !cfg.silent;
   if (posting && !env.TELEGRAM_BOT_TOKEN) throw new Error('TELEGRAM_BOT_TOKEN is not set. Add it as a repository secret, or run with SILENT=1 or DRY_RUN=1.');
+  const saving = !cfg.dryRun && !cfg.noPush;
+  jlog.info('run.start', { profile: profile.name, channel: channel.channel, dryRun: cfg.dryRun, silent: cfg.silent, code: env.CODE_SHA ?? null });
 
   // ---------- state ----------
   const git = opts.git ?? createGit({ cwd: root, env });
   const backend = opts.backend ?? (cfg.stateDir ? dirBackend(path.resolve(root, cfg.stateDir)) : gitBackend({ git, sleep }));
   const loaded = await backend.load();
+  let token = loaded.token;
   let entries = {};
   let reset = false;
   let restoredFromPrev = false;
@@ -174,13 +228,68 @@ export async function runOnce(opts = {}) {
   } else {
     note('notice', 'no state yet: first run');
   }
-  const silent = cfg.silent || reset || restoredFromPrev;
-  const idleDays = env.GITHUB_ACTIONS === 'true' || opts.git ? await repoIdleDays(git, t0) : null;
+  let silent = cfg.silent || reset || restoredFromPrev;
+  const idleDays = env.MAIN_COMMIT_TS ? idleDaysFrom(env.MAIN_COMMIT_TS, t0) : env.GITHUB_ACTIONS === 'true' || opts.git ? await repoIdleDays(git, t0) : null;
   if (idleDays !== null && idleDays >= IDLE_WARN_DAYS) note('warning', `the repository has had no commit for ${idleDays} days. GitHub switches scheduled jobs off after 60 days without activity. Commit any small change (for example a blank line in README.md) to reset the clock.`);
 
   const store = createStateStore({ entries, now });
   const meta = (await store.get('runner:meta')) ?? { runs: 0, firstRunAt: new Date(t0).toISOString(), lastTick: {} };
   meta.lastTick ??= {};
+  const silentOnce = await store.get(SILENT_ONCE_KEY);
+  if (silentOnce) {
+    silent = true;
+    note('notice', `first run after a state restore${silentOnce.from ? ` (backup ${silentOnce.from})` : ''}: learning only, nothing is posted, so nothing from before the backup is announced again`);
+    await store.delete(SILENT_ONCE_KEY);
+  }
+  if (posting && !channel.posting) {
+    silent = true;
+    note('warning', channel.reason);
+  }
+
+  // ---------- safety state: breakers, post ledger, held posts, admin alerts ----------
+  const breakers = loadBreakers(await store.get(BREAKERS_KEY));
+  const ledger = ledgerPrune((await store.get(LEDGER_KEY)) ?? {}, t0, ops.dedupe.keepHours);
+  let held = (await store.get(HELD_KEY)) ?? [];
+  const adminState = loadAdminState(await store.get(ADMIN_KEY));
+  const fetchImpl = opts.fetch ?? globalThis.fetch?.bind(globalThis);
+  const admin = createAdmin({ token: env.TELEGRAM_BOT_TOKEN, chatId: env.TELEGRAM_ADMIN_CHAT_ID, apiBase: env.TELEGRAM_API_BASE || undefined, fetch: fetchImpl, now, state: adminState, cfg: ops, label: `Lagerfunk${channel.channel === 'staging' ? ' (staging)' : ''}` });
+  const events = [];
+  let authTrip = false;
+  const onEvent = (breaker, ev) => {
+    if (!ev) return;
+    const who = ev.retailer ?? ev.product ?? ev.kind ?? '';
+    events.push(`${ev.type}:${breaker}${who ? `:${who}` : ''}`);
+    const fields = { breaker, ...ev };
+    if (ev.type === 'recover' || ev.type === 'lifted') jlog.info('breaker.recover', fields);
+    else jlog.warn(`breaker.${ev.type}`, fields);
+    if (breaker === 'retailer' && ev.type === 'trip') {
+      note('warning', `breaker: ${ev.retailer} paused after ${ev.failures} failed checks (${ev.error}) until ${ev.openUntil}`);
+      admin.raise(`trip:retailer:${ev.retailer}`, `[ALERT] Shop ${ev.retailer} paused after ${ev.failures} failed checks in a row (${ev.error}). Next probe ${hhmm(Date.parse(ev.openUntil))} UTC.\nDiagnosis: ${ev.diagnose}`);
+    } else if (breaker === 'retailer' && ev.type === 'reopen') {
+      if (ev.trips === 4) admin.raise(`escalate:retailer:${ev.retailer}`, `[ALERT] Shop ${ev.retailer} still failing after ${ev.trips - 1} probes (${ev.error}). Paused until ${hhmm(Date.parse(ev.openUntil))} UTC.\nDiagnosis: ${ev.diagnose}`);
+    } else if (breaker === 'retailer' && ev.type === 'recover') {
+      note('notice', `breaker: ${ev.retailer} is back`);
+      admin.raise(`recover:retailer:${ev.retailer}:${t0}`, `[OK] Shop ${ev.retailer} answers again${ev.downMinutes !== null ? ` after ${ev.downMinutes} min` : ''}. Checks resumed.`, { severity: 'info' });
+    } else if (breaker === 'surge') {
+      note('warning', `breaker: ${ev.total} products flipped to in stock in one run. ${ev.held} post(s) held`);
+      admin.raise(`trip:surge:${Object.keys(ev.perRetailer).sort().join(',')}`, `[ALERT] ${ev.total} products flipped to in stock in one run (${Object.entries(ev.perRetailer).map(([r, n]) => `${r} ${n}`).join(', ')}). ${ev.held} post(s) held, those shops stay held until ${hhmm(Date.parse(ev.holdUntil))} UTC.\nDiagnosis: ${ev.diagnose}`, { severity: 'critical' });
+    } else if (breaker === 'price' && ev.type === 'trip') {
+      note('warning', `price check: ${ev.product} ${ev.reason} (${ev.price} vs reference ${ev.reference} from ${ev.source}): held, kept out of the price history`);
+      admin.raise(`trip:price:${ev.product}`, `[ALERT] Price for ${ev.product} looks wrong: ${ev.price} EUR against ${ev.reference ?? '?'} EUR (${ev.source ?? 'no reference'}). The post is held and the reading is kept out of the 30-day history.\nDiagnosis: usually a parser picked up the wrong number (accessory, monthly rate, bundle). If the price is real, run the workflow with release_held within the hour. RUNBOOK: false alert posted.`);
+    } else if (breaker === 'price' && ev.type === 'lifted') {
+      admin.raise(`lift:price:${ev.product}:${t0}`, `[OK] Price for ${ev.product} is plausible again (${ev.price} EUR).`, { severity: 'info' });
+    } else if (breaker === 'telegram' && ev.type === 'trip') {
+      if (ev.kind === 'auth') authTrip = true;
+      note(ev.kind === 'auth' ? 'error' : 'warning', `breaker: Telegram ${ev.kind}: ${ev.error ?? ''} Posting paused until ${ev.openUntil}`);
+      admin.raise(`trip:telegram:${ev.kind}`, `[ALERT] Telegram breaker open (${ev.kind}): ${ev.error ?? ''}\nNew posts wait in the queue and nothing is resent early; a post older than an hour is dropped as stale. Next probe ${hhmm(Date.parse(ev.openUntil))} UTC.\nDiagnosis: ${ev.diagnose}`, { severity: ev.kind === 'auth' ? 'critical' : 'warn' });
+    } else if (breaker === 'telegram' && ev.type === 'recover') {
+      note('notice', 'breaker: Telegram is back, posting resumed');
+      admin.raise(`recover:telegram:${t0}`, `[OK] Telegram works again${ev.downMinutes !== null ? ` after ${ev.downMinutes} min` : ''}. Posting resumed.`, { severity: 'info' });
+    }
+  };
+
+  const plan = retailerPlan(breakers, t0);
+  if (plan.skip.size) note('notice', `paused by the circuit breaker: ${[...plan.skip].join(', ')}`);
 
   // ---------- check ----------
   const monitor = createMonitor({
@@ -204,14 +313,27 @@ export async function runOnce(opts = {}) {
   let error = null;
   try {
     if (cfg.mode === 'watch' || cfg.mode === 'all') {
-      const r = await monitor.tick({ tickMs: TICK_MS, since: clampSince(meta.lastTick.watch, t0), source: 'scrape' });
+      // Open shops sit out. Half-open shops get exactly one request: the probe below.
+      const r = await monitor.tick({ tickMs: TICK_MS, since: clampSince(meta.lastTick.watch, t0), source: 'scrape', skip: new Set([...plan.skip, ...plan.probe]) });
       scrape.checks.push(...r.checks);
       scrape.alerts.push(...r.alerts);
+      for (const rid of plan.probe) {
+        const item = pickProbe(monitor.items, rid, breakers);
+        if (!item) continue; // a feed shop is probed by its next feed download
+        const p = await monitor.checkItem(item);
+        jlog.info('breaker.probe', { breaker: 'retailer', retailer: rid, productKey: item.productKey, ok: p.check.ok, error: p.check.error });
+        scrape.checks.push(p.check);
+        if (p.alert) scrape.alerts.push(p.alert);
+      }
       meta.lastTick.watch = t0;
     }
     if (cfg.mode === 'feeds' || cfg.mode === 'all') {
       const retailers = [...new Set(monitor.items.filter((i) => i._source === 'feed').map((i) => i.retailer))];
       for (const retailer of retailers) {
+        if (plan.skip.has(retailer)) {
+          fed.feeds.push({ retailer, status: 'skipped', reason: 'breaker', rows: 0, matched: 0, items: 0, bytes: 0, ms: 0 });
+          continue;
+        }
         const remainingMs = deadlineAt - now();
         if (remainingMs < 20000) {
           fed.feeds.push({ retailer, status: 'skipped', reason: 'deadline', rows: 0, matched: 0, items: 0, bytes: 0, ms: 0 });
@@ -230,18 +352,152 @@ export async function runOnce(opts = {}) {
   } catch (e) {
     error = e;
     note('error', `check phase failed: ${e.message}`);
+    jlog.error('check.crash', { error: e.message });
   }
   for (const f of fed.feeds) if (f.status === 'error') note('warning', `feed ${f.retailer}: ${f.reason}`);
   for (const [id, h] of Object.entries(monitor.health().retailers)) if (h.status === 'blocked') note('warning', `${id} is blocked (${h.lastError}). It stays on, paused with backoff; see monitor/RECON.md.`);
+  jlog.info('check.summary', { checks: scrape.checks.length + fed.checks.length, failed: [...scrape.checks, ...fed.checks].filter((c) => !c.ok).length, scrape: scrape.checks.length, feed: fed.checks.length, feeds: fed.feeds.map((f) => ({ retailer: f.retailer, status: f.status, reason: f.reason ?? null })) });
+
+  // ---------- breaker: shops ----------
+  for (const ev of updateRetailers(breakers, collectRetailerResults({ scrapeChecks: scrape.checks, feeds: fed.feeds }), now(), ops)) onEvent('retailer', ev);
+
+  // ---------- breaker: price sanity (always, also in silent runs: it protects the 30-day history) ----------
+  const itemsByKey = new Map(monitor.items.map((i) => [`${i.retailer}:${i.productKey}`, i]));
+  const priceHold = new Map();
+  for (const c of [...scrape.checks, ...fed.checks]) {
+    if (!c.ok || c.inStock !== true) continue;
+    const id = `${c.retailer}:${c.productKey}`;
+    const hk = historyKey(c.retailer, c.productKey);
+    const v = priceVerdict(c, itemsByKey.get(id), entries[hk]?.v ?? null, ops);
+    if (v) {
+      // keep the reading out of the price history and the stock state, as if this check never happened
+      for (const k of [hk, stateKey(c.retailer, c.productKey)]) {
+        if (entries[k]) await store.put(k, entries[k].v);
+        else await store.delete(k);
+      }
+      priceHold.set(id, v);
+      const q = breakers.quarantine[id];
+      breakers.quarantine[id] = { since: q?.since ?? new Date(t0).toISOString(), lastAt: new Date(t0).toISOString(), price: v.price, reference: v.reference, source: v.source, reason: v.reason };
+      if (!q) onEvent('price', { type: 'trip', product: id, ...v });
+    } else if (breakers.quarantine[id]) {
+      delete breakers.quarantine[id];
+      onEvent('price', { type: 'lifted', product: id, price: c.price });
+    }
+  }
+
+  // ---------- guard the posts ----------
+  const alerts = [...scrape.alerts, ...fed.alerts];
+  const guarding = posting && !silent && !error;
+  let postable = [];
+  let heldNow = [];
+  let released = [];
+  let dupes = [];
+  if (guarding) {
+    const reason = new Map();
+    for (const a of alerts) {
+      const id = `${a.retailer}:${a.productKey}`;
+      if (priceHold.has(id)) reason.set(a.key, `price:${priceHold.get(id).reason}`);
+      else if (a.price === null || a.price === undefined) reason.set(a.key, 'price:price_missing');
+    }
+    const surge = surgeCheck(alerts.filter((a) => !reason.has(a.key)), breakers, now(), ops);
+    for (const [k, r] of surge.hold) if (!reason.has(k)) reason.set(k, r);
+    if (surge.event) onEvent('surge', surge.event);
+    if (cfg.pause) for (const a of alerts) if (!reason.has(a.key)) reason.set(a.key, 'paused');
+    heldNow = alerts.filter((a) => reason.has(a.key));
+    postable = alerts.filter((a) => !reason.has(a.key));
+    if (heldNow.length) {
+      held = holdAlerts(held, heldNow.map((a) => ({ alert: a, reason: reason.get(a.key) })), now(), ops);
+      jlog.warn('breaker.hold', { held: heldNow.map((a) => ({ key: a.key, reason: reason.get(a.key) })) });
+      if (cfg.pause) note('warning', `LAGERFUNK_PAUSE is set: ${heldNow.length} post(s) held, nothing is posted`);
+    }
+    if (cfg.releaseHeld) {
+      released = releasable(held, now(), STALE_AFTER_MS);
+      note('notice', `release_held: ${released.length} held post(s) released, ${held.length - released.length} too old and dropped`);
+      jlog.info('held.release', { released: released.map((a) => a.key), dropped: held.length - released.length });
+      held = [];
+      postable.push(...released);
+    }
+    const dd = dedupe(postable, ledger, now(), ops);
+    dupes = dd.dupes;
+    postable = dd.fresh;
+    if (dupes.length) {
+      jlog.info('dedupe.skip', { skipped: dupes.map((d) => ({ idem: d.idem, key: d.alert.key, prevAt: new Date(d.prevAt).toISOString() })) });
+      note('notice', `${dupes.length} alert(s) skipped: already posted (${dupes.map((d) => d.idem).join(', ').slice(0, 200)})`);
+    }
+  }
 
   // ---------- post ----------
-  const alerts = [...scrape.alerts, ...fed.alerts];
   let bot = null;
-  if (posting && !silent && !error) {
+  let skipSave = false;
+  const stateFile = (ents) => {
+    const text = serializeState(ents, { savedAt: new Date(now()).toISOString(), runId: env.GITHUB_RUN_ID ?? null });
+    const clean = scrub(text, secrets);
+    return clean.count ? clean.text : text;
+  };
+  const prevOk = loaded.files?.['state.json'] && parseState(loaded.files['state.json']).ok ? loaded.files['state.json'] : null;
+  if (guarding) {
     try {
-      const engine = createEngine({ store, monitorStore: store, config: loadConfig(botEnv(env, brand)), fetch: opts.fetch, ...(opts.clock ? { clock: opts.clock } : {}), log });
-      bot = await engine.run({ alerts });
-      if (env.ADMIN_IDS && cfg.mode !== 'feeds') {
+      const linkCheck = { enabled: ops.affiliate.checkLinks, ...linkExpectations(root, env) };
+      const engineWith = (more = {}) => createEngine({ store, monitorStore: store, config: loadConfig(botEnv({ ...env, ...channel.envPatch }, brand), { linkCheck, ...more }), fetch: opts.fetch, ...(opts.clock ? { clock: opts.clock } : {}), log });
+      let plan2 = telegramPlan(breakers, now());
+      if (plan2 === 'probe') {
+        try {
+          await engineWith().telegram.getMe();
+          onEvent('telegram', telegramAfterProbe(breakers, { ok: true }, now(), ops));
+          plan2 = 'send';
+        } catch (e) {
+          onEvent('telegram', telegramAfterProbe(breakers, { ok: false, status: e.status ?? 0, error: e.message }, now(), ops));
+          plan2 = 'hold';
+        }
+        jlog.info('breaker.probe', { breaker: 'telegram', result: plan2 });
+      }
+      // A pause stops every public send, also posts queued in the bot by earlier runs.
+      const holding = plan2 === 'hold' || cfg.pause;
+      if (plan2 === 'hold') note('notice', `Telegram breaker ${breakers.telegram.state} (${breakers.telegram.kind}): ${postable.length} post(s) queued, not sent before ${new Date(breakers.telegram.openUntil).toISOString()}`);
+
+      // Checkpoint: save the state with these posts marked BEFORE sending anything. New alerts go into the ledger as
+      // pending (the next run treats them as posted). Posts already queued in the bot that may go out now are saved
+      // as in flight, which the bot never resends after a lost run (its strict "never twice" rule).
+      const botKey = `${env.STORE_PREFIX || 'bot:'}state`;
+      const soon = now() + 60000;
+      const queued = holding ? [] : ((await store.get(botKey))?.outbox ?? []).filter((j) => !j.inf && Math.max(j.due ?? 0, j.nx ?? 0) <= soon);
+      if ((postable.length || queued.length) && saving) {
+        for (const a of postable) ledgerRecord(ledger, a, now(), holding ? 'queued' : 'pending', channel.channel);
+        await store.put(LEDGER_KEY, ledger);
+        await store.put(BREAKERS_KEY, breakers);
+        await store.put(HELD_KEY, held);
+        await store.put('runner:meta', meta);
+        const ents = { ...store.entries() };
+        if (queued.length && ents[botKey]) {
+          const v = structuredClone(ents[botKey].v);
+          const ids = new Set(queued.map((j) => j.id));
+          for (const j of v.outbox) if (ids.has(j.id)) j.inf = now();
+          v.lease = null;
+          ents[botKey] = { ...ents[botKey], v };
+        }
+        try {
+          const r = await backend.save({ 'state.json': stateFile(ents), 'state.prev.json': prevOk, 'activity.jsonl': loaded.files?.['activity.jsonl'] ?? null, 'status.json': loaded.files?.['status.json'] ?? null }, { token, message: `checkpoint ${new Date(now()).toISOString()} (${cfg.mode}, ${postable.length + queued.length} to post)` });
+          token = r?.sha ?? token;
+          jlog.info('state.checkpoint', { posts: postable.length });
+        } catch (e) {
+          skipSave = true; // the final save would make the alerts look announced without a post: let the next run detect them again
+          throw Object.assign(new Error(`checkpoint save failed, nothing was posted: ${e.message}`), { checkpoint: true });
+        }
+      }
+
+      const engine = engineWith(holding ? { maxPostsPerRun: 0 } : {});
+      const shopUrl = (a) => itemsByKey.get(`${a.retailer}:${a.productKey}`)?.url ?? null;
+      bot = await engine.run({ alerts: postable.map((a) => ({ ...a, shopUrl: shopUrl(a) })) });
+      ledgerMarkSent(ledger, bot.sent, channel.channel);
+      for (const s of bot.sent) jlog.info('post.sent', { key: s.key, target: s.target, channel: channel.channel });
+      for (const f of bot.failed) jlog.warn('post.failed', { key: f.key, status: f.status ?? null, error: f.error, retry: f.retry });
+      if (plan2 !== 'hold' && !cfg.pause) for (const ev of telegramUpdate(breakers, bot, now(), ops)) onEvent('telegram', ev);
+      for (const l of bot.links ?? []) {
+        jlog.warn('link.fallback', l);
+        admin.raise(`link:${l.retailer}:${l.reason}`, `[WARN] Affiliate link for ${l.retailer} failed the check (${l.reason}). ${l.action === 'plain' ? 'Posted with the plain shop link, no commission on it.' : 'Post dropped: no clean link.'} Check AWIN_AFFILIATE_ID, AWIN_MIDS and the feed link. RUNBOOK: affiliate network down.`);
+      }
+      if (bot.links?.length) note('warning', `${bot.links.length} affiliate link(s) failed the check and were posted plain or dropped`);
+      if (env.ADMIN_IDS && cfg.mode !== 'feeds' && !holding) {
         try {
           await engine.pollCommands({ timeoutSec: 0 });
         } catch (e) {
@@ -251,17 +507,50 @@ export async function runOnce(opts = {}) {
       if (bot.failed.length) note('warning', `${bot.failed.length} post(s) failed: ${bot.failed.map((f) => f.error).join('; ').slice(0, 200)}`);
     } catch (e) {
       error = e;
-      note('error', `bot phase failed: ${e.message}`);
+      note('error', `${e.checkpoint ? '' : 'bot phase failed: '}${e.message}`);
+      if (e.checkpoint) admin.raise('checkpoint', `[ALERT] The state could not be saved before posting, so nothing was posted in this run. The alerts will be detected again next run. Error: ${e.message.slice(0, 300)}`, { severity: 'critical' });
     }
   } else if (alerts.length) {
     note('notice', `${alerts.length} alert(s) detected and not posted (${cfg.dryRun ? 'dry run' : silent ? 'silent run' : 'check phase failed'})`);
   }
+  if (authTrip && !error) {
+    error = new Error('Telegram refused the bot (401/403): posting is paused by the circuit breaker');
+  }
+
+  // ---------- the watchdog is watched too (hourly, git backend only) ----------
+  if (saving && backend.kind === 'git' && t0 - (meta.lastWatchdogCheck ?? 0) >= 3600000) {
+    meta.lastWatchdogCheck = t0;
+    try {
+      const opsBranch = await readBranch({ git, branch: OPS_BRANCH });
+      const wd = opsBranch.status === 'ok' ? JSON.parse((await opsBranch.read('watchdog.json')) ?? 'null') : null;
+      const last = wd?.lastRunAt ? Date.parse(wd.lastRunAt) : null;
+      const age = last ? Math.round((t0 - last) / 60000) : null;
+      const runningSince = Date.parse(meta.firstRunAt ?? new Date(t0).toISOString());
+      if ((age !== null && age > ops.deadman.watchdogStaleMinutes) || (age === null && t0 - runningSince > 24 * 3600000)) {
+        admin.raise('watchdog-stale', `[ALERT] The watchdog has not run for ${age === null ? 'ever' : `${age} min`}. Nobody is watching the runner. Check Actions, lagerfunk-watchdog: is it disabled? RUNBOOK: Actions disabled.`, { severity: 'critical' });
+        jlog.warn('watchdog.stale', { minutes: age });
+      }
+    } catch (e) {
+      jlog.warn('watchdog.check_failed', { error: e.message });
+    }
+  }
+
+  // ---------- admin alerts (not in dry runs: nothing is saved there, so the dedupe could not hold) ----------
+  let adminRes = { configured: admin.configured, sent: 0, failed: 0, pending: adminState.outbox.length, error: null };
+  if (saving) adminRes = await admin.flush();
+  if (adminRes.sent) jlog.info('admin.sent', { sent: adminRes.sent, keys: adminRes.keys });
+  if (adminRes.error) note('warning', `admin alert not delivered: ${adminRes.error}`);
+  if (!adminRes.configured && adminRes.pending) note('warning', `TELEGRAM_ADMIN_CHAT_ID is not set: ${adminRes.pending} admin alert(s) wait in the state (runner:admin) and in this log only`);
 
   // ---------- activity and state ----------
   const tEnd = now();
   meta.runs += 1;
   meta.lastRunAt = new Date(tEnd).toISOString();
   await store.put('runner:meta', meta);
+  await store.put(BREAKERS_KEY, breakers);
+  await store.put(LEDGER_KEY, ledger);
+  await store.put(HELD_KEY, held);
+  await store.put(ADMIN_KEY, adminState);
   const st = monitor.status();
   let stateText = serializeState(store.entries(), { savedAt: new Date(tEnd).toISOString(), runId: env.GITHUB_RUN_ID ?? null });
   const cleanState = scrub(stateText, secrets);
@@ -270,7 +559,8 @@ export async function runOnce(opts = {}) {
     note('error', `${cleanState.count} secret value(s) found in the state and removed before saving. Find out where they came from.`);
     if (!parseState(stateText).ok) throw new Error('state is not valid after scrubbing: refusing to save');
   }
-  const saving = !cfg.dryRun && !cfg.noPush;
+  const willSave = saving && !skipSave;
+  const latched = Object.keys(breakers.surge.latched).filter((r) => breakers.surge.latched[r] > tEnd);
   const activity = buildActivity({
     at: tEnd,
     mode: cfg.mode,
@@ -282,41 +572,61 @@ export async function runOnce(opts = {}) {
     bot,
     feeds: fed.feeds,
     shops: { active: st.active, disabled: st.disabled },
-    state: { keys: Object.keys(store.entries()).length, bytes: Buffer.byteLength(stateText), pushed: saving, reset },
-    run: { id: env.GITHUB_RUN_ID, attempt: env.GITHUB_RUN_ATTEMPT, event: env.GITHUB_EVENT_NAME, sha: env.GITHUB_SHA?.slice(0, 7), idleDays },
+    state: { keys: Object.keys(store.entries()).length, bytes: Buffer.byteLength(stateText), pushed: willSave, reset },
+    run: { id: env.GITHUB_RUN_ID, attempt: env.GITHUB_RUN_ATTEMPT, event: env.GITHUB_EVENT_NAME, sha: env.GITHUB_SHA?.slice(0, 7), idleDays, code: env.CODE_SHA ?? null },
     notes,
     ok: !error,
+    extra: {
+      channel: channel.channel,
+      breakers: { open: openRetailers(breakers), telegram: breakers.telegram.state, surge: latched.length > 0, quarantined: Object.keys(breakers.quarantine).length, events },
+      posts: { held: heldNow.length, released: released.length, duplicates: dupes.length, linkFallbacks: bot?.links?.length ?? 0 },
+      admin: { sent: adminRes.sent, pending: adminRes.pending, failed: adminRes.failed },
+    },
   });
   const activityText = scrub(appendActivity(loaded.files?.['activity.jsonl'], activity), secrets).text;
-  const statusText = `${JSON.stringify(buildStatus(parseActivity(activityText), tEnd), null, 1)}\n`;
-  const prevOk = loaded.files?.['state.json'] && parseState(loaded.files['state.json']).ok ? loaded.files['state.json'] : null;
+  const statusExtras = {
+    channel: channel.channel,
+    version: env.CODE_SHA ?? env.GITHUB_SHA?.slice(0, 7) ?? null,
+    breakers: { retailersOpen: openRetailers(breakers), telegram: breakers.telegram.state, telegramKind: breakers.telegram.kind, surgeLatched: latched, quarantined: Object.keys(breakers.quarantine).length },
+    held: held.length,
+    alertAfterMinutes: ops.deadman.alertAfterMinutes,
+  };
+  const statusText = `${JSON.stringify(buildStatus(parseActivity(activityText), tEnd, statusExtras), null, 1)}\n`;
   const files = { 'state.json': stateText, 'state.prev.json': prevOk, 'activity.jsonl': activityText, 'status.json': statusText };
 
   mkdirSync(cfg.outDir, { recursive: true });
   writeFileSync(path.join(cfg.outDir, 'activity-last.json'), `${JSON.stringify(activity, null, 1)}\n`);
-  if (!saving) {
+  if (!willSave) {
     writeFileSync(path.join(cfg.outDir, 'state.json'), stateText);
+    if (skipSave) note('error', 'the state was NOT saved on purpose (the checkpoint failed), so the next run detects the same alerts again and can post them. The state is in deploy/out/state.json.');
   } else {
     try {
-      await backend.save(files, { token: loaded.token, message: `state ${new Date(tEnd).toISOString()} (${cfg.mode})` });
+      const r = await backend.save(files, { token, message: `state ${new Date(tEnd).toISOString()} (${cfg.mode})` });
+      jlog.info('state.saved', { bytes: Buffer.byteLength(stateText), attempts: r?.attempts ?? 1 });
     } catch (e) {
       writeFileSync(path.join(cfg.outDir, 'state.json'), stateText); // the workflow uploads deploy/out when a run fails
       const posted = bot?.sent?.length ?? 0;
-      note('error', `state could not be saved: ${e.message}.${posted ? ` ${posted} post(s) went out in this run and may be repeated by the next one.` : ''} The state is in deploy/out/state.json.`);
+      note('error', `state could not be saved: ${e.message}.${posted ? ` ${posted} post(s) went out in this run; the checkpoint saved before posting marks them as announced, so the next run does not repeat them.` : ''} The state is in deploy/out/state.json.`);
+      jlog.error('state.save_failed', { error: e.message, posted });
       error = e;
     }
   }
 
   summary(env, cfg, activity, st, out);
-  return { ok: !error, activity, alerts, bot, files, error: error ?? undefined };
+  jlog[error ? 'error' : 'info']('run.end', {
+    ok: !error, durationMs: activity.durationMs, checks: activity.checks, alerts: activity.alerts, posts: activity.posts, breakers: activity.breakers, admin: activity.admin, channel: channel.channel,
+  });
+  return { ok: !error, activity, alerts, bot, files, error: error ?? undefined, held, breakers, ledger, jsonLog: jlog.lines };
 }
 
 function summary(env, cfg, a, st, out) {
   out(`${a.at} ${cfg.mode}: ${a.checks.total} checks (${a.checks.failed} failed), ${a.alerts.detected} alerts (${a.alerts.sent} posted), ${a.feeds.length} feeds, ${a.durationMs} ms, state ${Math.round(a.state.bytes / 1024)} KB`);
   for (const e of a.errors) out(`  ${e.retailer}: ${e.error} x${e.n}`);
   for (const f of a.feeds) out(`  feed ${f.retailer}: ${f.status}${f.reason ? ` (${f.reason})` : ''}, ${f.rows} rows, ${f.matched}/${f.items} matched`);
+  if (a.posts && (a.posts.held || a.posts.duplicates || a.posts.released)) out(`  posts: ${a.posts.held} held, ${a.posts.released} released, ${a.posts.duplicates} duplicates skipped`);
+  if (a.breakers?.open?.length) out(`  breakers open: ${a.breakers.open.join(', ')}`);
   if (env.GITHUB_STEP_SUMMARY) {
     const rows = st.retailers.map((r) => `| ${r.retailer} | ${r.source ? `on (${r.source})` : 'off'} | ${r.items} |`).join('\n');
-    appendFileSync(env.GITHUB_STEP_SUMMARY, `### ${cfg.mode}: ${a.checks.total} checks, ${a.checks.failed} failed, ${a.alerts.detected} alerts, ${a.alerts.sent} posted\n\n| shop | state | items |\n|---|---|---|\n${rows}\n`);
+    appendFileSync(env.GITHUB_STEP_SUMMARY, `### ${cfg.mode} (${a.channel ?? 'public'}): ${a.checks.total} checks, ${a.checks.failed} failed, ${a.alerts.detected} alerts, ${a.alerts.sent} posted, ${a.posts?.held ?? 0} held\n\n| shop | state | items |\n|---|---|---|\n${rows}\n`);
   }
 }

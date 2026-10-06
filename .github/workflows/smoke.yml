@@ -1,0 +1,47 @@
+# Post-deploy smoke test, after every push to main (and by hand). Fail closed: the commit becomes production
+# (tag last-known-good, which the runner and the watchdog check out) only when BOTH parts pass:
+#   1. offline: the code runs end to end against generated fixtures, with every circuit breaker and a restore drill,
+#   2. live: one dry run against the real shops (posts nothing, saves nothing) and read-only Telegram checks.
+# On failure production stays on the previous good version and the admin chat is told.
+name: lagerfunk-smoke
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lagerfunk-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: Offline smoke test (fixtures, breakers, restore drill)
+        run: node deploy/smoke.mjs offline
+      - name: Live dry run (reads shops, posts nothing, saves nothing)
+        run: node deploy/smoke.mjs live
+        env:
+          PROFILE: free
+          LAGERFUNK_CHANNEL: ${{ vars.LAGERFUNK_CHANNEL || 'staging' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_STAGING: ${{ secrets.TELEGRAM_CHAT_ID_STAGING }}
+          TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
+      - name: Mark this commit last known good
+        if: success()
+        run: node deploy/ops.mjs tag-good --sha "$GITHUB_SHA"
+      - name: Tell the owner the change was NOT deployed
+        if: failure()
+        run: node deploy/ops.mjs notify --soft --text "Lagerfunk: [ALERT] smoke test failed for ${GITHUB_SHA::7}. Production stays on the previous good version. Log: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}

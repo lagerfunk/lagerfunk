@@ -1,0 +1,68 @@
+{
+  "note": "Every threshold of the Lagerfunk safety system, in one place. The runner, the watchdog, the smoke test and the ops commands read this file. Change a number, push to main: the smoke test checks the change before production uses it. Minutes and hours are wall clock.",
+  "deadman": {
+    "alertAfterMinutes": 40,
+    "remindEveryMinutes": 360,
+    "blindAfterMinutes": 120,
+    "firstRunGraceMinutes": 60,
+    "watchdogStaleMinutes": 180
+  },
+  "retailer": {
+    "tripAfterFailures": 5,
+    "openMinutes": 30,
+    "maxOpenMinutes": 720,
+    "ignoreErrors": ["not_found"]
+  },
+  "surge": {
+    "maxInStockFlipsPerRun": 8,
+    "maxInStockFlipsPerRetailer": 5,
+    "holdMinutes": 60
+  },
+  "price": {
+    "minPctOfMedian": 50,
+    "maxPctOfMedian": 250,
+    "minHistoryDays": 3
+  },
+  "telegram": {
+    "tripAfterFailedRuns": 3,
+    "openMinutes": 10,
+    "maxOpenMinutes": 360,
+    "authOpenMinutes": 30,
+    "longRetryAfterSec": 60
+  },
+  "dedupe": {
+    "windowMinutes": { "restock": 60, "ships_before": 60, "price_drop": 720, "lowest_30d": 1440 },
+    "keepHours": 72
+  },
+  "affiliate": {
+    "checkLinks": true
+  },
+  "admin": {
+    "maxPerRun": 4,
+    "cooldownMinutes": 360,
+    "outboxMax": 20,
+    "outboxTtlHours": 24
+  },
+  "held": {
+    "max": 50,
+    "keepHours": 24
+  },
+  "digest": {
+    "hourBerlin": 8
+  },
+  "backups": {
+    "keep": 7
+  },
+  "keepalive": {
+    "warnAfterDays": 45,
+    "actAfterDays": 50
+  },
+  "smoke": {
+    "minOkChecks": 1
+  },
+  "promotion": {
+    "minGoodRuns24h": 12,
+    "maxFailedRuns24h": 2,
+    "maxOpenBreakers": 0
+  }
+}

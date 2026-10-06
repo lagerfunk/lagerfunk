@@ -1,0 +1,57 @@
+# Operations by hand (Actions, lagerfunk-ops, Run workflow), or: gh workflow run ops.yml -f action=<action> -f arg=<arg>
+#   rollback     production back to the previous good version (arg: optional tag, e.g. lkg-20261020T081500Z-abc1234)
+#   restore      the state from a daily backup (arg: YYYY-MM-DD or latest). The next run learns silently.
+#   backup-now   back up the state branch now (overwrites today's backup)
+#   retract      delete a false post (arg: part of its key, e.g. "restock|psdirect|ps5-pro", or "last")
+#   digest-now   the daily digest to the admin chat now
+#   status       print heartbeat, breakers, held posts, last posts
+# Promotion from staging to public is not here: the job token cannot set repository variables. See deploy/RUNBOOK.md.
+name: lagerfunk-ops
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'What to do'
+        type: choice
+        options: [status, rollback, restore, backup-now, retract, digest-now]
+        default: status
+      arg:
+        description: 'Argument (tag, date, post key) if the action needs one'
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lagerfunk-ops
+  cancel-in-progress: false
+
+jobs:
+  ops:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: Run
+        # inputs reach the shell only through environment variables, never pasted into the script
+        run: |
+          case "$ACTION" in
+            backup-now) node deploy/ops.mjs backup --force ;;
+            digest-now) node deploy/ops.mjs digest ;;
+            *) node deploy/ops.mjs "$ACTION" --arg "$ARG" ;;
+          esac
+        env:
+          ACTION: ${{ inputs.action }}
+          ARG: ${{ inputs.arg }}
+          GITHUB_TOKEN: ${{ github.token }}
+          LAGERFUNK_CHANNEL: ${{ vars.LAGERFUNK_CHANNEL || 'staging' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
+          TELEGRAM_CHAT_ID_STAGING: ${{ secrets.TELEGRAM_CHAT_ID_STAGING }}
+          AWIN_API_TOKEN: ${{ secrets.AWIN_API_TOKEN }}
+          AWIN_PUBLISHER_ID: ${{ vars.AWIN_PUBLISHER_ID }}
