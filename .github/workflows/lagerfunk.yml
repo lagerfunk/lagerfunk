@@ -17,6 +17,11 @@ on:
     - cron: '4,14,24,34,44,54 * * * *'
     # Product feeds (Proshop, Cyberport, computeruniverse, Galaxus): once an hour, at :29.
     - cron: '29 * * * *'
+  # Run once right after every passing smoke test, so a new version starts working at once
+  # (and the first run happens even before GitHub's scheduler picks the cron up).
+  workflow_run:
+    workflows: [lagerfunk-smoke]
+    types: [completed]
   workflow_dispatch:
     inputs:
       mode:
@@ -52,6 +57,7 @@ concurrency:
 
 jobs:
   run:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 9
     steps:
