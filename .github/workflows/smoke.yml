@@ -41,7 +41,8 @@ jobs:
         run: node deploy/ops.mjs tag-good --sha "$GITHUB_SHA"
       - name: Tell the owner the change was NOT deployed
         if: failure()
-        run: node deploy/ops.mjs notify --soft --text "Lagerfunk: [ALERT] smoke test failed for ${GITHUB_SHA::7}. Production stays on the previous good version. Log: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+        run: |
+          node deploy/ops.mjs notify --soft --text "Lagerfunk: [ALERT] smoke test failed for ${GITHUB_SHA::7}. Production stays on the previous good version. Log: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
