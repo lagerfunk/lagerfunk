@@ -8,7 +8,8 @@
 //   Awin        awin1.com/cread.php (awinmid, awinaffid, ued) or awin1.com/pclick.php (m, a, p).
 //               awinmid / m must be the shop's advertiser id, awinaffid / a our publisher id, ued a page of that shop.
 //   Tradedoubler *.tradedoubler.com/click (p, a, url): p the shop's programme id, a our site id if we know it.
-//   Amazon      tag must be our AMAZON_TAG. Short links (amzn.to) cannot be checked and count as failed.
+//   Amazon      OFF by default (AMAZON_LINKS): any tracked Amazon link fails with amazon:not_allowed. When switched on, the tag
+//               must be our AMAZON_TAG. Short links (amzn.to) cannot be checked and count as failed.
 //   Anything else that looks like a tracking link: unknown network, failed.
 import { hostOf, isAmazonUrl, looksLikeAffiliateUrl } from './affiliate.js';
 import { isPlaceholder } from './config.js';
@@ -92,6 +93,7 @@ export function verifyAffiliateUrl(url, { retailer = null, cfg = {} } = {}) {
   }
 
   if (isAmazonUrl(url)) {
+    if (!cfg.amazonLinks) return { ok: false, reason: 'amazon:not_allowed', target: null };
     if (host.startsWith('amzn.')) return { ok: false, reason: 'amazon:short_link', target: null };
     const tag = p('tag');
     const want = real(cfg.amazonTag);

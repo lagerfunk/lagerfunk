@@ -3,6 +3,7 @@
 //   node deploy/run.mjs --mode watch     shops that can be fetched without a proxy (every 10 minutes)
 //   node deploy/run.mjs --mode feeds     affiliate product feeds: Proshop, Cyberport, computeruniverse, Galaxus (hourly)
 //   node deploy/run.mjs --mode all       both (manual runs)
+//   node deploy/run.mjs --mode auto      watch, and the feeds too when the last feeds run is an hour old (what the chain loop runs)
 //   node deploy/run.mjs --mode status    print what the profile switches on and off, no network, no state
 //
 // Order of work: read state, check, guard (circuit breakers, price sanity, surge, dedupe), checkpoint, post through
@@ -25,6 +26,7 @@ import { collectSecrets, scrub } from './secrets.mjs';
 import { buildActivity, appendActivity, parseActivity, buildStatus } from './activity.mjs';
 import { createGit, fetchState, pushState } from './gitstate.mjs';
 import { loadOpsConfig } from './config.mjs';
+import { feedsDue } from './chain.mjs';
 import { createJsonLog, personalValues, scrubPersonal } from './log.mjs';
 import { createAdmin, loadAdminState } from './admin.mjs';
 import { resolveChannel } from './stage.mjs';
@@ -37,7 +39,7 @@ import {
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.resolve(here, '..', '..');
-export const MODES = ['watch', 'feeds', 'all', 'status'];
+export const MODES = ['watch', 'feeds', 'all', 'auto', 'status'];
 const TICK_MS = 10 * 60000;
 const MAX_SINCE_MS = 2 * 3600000;
 export const IDLE_WARN_DAYS = 45; // GitHub switches scheduled workflows off in a public repo after 60 days without activity
@@ -197,7 +199,8 @@ export async function runOnce(opts = {}) {
   // Bad configuration fails here, before any state is read or written.
   const ops = opts.opsConfig ?? loadOpsConfig({ root });
   const channel = resolveChannel(env);
-  const jlog = createJsonLog({ out, secrets, personal, base: { run: env.GITHUB_RUN_ID ?? null, mode: cfg.mode }, now });
+  const logBase = { run: env.GITHUB_RUN_ID ?? null, mode: cfg.mode };
+  const jlog = createJsonLog({ out, secrets, personal, base: logBase, now });
 
   // Posting without a bot token would consume the state transitions and lose the alerts. Fail before touching anything.
   const posting = !cfg.dryRun && !cfg.silent;
@@ -235,6 +238,13 @@ export async function runOnce(opts = {}) {
   const store = createStateStore({ entries, now });
   const meta = (await store.get('runner:meta')) ?? { runs: 0, firstRunAt: new Date(t0).toISOString(), lastTick: {} };
   meta.lastTick ??= {};
+  if (cfg.mode === 'auto') {
+    // The chain loop runs every cycle as "auto": the feeds are due once an hour (the state remembers when they last ran).
+    const due = feedsDue({ lastFeedsAt: meta.lastTick.feeds, now: t0, everyMinutes: ops.chain.feedsEveryMinutes, slackMinutes: ops.chain.feedsSlackMinutes });
+    cfg.mode = due ? 'all' : 'watch';
+    logBase.mode = cfg.mode;
+    jlog.info('run.mode', { requested: 'auto', feedsDue: due });
+  }
   const silentOnce = await store.get(SILENT_ONCE_KEY);
   if (silentOnce) {
     silent = true;
@@ -301,6 +311,10 @@ export async function runOnce(opts = {}) {
     feeds,
     proxy: null,
     options: env.SHIPS_BY ? { shipsBy: env.SHIPS_BY } : {},
+    // A runner with a history only learns an item it has never seen: adding a watchlist row (RAM, SSD, ...) that happens to be in
+    // stock must not post "wieder da" for it, and twenty such rows must not trip the surge breaker. A brand-new state keeps the old
+    // behaviour (the first real run is started silent by hand).
+    learnNew: Object.keys(entries).some((k) => k.startsWith('state:')),
     jitterMs: opts.jitterMs ?? 1500,
     concurrency: 6,
     timeoutMs: 20000,
@@ -355,6 +369,12 @@ export async function runOnce(opts = {}) {
     jlog.error('check.crash', { error: e.message });
   }
   for (const f of fed.feeds) if (f.status === 'error') note('warning', `feed ${f.retailer}: ${f.reason}`);
+  // What the monitor did besides plain checks: items seen for the first time, trial shops (never checked from a datacenter IP).
+  const lr = monitor.lastRun();
+  if (lr.learned.length) note('notice', `learned ${lr.learned.length} new item(s) silently (first sight, no post): ${lr.learned.slice(0, 8).join(', ')}${lr.learned.length > 8 ? ', ...' : ''}`);
+  if (lr.trialProven.length) note('notice', `trial shop answered a GitHub runner, now an ordinary shop: ${lr.trialProven.join(', ')}`);
+  if (lr.trialBlocked.length) note('notice', `trial shop did not answer, resting: ${lr.trialBlocked.join(', ')}. See monitor/RECON.md and the shop's feed.`);
+  if (lr.learned.length || lr.trialProven.length || lr.trialBlocked.length || lr.deadSkipped) jlog.info('check.coverage', { learned: lr.learned.length, trialProven: lr.trialProven, trialBlocked: lr.trialBlocked, restingTrial: lr.restingTrial, deadSkipped: lr.deadSkipped });
   for (const [id, h] of Object.entries(monitor.health().retailers)) if (h.status === 'blocked') note('warning', `${id} is blocked (${h.lastError}). It stays on, paused with backoff; see monitor/RECON.md.`);
   jlog.info('check.summary', { checks: scrape.checks.length + fed.checks.length, failed: [...scrape.checks, ...fed.checks].filter((c) => !c.ok).length, scrape: scrape.checks.length, feed: fed.checks.length, feeds: fed.feeds.map((f) => ({ retailer: f.retailer, status: f.status, reason: f.reason ?? null })) });
 
@@ -494,7 +514,7 @@ export async function runOnce(opts = {}) {
       if (plan2 !== 'hold' && !cfg.pause) for (const ev of telegramUpdate(breakers, bot, now(), ops)) onEvent('telegram', ev);
       for (const l of bot.links ?? []) {
         jlog.warn('link.fallback', l);
-        admin.raise(`link:${l.retailer}:${l.reason}`, `[WARN] Affiliate link for ${l.retailer} failed the check (${l.reason}). ${l.action === 'plain' ? 'Posted with the plain shop link, no commission on it.' : 'Post dropped: no clean link.'} Check AWIN_AFFILIATE_ID, AWIN_MIDS and the feed link. RUNBOOK: affiliate network down.`);
+        admin.raise(`link:${l.retailer}:${l.reason}`, `[WARN] Affiliate link for ${l.retailer} failed the check (${l.reason}). ${l.action === 'plain' ? 'Posted with the plain shop link, no affiliate tracking on it.' : 'Post dropped: no clean link.'} Check AWIN_AFFILIATE_ID, AWIN_MIDS and the feed link. RUNBOOK: affiliate network down.`);
       }
       if (bot.links?.length) note('warning', `${bot.links.length} affiliate link(s) failed the check and were posted plain or dropped`);
       if (env.ADMIN_IDS && cfg.mode !== 'feeds' && !holding) {

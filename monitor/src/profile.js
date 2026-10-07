@@ -22,7 +22,10 @@ function ruleFor(profile, retailer) {
 
 /**
  * Where does an item of this retailer get its data?
- * @returns {{ active: boolean, source: 'scrape'|'feed'|null, reason: string|null }}
+ * `trial` is true for a shop that is scraped on trial: nobody has seen it answer a datacenter IP yet. The monitor treats
+ * it carefully until its first good check (one canary request per run, a block puts the shop to rest for hours, and
+ * a blocked trial shop never degrades health or opens a breaker). A configured feed always wins over a trial.
+ * @returns {{ active: boolean, source: 'scrape'|'feed'|null, reason: string|null, trial?: boolean }}
  */
 export function decide(profile, retailer, { feedConfigured = false } = {}) {
   if (!profile) return { active: true, source: 'scrape', reason: null };
@@ -31,7 +34,7 @@ export function decide(profile, retailer, { feedConfigured = false } = {}) {
   const canFeed = rule.feed !== false && feedConfigured;
   const order = rule.prefer === 'feed' ? ['feed', 'scrape'] : ['scrape', 'feed'];
   for (const s of order) {
-    if (s === 'scrape' && canScrape) return { active: true, source: 'scrape', reason: null };
+    if (s === 'scrape' && canScrape) return rule.trial === true ? { active: true, source: 'scrape', reason: null, trial: true } : { active: true, source: 'scrape', reason: null };
     if (s === 'feed' && canFeed) return { active: true, source: 'feed', reason: null };
   }
   const waiting = rule.feed !== false && !feedConfigured ? ` Waiting for a feed: set FEED_URL_${String(retailer).toUpperCase().replace(/[^A-Z0-9]/g, '_')}.` : '';
@@ -48,7 +51,7 @@ export function partition(items, profile, feedRetailers = new Set()) {
   const disabled = [];
   for (const it of items) {
     const d = decide(profile, it.retailer, { feedConfigured: has(it.retailer) });
-    if (d.active) active.push({ ...it, _source: d.source });
+    if (d.active) active.push(d.trial ? { ...it, _source: d.source, _trial: true } : { ...it, _source: d.source });
     else disabled.push({ ...it, _disabledReason: d.reason });
   }
   return { active, disabled };
@@ -60,6 +63,7 @@ export function summarize(active, disabled) {
   for (const it of active) {
     const r = (by[it.retailer] ??= { retailer: it.retailer, source: it._source, items: 0, reason: null });
     r.items++;
+    if (it._trial) r.trial = true;
   }
   for (const it of disabled) {
     const r = (by[it.retailer] ??= { retailer: it.retailer, source: null, items: 0, reason: it._disabledReason });

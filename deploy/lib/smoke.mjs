@@ -5,13 +5,15 @@
 //            Telegram server, a temporary state. It walks through baseline, a restock posted to the STAGING chat
 //            only, a duplicate that must not post, a surge that must be held, a wrong price that must be held and
 //            kept out of the history, the heartbeat, the watchdog decision, and a full backup and restore drill on a
-//            temporary git repository.
+//            temporary git repository. Also the chain loop (deploy/loop.mjs) against a fake GitHub API: one real cycle, the hand-over,
+//            no second chain while a run is queued, and a stop when the workflow is disabled.
 //   live     one dry run against the real shops (reads pages politely, posts nothing, saves nothing), and read-only
 //            Telegram calls (getMe, getChat, getChatMember) for the target channel and the admin chat.
 //
 // Everything here is in the public bundle and needs no npm install.
 import { createServer } from 'node:http';
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
+import { promisify } from 'node:util';
 import { mkdtempSync, rmSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -24,6 +26,9 @@ import { loadOpsConfig } from './config.mjs';
 import { collectSecrets, scrub } from './secrets.mjs';
 import { parseJsonLines } from './log.mjs';
 import { resolveChannel } from './stage.mjs';
+import { createMonitor } from '../../monitor/src/monitor.js';
+import { resolveProfile } from '../../monitor/src/profile.js';
+import { robotsReport } from '../../monitor/src/robots.js';
 
 const MIN = 60000;
 
@@ -59,6 +64,33 @@ export async function startFakeTelegram() {
     sends: (chat) => calls.filter((c) => (c.method === 'sendMessage' || c.method === 'sendPhoto') && (chat === undefined || String(c.body.chat_id) === String(chat))),
     close: () => new Promise((r) => { server.closeAllConnections?.(); server.close(r); }),
   };
+}
+
+/** A tiny GitHub Actions API stand-in on 127.0.0.1 for the chain loop: the run list, the workflow state, the pause variable, dispatch. */
+export async function startFakeGithub() {
+  const api = { runs: [], state: 'active', variable: null, dispatches: [], requests: [] };
+  const server = createServer((req, res) => {
+    let raw = '';
+    req.on('data', (c) => (raw += c));
+    req.on('end', () => {
+      api.requests.push(`${req.method} ${req.url}`);
+      const send = (status, body) => {
+        res.writeHead(status, { 'content-type': 'application/json' });
+        res.end(body === null ? '' : JSON.stringify(body));
+      };
+      if (req.method === 'POST' && /\/dispatches$/.test(req.url)) {
+        api.dispatches.push(JSON.parse(raw || '{}'));
+        return send(204, null);
+      }
+      if (/\/runs\?/.test(req.url)) return send(200, { workflow_runs: api.runs });
+      if (/\/actions\/variables\//.test(req.url)) return api.variable === null ? send(404, { message: 'Not Found' }) : send(200, { name: 'LAGERFUNK_PAUSE', value: api.variable });
+      return send(200, { state: api.state });
+    });
+  });
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  api.base = `http://127.0.0.1:${server.address().port}`;
+  api.close = () => new Promise((r) => { server.closeAllConnections?.(); server.close(r); });
+  return api;
 }
 
 const PSD_URL = 'https://direct.playstation.com/de-de/buy-consoles/playstation5-pro-console-2-tb';
@@ -204,6 +236,28 @@ export async function smokeOffline({ root = ROOT, keep = false } = {}) {
       must(b.actions.some((x) => x.type === 'alert' && /^deadman-recover:/.test(x.key)), 'no recovery notice');
       return null;
     });
+    await step('chain: deploy/loop.mjs runs a real cycle, hands over through the GitHub API, starts no second chain, and stops when the workflow is disabled', async () => {
+      const gh = await startFakeGithub();
+      const JOB_TOKEN = 'smoke-job-token-not-a-real-one';
+      const loopEnv = { PATH: process.env.PATH, HOME: process.env.HOME, PROFILE: 'free', WATCHLIST_FILE: wl, GITHUB_ACTIONS: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch', CHAIN: 'false', MODE: 'status', GITHUB_RUN_ID: '500', GITHUB_REPOSITORY: 'smoke/smoke', GITHUB_TOKEN: JOB_TOKEN, GITHUB_API_URL: gh.base, GITHUB_REF_NAME: 'main', DEFAULT_BRANCH: 'main' };
+      const loop = async () => (await promisify(execFile)(process.execPath, [path.join(root, 'deploy/loop.mjs')], { cwd: root, encoding: 'utf8', env: loopEnv, timeout: 60000 })).stdout;
+      try {
+        const first = await loop();
+        must(/Profile free/.test(first), 'the cycle (deploy/run.mjs) did not run');
+        must(gh.dispatches.length === 1 && gh.dispatches[0].ref === 'main' && gh.dispatches[0].inputs?.chain === 'true', `successor dispatch: ${JSON.stringify(gh.dispatches)}`);
+        gh.runs = [{ id: 501, status: 'queued', event: 'schedule' }];
+        await loop();
+        must(gh.dispatches.length === 1, 'a second chain was dispatched while a run was queued');
+        gh.runs = [];
+        gh.state = 'disabled_manually';
+        const stopped = await loop();
+        must(!/Profile free/.test(stopped) && gh.dispatches.length === 1, 'a disabled workflow still ran a cycle or started a successor');
+        must(!first.includes(JOB_TOKEN) && !stopped.includes(JOB_TOKEN), 'the job token appeared in the log');
+        return { requests: gh.requests.length };
+      } finally {
+        await gh.close();
+      }
+    });
     await step('backup and restore drill on a temporary git repository', async () => {
       const g = path.join(tmp, 'git');
       const gitEnv = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null' };
@@ -294,6 +348,19 @@ export async function smokeLive({ env = process.env, root = ROOT, fetch: fetchIm
       const admin = env.TELEGRAM_ADMIN_CHAT_ID ? await tgCall(env, fetchImpl, 'getChat', { chat_id: env.TELEGRAM_ADMIN_CHAT_ID }).then(() => 'reachable') : 'not set';
       must(admin === 'reachable', 'TELEGRAM_ADMIN_CHAT_ID is not set: nobody would hear an alert');
       return { bot: me.username, channel: ch.channel, admin };
+    });
+    // Information only, never a failure: which of the pages we read does robots.txt close to automated access? One request
+    // per shop host. The owner reads this in the log (ev smoke.step) and decides: leave it, switch the shop to its feed, or off.
+    await step('robots.txt report (information only, never fails)', async () => {
+      try {
+        const raw = JSON.parse(readFileSync(watchlistPath ?? path.join(root, 'watchlist.json'), 'utf8'));
+        const m = createMonitor({ store: { get: async () => null, put: async () => {} }, watchlist: raw, profile: resolveProfile(env.PROFILE), log: { warn() {}, error() {}, log() {} } });
+        const entries = m.items.filter((i) => i._source === 'scrape').map((i) => ({ id: `${i.retailer}:${i.productKey}`, url: i._adapter.request(i).url }));
+        const rep = await robotsReport(entries, { fetch: fetchImpl });
+        return { hosts: rep.length, closed: rep.filter((r) => r.disallowed.length).map((r) => ({ host: r.host, pages: r.disallowed.length, example: r.disallowed[0].id, rule: r.disallowed[0].rule })), unreachable: rep.filter((r) => r.status === 'unknown').map((r) => r.host) };
+      } catch (e) {
+        return { skipped: e.message };
+      }
     });
   } finally {
     rmSync(tmp, { recursive: true, force: true });

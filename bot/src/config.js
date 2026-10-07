@@ -4,6 +4,8 @@ export const DEFAULTS = Object.freeze({
   brand: 'Drop Radar',
   channelUrl: 'https://t.me/dropradar_de',
   impressumUrl: 'https://dropradar.de/impressum',
+  // Empty means: derived from impressumUrl ("/impressum" or "/impressum.html" becomes "/datenschutz" or "/datenschutz.html").
+  datenschutzUrl: '',
 
   // The public Free channel is the product: every alert posts at once.
   // PAID_TIER (off) is the switch for a later private channel. On + INSTANT_CHAT_ID set: private channel gets
@@ -17,6 +19,10 @@ export const DEFAULTS = Object.freeze({
   adminIds: [],
 
   // Affiliate
+  // Amazon affiliate links are OFF unless AMAZON_LINKS=on is set on purpose AND an AMAZON_TAG exists. The PartnerNet policy
+  // (read 2026-10-07) bans price tracking and price alerting on the partner's site, which includes its social channel.
+  // See the Amazon PartnerNet check in the private research notes. Nothing in the code switches this on by itself.
+  amazonLinks: false,
   amazonTag: '',
   awinAffId: '',
   awinMids: {},
@@ -90,6 +96,7 @@ export function loadConfig(env = {}, overrides = {}) {
     brand: str(env.BRAND),
     channelUrl: str(env.CHANNEL_URL),
     impressumUrl: str(env.IMPRESSUM_URL),
+    datenschutzUrl: str(env.DATENSCHUTZ_URL),
     paidTier: bool(env.PAID_TIER, undefined),
     freeDelaySec: num(env.FREE_DELAY_SEC, undefined),
     joinUrl: str(env.JOIN_URL),
@@ -100,6 +107,7 @@ export function loadConfig(env = {}, overrides = {}) {
     discordWebhookUrl: str(env.DISCORD_WEBHOOK_URL),
     discordTier: str(env.DISCORD_TIER),
     adminIds: env.ADMIN_IDS ? list(env.ADMIN_IDS) : undefined,
+    amazonLinks: bool(env.AMAZON_LINKS, undefined),
     amazonTag: str(env.AMAZON_TAG),
     awinAffId: str(env.AWIN_AFFILIATE_ID),
     awinMids: env.AWIN_MIDS ? pairs(env.AWIN_MIDS) : undefined,
@@ -143,7 +151,7 @@ export function configWarnings(cfg) {
   if (!cfg.channels.free.chatId && !cfg.channels.instant.chatId) w.push('Kein Kanal gesetzt (FREE_CHAT_ID)');
   if (cfg.paidTier && !cfg.channels.instant.chatId) w.push('PAID_TIER an, aber INSTANT_CHAT_ID fehlt: alles läuft sofort');
   if (cfg.paidTier && !cfg.joinUrl) w.push('PAID_TIER an, aber JOIN_URL fehlt');
-  if (isPlaceholder(cfg.amazonTag)) w.push('AMAZON_TAG fehlt: Amazon-Links ohne Provision');
+  if (cfg.amazonLinks && isPlaceholder(cfg.amazonTag)) w.push('AMAZON_LINKS an, aber AMAZON_TAG fehlt: Amazon-Links ohne Provision');
   if (isPlaceholder(cfg.awinAffId)) w.push('AWIN_AFFILIATE_ID fehlt: Shop-Links ohne Provision');
   return w;
 }

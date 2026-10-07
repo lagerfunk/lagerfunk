@@ -66,6 +66,11 @@ export function buildLink(rawUrl, retailer, cfg, opts = {}) {
   if (!retailer) return passthrough;
 
   if (retailer.program === 'amazon' || (isAmazonUrl(rawUrl) && retailer.program !== 'none')) {
+    // Amazon affiliate links are off by default (price-alert ban in the PartnerNet policy): never add a tag, remove a foreign one.
+    if (!cfg.amazonLinks) {
+      const url = stripAmazonTag(rawUrl);
+      return { url, affiliate: looksLikeAffiliateUrl(url), program: 'none' };
+    }
     if (opts.privateChannel && retailer.publicOnly !== false) {
       const url = stripAmazonTag(rawUrl);
       return { url, affiliate: looksLikeAffiliateUrl(url), program: 'none' };

@@ -2,6 +2,11 @@
 # GitHub-hosted runners are free and unlimited for public repositories (a private repository on the Free plan gets 2,000
 # minutes a month, and this schedule needs about 5,000). See deploy/README.md for the arithmetic and the limits.
 #
+# The clock is NOT the cron. GitHub's scheduler drops and delays scheduled runs under load (4 of about 48 arrived in one
+# night), so one run stays alive for about 50 minutes, does a cycle every 10 minutes, and starts the next run itself
+# (deploy/loop.mjs, rules in deploy/lib/chain.mjs, numbers in deploy/config/breakers.json "chain"). The cron below is only the
+# safety net that restarts the chain if it ever breaks. A run that finds the chain alive does not start a second one.
+#
 # Every action is pinned to a full commit SHA (the version is in the comment), because this job holds the Telegram bot
 # token and a moving tag could run changed code with it. Same pins as the private agency repository's CI.
 #
@@ -12,13 +17,13 @@ name: lagerfunk
 
 on:
   schedule:
-    # PS5 list and every shop that answers without a proxy: every 10 minutes. Minutes are offset away from :00,
+    # Safety net: restarts the chain if it ever breaks. A run that starts while the chain is alive waits in the concurrency
+    # group and takes over when the chain's run ends, so it never doubles the checks. Minutes are offset away from :00,
     # the start of the hour is when GitHub is busiest and scheduled jobs get delayed or dropped.
     - cron: '4,14,24,34,44,54 * * * *'
-    # Product feeds (Proshop, Cyberport, computeruniverse, Galaxus): once an hour, at :29.
     - cron: '29 * * * *'
-  # Run once right after every passing smoke test, so a new version starts working at once
-  # (and the first run happens even before GitHub's scheduler picks the cron up).
+  # Right after every passing smoke test, so a new version starts working at once: the running chain notices the queued
+  # run, ends after its current cycle and lets it take over.
   workflow_run:
     workflows: [lagerfunk-smoke]
     types: [completed]
@@ -45,12 +50,19 @@ on:
         description: 'Post the posts a circuit breaker held (only those under an hour old)'
         type: boolean
         default: false
+      chain:
+        description: 'Start the chain: keep running for about 50 minutes and hand over to the next run (what the cron does). Off = one cycle of the chosen mode, then make sure a chain exists'
+        type: boolean
+        default: false
 
-# The job token may push the "state" branch and nothing else.
+# The job token may push the "state" branch (contents) and list, start and cancel runs of this workflow (actions): the loop starts
+# the next run with it. A workflow_dispatch made with the job token DOES start a run (the documented exception).
 permissions:
   contents: write
+  actions: write
 
-# One run at a time. A run that waits is replaced by a newer one, which is what we want for a poller.
+# One run at a time, and a run that is waiting never cancels the one that is running (no cancel-in-progress): the chain
+# run keeps its cycles, the next run starts when it ends. Of several waiting runs only the newest is kept.
 concurrency:
   group: lagerfunk
   cancel-in-progress: false
@@ -59,7 +71,7 @@ jobs:
   run:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 9
+    timeout-minutes: 58 # loop 50 + hand-over lead + start-up, under the hour; breakers.json "chain" is checked against this
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -76,19 +88,30 @@ jobs:
           fi
           echo "CODE_SHA=$(git rev-parse --short=7 HEAD)" >> "$GITHUB_ENV"
       - name: Run
-        run: node deploy/run.mjs
+        # An older tag (a rollback) has no loop.mjs: it then runs one plain cycle, as before the chain.
+        run: |
+          if [ -f deploy/loop.mjs ]; then exec node deploy/loop.mjs; fi
+          echo "::notice::this version has no deploy/loop.mjs: one plain cycle, no chain"
+          exec node deploy/run.mjs
         env:
           MODE: ${{ inputs.mode || (github.event.schedule == '29 * * * *' && 'feeds' || 'watch') }}
           DRY_RUN: ${{ inputs.dry_run }}
           SILENT: ${{ inputs.silent }}
           FORCE: ${{ inputs.force }}
           RELEASE_HELD: ${{ inputs.release_held }}
+          # The chain: loop.mjs lists, starts and reads this workflow's runs with the job token. A manual run without "chain" is one cycle.
+          CHAIN: ${{ inputs.chain }}
+          GITHUB_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           PROFILE: free
           # Where posts go: "staging" (the private test channel, the default until promoted) or "public".
           LAGERFUNK_CHANNEL: ${{ vars.LAGERFUNK_CHANNEL || 'staging' }}
-          # Any value here holds every post (checks go on). For incidents: Settings, Variables, LAGERFUNK_PAUSE = 1.
+          # 1 (or true, yes, on) here holds every post (checks go on). For incidents: Settings, Variables, LAGERFUNK_PAUSE = 1.
           LAGERFUNK_PAUSE: ${{ vars.LAGERFUNK_PAUSE }}
           # Telegram. FREE_CHAT_ID, BRAND and the links default to brand.json (@lagerfunk).
+          # Legal links in the channel texts default to <siteUrl>/impressum and /datenschutz from brand.json. Variables, only needed to override (for example ".html" addresses).
+          IMPRESSUM_URL: ${{ vars.IMPRESSUM_URL }}
+          DATENSCHUTZ_URL: ${{ vars.DATENSCHUTZ_URL }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID_STAGING: ${{ secrets.TELEGRAM_CHAT_ID_STAGING }}
           TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}

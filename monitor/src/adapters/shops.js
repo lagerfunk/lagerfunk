@@ -89,6 +89,20 @@ export const cyberport = jsonLdShop({
   id: 'cyberport', name: 'Cyberport', hosts: ['cyberport.de'], officialSeller: /cyberport/i, trustUnknownSeller: true, proxy: 'always', earlyStop: false,
 });
 
+// Proshop DE, computeruniverse and Caseking: single-seller PC and console shops with schema.org offers in the page.
+// Never checked from a datacenter IP when these adapters were written (2026-10-07): the free profile scrapes them
+// on trial (see monitor/config/profiles.json, rule trial:true) until their affiliate feed exists. The seller is the
+// shop itself; an offer that names another seller does not count as the retailer's own.
+export const proshop = jsonLdShop({
+  id: 'proshop', name: 'Proshop', hosts: ['proshop.de'], officialSeller: /proshop/i, trustUnknownSeller: true, proxy: 'never',
+});
+export const computeruniverse = jsonLdShop({
+  id: 'computeruniverse', name: 'computeruniverse', hosts: ['computeruniverse.net'], officialSeller: /computer ?universe/i, trustUnknownSeller: true, proxy: 'never',
+});
+export const caseking = jsonLdShop({
+  id: 'caseking', name: 'Caseking', hosts: ['caseking.de'], officialSeller: /caseking/i, trustUnknownSeller: true, proxy: 'never',
+});
+
 // Smyths Toys DE (SAP Commerce). Three fetch attempts through a residential proxy failed on 2026-10-04.
 export const smyths = jsonLdShop({
   id: 'smyths', name: 'Smyths Toys', hosts: ['smythstoys.com'], officialSeller: /smyths/i, trustUnknownSeller: true, proxy: 'always', earlyStop: false,

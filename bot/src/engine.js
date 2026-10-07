@@ -111,6 +111,7 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
     }
     ours.chatMap = { ...(theirs.chatMap || {}), ...ours.chatMap };
     ours.pinned = { ...(theirs.pinned || {}), ...(ours.pinned || {}) };
+    ours.pinnedChat = { ...(theirs.pinnedChat || {}), ...(ours.pinnedChat || {}) };
     ours.updOffset = Math.max(ours.updOffset || 0, theirs.updOffset || 0);
     if (theirs.lease && theirs.lease.owner !== me && !ours.lease) ours.lease = theirs.lease;
   }
@@ -574,7 +575,10 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
           lines.push('Beschreibung: gesetzt');
         }
         if (pin && t === 'free') {
-          const done = (await load()).state.pinned?.[t];
+          // "Done" is per chat: the same bot pins in the private test channel first and in the public one after promotion.
+          // A state from before this field existed has no chat recorded and counts as not done (one more pin in a test channel is harmless).
+          const st = (await load()).state;
+          const done = st.pinned?.[t] && String(st.pinnedChat?.[t] ?? '') === String(chatId);
           if (done) lines.push('Info-Post: schon angepinnt');
           else {
             const m = await tg.sendMessage({ chat_id: chatId, text: pinnedPost(cfg), parse_mode: 'HTML', link_preview_options: { is_disabled: true } });
@@ -587,6 +591,7 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
             await serial(async () => {
               const ctx = await load();
               ctx.state.pinned = { ...(ctx.state.pinned || {}), [t]: m.message_id };
+              ctx.state.pinnedChat = { ...(ctx.state.pinnedChat || {}), [t]: String(chatId) };
               await persist(ctx);
             });
           }

@@ -64,5 +64,15 @@
     "minGoodRuns24h": 12,
     "maxFailedRuns24h": 2,
     "maxOpenBreakers": 0
+  },
+  "chain": {
+    "loopMinutes": 50,
+    "intervalMinutes": 10,
+    "feedsEveryMinutes": 60,
+    "feedsSlackMinutes": 3,
+    "handoffLeadSeconds": 90,
+    "cycleTimeoutMinutes": 8,
+    "maxFailedCycles": 3,
+    "pauseStopsChain": true
   }
 }

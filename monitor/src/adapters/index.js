@@ -2,10 +2,10 @@ import amazon from './amazon.js';
 import psdirect from './psdirect.js';
 import nvidia from './nvidia.js';
 import { mediamarkt, saturn } from './mediamarkt.js';
-import { otto, mueller, notebooksbilliger, alternate, galaxus, euronics, expert, cyberport, smyths, generic } from './shops.js';
+import { otto, mueller, notebooksbilliger, alternate, galaxus, euronics, expert, cyberport, smyths, proshop, computeruniverse, caseking, generic } from './shops.js';
 import { hostOf } from '../util.js';
 
-export const ADAPTERS = [amazon, mediamarkt, saturn, psdirect, nvidia, otto, mueller, notebooksbilliger, alternate, galaxus, euronics, expert, cyberport, smyths];
+export const ADAPTERS = [amazon, mediamarkt, saturn, psdirect, nvidia, otto, mueller, notebooksbilliger, alternate, galaxus, euronics, expert, cyberport, smyths, proshop, computeruniverse, caseking];
 export { generic };
 
 const ALIASES = { nbb: 'notebooksbilliger', 'media markt': 'mediamarkt', 'playstation direct': 'psdirect', 'ps direct': 'psdirect', 'müller': 'mueller', smythstoys: 'smyths' };

@@ -12,6 +12,20 @@ import { createFeedReader } from './feeds/index.js';
 
 export const ALERT_TTL_SEC = 7 * 86400;
 
+// Two small pieces of memory that keep a long watchlist polite (both live in the store, both are tiny):
+//  * "dead": a product page that answers 404 is not asked again at once. 1 h, 6 h, 24 h, then 24 h again and 72 h from the
+//    sixth miss. Any good answer clears it. Fix the URL in the watchlist and the new URL is checked at once.
+//  * "trial": a shop that no one has seen answer a datacenter IP yet (profile rule trial:true). One canary request per
+//    run until it answers, then it is an ordinary shop. A block puts it to rest 6 h, 24 h, 72 h, then 7 days.
+export const DEAD_KEY = 'dead';
+export const TRIAL_KEY = 'trial';
+export const DEAD_BACKOFF_H = [1, 6, 24, 24, 24, 72];
+export const TRIAL_REST_H = [6, 24, 72, 168];
+const HOUR_MS = 3600000;
+const deadId = (it) => `${it.retailer}|${it.productKey}|${hash32(it.url).toString(36)}`;
+/** Errors that say something about the whole shop, not about one product page. */
+export const shopLevelError = (e) => isBlockError(e) || e === 'queue_active' || e === 'timeout' || /^network/.test(String(e ?? '')) || /^http_4\d\d$/.test(String(e ?? ''));
+
 function prepareItems(raw) {
   const list = Array.isArray(raw) ? raw : raw?.items ?? [];
   return list
@@ -61,6 +75,7 @@ export function createMonitor({
   random = Math.random,
   healthFlushMs = 10 * 60000,
   defaultShipDays = 3,
+  learnNew = false,
   profile = null,
   feeds = null,
   feedTimeoutMs,
@@ -85,6 +100,10 @@ export function createMonitor({
   let loaded = false;
   let lastHealthFlush = 0;
   let prevTick = null;
+  let dead = {};
+  let trial = {};
+  let auxDirty = false;
+  let lastRun = { learned: [], restingTrial: [], deadSkipped: 0, trialBlocked: [], trialProven: [] };
 
   async function cached(key) {
     if (cache.has(key)) return cache.get(key);
@@ -105,7 +124,35 @@ export function createMonitor({
     } catch (e) {
       log.warn?.(`health load failed: ${e.message}`);
     }
+    try {
+      dead = (await store.get(DEAD_KEY)) ?? {};
+      trial = (await store.get(TRIAL_KEY)) ?? {};
+    } catch (e) {
+      log.warn?.(`dead/trial load failed: ${e.message}`);
+    }
   }
+
+  async function flushAux() {
+    if (!auxDirty) return;
+    auxDirty = false;
+    // a page whose URL was fixed or removed from the watchlist is a different item: forget the old one
+    const known = new Set(items.map(deadId));
+    for (const k of Object.keys(dead)) if (!known.has(k)) delete dead[k];
+    await store.put(DEAD_KEY, dead);
+    await store.put(TRIAL_KEY, trial);
+  }
+  const markDead = (it) => {
+    const id = deadId(it);
+    const n = (dead[id]?.n ?? 0) + 1;
+    dead[id] = { n, until: now() + DEAD_BACKOFF_H[Math.min(n, DEAD_BACKOFF_H.length) - 1] * HOUR_MS, at: new Date(now()).toISOString(), id: `${it.retailer}:${it.productKey}` };
+    auxDirty = true;
+  };
+  const clearDead = (it) => {
+    if (dead[deadId(it)]) {
+      delete dead[deadId(it)];
+      auxDirty = true;
+    }
+  };
 
   async function flushHealth(force = false) {
     const t = now();
@@ -185,7 +232,16 @@ export function createMonitor({
     const sKey = stateKey(item.retailer, item.productKey);
     const [histRaw, prev] = await Promise.all([cached(hKey), cached(sKey)]);
     const hist = histRaw ? summarize(histRaw, t) : null;
-    const { alert, state, changed, flags } = evaluate({ item, check, prev, hist, adapter: item._adapter, now: t, options });
+    const evaluated = evaluate({ item, check, prev, hist, adapter: item._adapter, now: t, options });
+    const { state, changed } = evaluated;
+    let { alert, flags } = evaluated;
+    // A product seen for the first time only teaches us its state: a newly added item that happens to be in stock must not
+    // post "wieder da" for something that has been on sale for weeks. Set announceFirst:true on an item to opt out.
+    if (alert && !prev && learnNew && item.announceFirst !== true) {
+      lastRun.learned.push(`${item.retailer}:${item.productKey}`);
+      alert = null;
+      flags = { ...flags, learned: true };
+    }
 
     // History starts at the very first check, even when sold out, so 30 days of coverage accrue from deployment.
     if (check.ok || !histRaw) {
@@ -212,13 +268,51 @@ export function createMonitor({
     async function worker() {
       while (idx < lanes.length) {
         const lane = lanes[idx++];
+        const retailer = lane[0].retailer;
+        // An unproven trial shop: one canary request per run, and it rests after a block.
+        const onTrial = lane[0]._trial === true && !trial[retailer]?.proven;
+        if (onTrial && (trial[retailer]?.until ?? 0) > now()) {
+          lastRun.restingTrial.push(retailer);
+          continue;
+        }
+        let proven = !onTrial;
+        let soft = 0;
         for (const it of lane) {
-          if (jitterMs > 0) await sleep(Math.floor(random() * jitterMs));
           if (health.isPaused(it.retailer, now())) continue;
+          if ((dead[deadId(it)]?.until ?? 0) > now()) {
+            lastRun.deadSkipped++;
+            continue;
+          }
+          if (jitterMs > 0) await sleep(Math.floor(random() * jitterMs));
           try {
+            if (!proven) {
+              const check = await probe(it);
+              if (check.ok) {
+                proven = true;
+                trial[retailer] = { proven: true, since: check.checkedAt };
+                auxDirty = true;
+                lastRun.trialProven.push(retailer);
+                const r = await processCheck(it, check);
+                checks.push(r.check);
+                if (r.alert) alerts.push(r.alert);
+                clearDead(it);
+              } else if (check.error === 'not_found') {
+                markDead(it); // one dead page says nothing about the shop: try the next item
+              } else if (shopLevelError(check.error) || ++soft >= 3) {
+                const tries = (trial[retailer]?.tries ?? 0) + 1;
+                trial[retailer] = { proven: false, tries, error: check.error, at: check.checkedAt, until: now() + TRIAL_REST_H[Math.min(tries, TRIAL_REST_H.length) - 1] * HOUR_MS };
+                auxDirty = true;
+                lastRun.trialBlocked.push(retailer);
+                log.warn?.(`[trial] ${retailer} did not answer (${check.error}): resting until ${new Date(trial[retailer].until).toISOString()}`);
+                break;
+              }
+              continue;
+            }
             const r = await checkItem(it);
             checks.push(r.check);
             if (r.alert) alerts.push(r.alert);
+            if (r.check.error === 'not_found') markDead(it);
+            else if (r.check.ok) clearDead(it);
           } catch (e) {
             log.error?.(`check ${it.retailer}/${it.productKey} crashed: ${e.stack ?? e}`);
           }
@@ -227,6 +321,7 @@ export function createMonitor({
     }
     await Promise.all(Array.from({ length: Math.min(concurrency, lanes.length || 1) }, worker));
     await flushHealth(false);
+    await flushAux();
     if (alerts.length && onAlerts) await onAlerts(alerts);
     return { checks, alerts };
   }
@@ -302,6 +397,7 @@ export function createMonitor({
      */
     async tick({ tickMs = 60000, since = null, source = null, skip = null } = {}) {
       await ensureLoaded();
+      lastRun = { learned: [], restingTrial: [], deadSkipped: 0, trialBlocked: [], trialProven: [] };
       const t = now();
       const prevT = Number.isFinite(since) && since < t ? since : prevTick ?? t - tickMs;
       prevTick = t;
@@ -317,12 +413,19 @@ export function createMonitor({
     /** Check every item once, ignoring intervals (CLI --once). source: "scrape" | "feed" | omitted for both. */
     async runAll({ source = null, force = false } = {}) {
       await ensureLoaded();
+      lastRun = { learned: [], restingTrial: [], deadSkipped: 0, trialBlocked: [], trialProven: [] };
       let out = { checks: [], alerts: [], feeds: [] };
       if (source !== 'feed') out = merge(out, await runItems(items.filter((it) => !health.isPaused(it.retailer, now()))));
       if (source !== 'scrape' && feedReader) out = merge(out, await runFeeds({ force }));
       return out;
     },
     runFeeds,
+    /** What the last tick or runAll did besides plain checks: learned new items, trial shops, dead pages skipped. */
+    lastRun: () => structuredClone(lastRun),
+    /** Product pages that answered 404 and are resting: [{ id, n, until }]. */
+    deadItems: () => Object.entries(dead).filter(([k, d]) => d.until > now() && items.some((it) => deadId(it) === k)).map(([, d]) => d).map((d) => ({ id: d.id, n: d.n, until: new Date(d.until).toISOString() })).sort((a, b) => a.id.localeCompare(b.id)),
+    /** Trial shops: { shop: { proven, error, until, tries } }. */
+    trialShops: () => structuredClone(trial),
     /** Process a Check produced elsewhere (tests, other adapters) exactly like a scraped one. */
     ingestCheck: processCheck,
     checkItem,

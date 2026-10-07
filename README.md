@@ -3,8 +3,10 @@
 Public on purpose: GitHub Actions is free and unlimited for public repositories. It checks shop prices and stock for
 the Telegram channel [t.me/lagerfunk](https://t.me/lagerfunk) and posts restocks and deals.
 
-- `.github/workflows/lagerfunk.yml` runs `deploy/run.mjs` every 10 minutes (shops) and every hour (product feeds).
-  It runs the code at the tag `last-known-good`, which only the smoke test moves.
+- `.github/workflows/lagerfunk.yml` runs `deploy/loop.mjs`: one run stays alive for about 50 minutes, checks the shops
+  every 10 minutes (and the product feeds once an hour) with `deploy/run.mjs`, then starts the next run itself. The cron
+  schedule only restarts that chain if it ever breaks. It runs the code at the tag `last-known-good`, which only the
+  smoke test moves.
 - `.github/workflows/watchdog.yml` checks every hour (and after any failed run) that a good run happened in the last
   40 minutes, alerts the owner's admin chat, re-enables a disabled schedule, backs up the state daily and sends a digest.
 - `.github/workflows/smoke.yml` tests every push to main (fixtures, then a live dry run) before it goes live.
@@ -29,7 +31,8 @@ Posts that contain affiliate links start with "Anzeige". Prices are shown with t
    its secret exists.
 3. Posts go to the staging channel until the variable `LAGERFUNK_CHANNEL` is set to `public` (Settings, Variables).
    `LAGERFUNK_PAUSE` = 1 holds every post during an incident.
-4. First run: Actions, lagerfunk, Run workflow, mode `all`, tick "silent" (learns prices, posts nothing). Then the schedule runs by itself.
+4. First run: Actions, lagerfunk, Run workflow, mode `all`, tick "silent" (learns prices, posts nothing). It then starts the chain by itself.
+   To stop the chain: set the variable `LAGERFUNK_PAUSE` or disable the workflow. To restart it: Run workflow with "chain" ticked.
 
 Without `TELEGRAM_BOT_TOKEN` a normal run stops with a clear error. A silent or dry run works without any secret.
 

@@ -19,7 +19,7 @@
 //   admin      { sent, pending, failed }
 //   run.code   the commit that actually ran (the last-known-good tag), next to run.sha (main)
 
-export const MAX_ACTIVITY_LINES = 1008; // 6 days at 168 runs a day. About 0.6 MB typical, 1.5 MB at the largest a line gets
+export const MAX_ACTIVITY_LINES = 1008; // 7 days at 144 cycles a day (one every 10 minutes, the hourly feeds ride in one of them). About 0.6 MB typical, 1.5 MB at the largest a line gets
 export const DAY = 86400000;
 
 export function buildActivity({ at, mode, profile, durationMs, scrapeChecks = [], feedChecks = [], alerts = [], bot = null, feeds = [], shops = {}, state = {}, run = {}, notes = [], ok = true, extra = {} }) {
@@ -30,7 +30,7 @@ export function buildActivity({ at, mode, profile, durationMs, scrapeChecks = []
     const k = `${c.retailer}\u0000${c.error ?? 'unknown'}`;
     grouped.set(k, (grouped.get(k) ?? 0) + 1);
   }
-  const byRetailer = {}; // compact on purpose: [ok, failed] per shop keeps 6 days of lines under the 2 MB budget
+  const byRetailer = {}; // compact on purpose: [ok, failed] per shop keeps the week of lines under the 2 MB budget
   for (const c of checks) {
     const r = (byRetailer[c.retailer] ??= [0, 0]);
     r[c.ok ? 0 : 1] += 1;

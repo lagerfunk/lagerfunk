@@ -1179,6 +1179,253 @@
    "threshold": 127.86,
    "intervalSec": 3600,
    "title": "Logitech G Pro X 2 Lightspeed black (981-001263)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-kingston-fury-beast-6000-cl30",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Kingston-FURY/DIMM-64-GB-DDR5-6000-2x-32-GB-Dual-Kit-Arbeitsspeicher/html/product/100052231",
+   "threshold": 1061.1,
+   "intervalSec": 1800,
+   "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-team-delta-rgb-6000-cl38",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Team-Group/DIMM-64-GB-DDR5-6000-2x-32-GB-Dual-Kit-Arbeitsspeicher/html/product/1886607",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Team Group T-Force Delta RGB DDR5-6000 CL38 64GB kit, white (FF4D564G6000HC38ADC01)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-patriot-viper-venom-6000-cl36",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Patriot/DIMM-64-GB-DDR5-6000-(2x-32-GB)-Dual-Kit-Arbeitsspeicher/html/product/100006896",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Patriot Viper Venom DDR5-6000 CL36 64GB kit (PVV564G600C36K)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-gskill-trident-z5-6000-cl32",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/G-Skill/DIMM-64-GB-DDR5-6000-Kit-Arbeitsspeicher/html/product/1863753",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "G.Skill Trident Z5 DDR5-6000 CL32 64GB kit (F5-6000J3238G32GX2-TZ5K)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-corsair-vengeance-6000-cl40",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Corsair/DIMM-64-GB-DDR5-6000-Kit-Arbeitsspeicher/html/product/1881188",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Corsair Vengeance DDR5-6000 CL40 64GB kit (CMK64GX5M2B6000Z40)"
+  },
+  {
+   "productKey": "ram-ddr5-64gb-crucial-pro-oc-6000-cl40",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Crucial/DIMM-64-GB-DDR5-6000-(2x-32-GB)-Dual-Kit-Arbeitsspeicher/html/product/100114534",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Crucial Pro OC DDR5-6000 CL40 64GB kit (CP2K32G60C40U5B)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-patriot-viper-venom-6000-cl30",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Patriot/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/100063948",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Patriot Viper Venom DDR5-6000 CL30 32GB kit (PVV532G600C30K)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-team-delta-rgb-6000-cl30",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Team-Group/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1853819",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Team Group T-Force Delta RGB DDR5-6000 CL30 32GB kit, black (FF3D532G6000HC30DC01)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-gskill-flare-x5-6000-cl30",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/G-Skill/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1906541",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "G.Skill Flare X5 DDR5-6000 CL30 32GB kit (F5-6000J3038F16GX2-FX5)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-adata-lancer-blade-6000-cl30",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/ADATA/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/100011564",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "ADATA XPG Lancer Blade RGB DDR5-6000 CL30 32GB kit (AX5U6000C3016G-DTLABRBK)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-kingston-fury-beast-5600-cl40",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Kingston-FURY/DIMM-32-GB-DDR5-5600-Kit-Arbeitsspeicher/html/product/1805062",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Kingston FURY Beast DDR5-5600 CL40 32GB kit (KF556C40BBK2-32)"
+  },
+  {
+   "productKey": "ram-ddr5-32gb-patriot-viper-venom-5600-cl36",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Patriot/DIMM-32-GB-DDR5-5600-(2x-16-GB)-Dual-Kit-Arbeitsspeicher/html/product/1855435",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Patriot Viper Venom DDR5-5600 CL36 32GB kit (PVV532G560C36K)"
+  },
+  {
+   "productKey": "ram-ddr4-32gb-corsair-vengeance-lpx-3200-cl16",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Corsair/DIMM-32-GB-DDR4-3200-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1548588",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Corsair Vengeance LPX DDR4-3200 CL16 32GB kit (CMK32GX4M2E3200C16)"
+  },
+  {
+   "productKey": "ram-ddr4-32gb-kingston-fury-beast-3200-cl16",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Kingston-FURY/DIMM-32-GB-DDR4-3200-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1765499",
+   "intervalSec": 1800,
+   "minDropPct": 0.1,
+   "minDropEur": 40,
+   "title": "Kingston FURY Beast DDR4-3200 CL16 32GB kit (KF432C16BB1K2/32)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-1tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/990-PRO-1-TB-SSD/html/product/1864239",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Samsung 990 PRO 1TB PCIe 4.0 (MZ-V9P1T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-2tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/990-PRO-2-TB-SSD/html/product/1864243",
+   "threshold": 302.63,
+   "intervalSec": 1800,
+   "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990pro-4tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/990-PRO-4-TB-SSD/html/product/100011336",
+   "threshold": 535.92,
+   "intervalSec": 1800,
+   "title": "Samsung 990 PRO 4TB NVMe (MZ-V9P4T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-9100pro-1tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/9100-PRO-1-TB-SSD/html/product/100118126",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Samsung 9100 PRO 1TB PCIe 5.0 (MZ-VAP1T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-9100pro-4tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/9100-PRO-4-TB-SSD/html/product/100118135",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Samsung 9100 PRO 4TB PCIe 5.0 (MZ-VAP4T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990evo-plus-1tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/990-EVO-Plus-1-TB-SSD/html/product/100080160",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Samsung 990 EVO Plus 1TB PCIe 4.0 x4 / 5.0 x2 (MZ-V9S1T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990evo-plus-2tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/990-EVO-Plus-2-TB-SSD/html/product/100080170",
+   "threshold": 263.12,
+   "intervalSec": 1800,
+   "title": "Samsung 990 EVO Plus 2TB NVMe (MZ-V9S2T0BW)"
+  },
+  {
+   "productKey": "ssd-samsung-990evo-plus-4tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Samsung/990-EVO-Plus-4-TB-SSD/html/product/100080174",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Samsung 990 EVO Plus 4TB PCIe 4.0 x4 / 5.0 x2 (MZ-V9S4T0BW)"
+  },
+  {
+   "productKey": "ssd-wd-black-sn850x-1tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/SanDisk/Black-SN850X-NVMe-SSD-1-TB/html/product/1862682",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "WD_BLACK SN850X 1TB PCIe 4.0, no heatsink (WDS100T2X0E)"
+  },
+  {
+   "productKey": "ssd-wd-black-sn850x-2tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/SanDisk/Black-SN850X-NVMe-SSD-2-TB/html/product/1862684",
+   "threshold": 299.19,
+   "intervalSec": 1800,
+   "title": "WD_BLACK SN850X 2TB NVMe (WDS200T2X0E)"
+  },
+  {
+   "productKey": "ssd-crucial-t500-1tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Crucial/T500-1-TB-SSD/html/product/100022304",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Crucial T500 1TB PCIe 4.0 with heatsink (CT1000T500SSD5)"
+  },
+  {
+   "productKey": "ssd-kingston-kc3000-1tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Kingston/KC3000-1024-GB-SSD/html/product/1791577",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Kingston KC3000 1TB PCIe 4.0 (SKC3000S/1024G)"
+  },
+  {
+   "productKey": "ssd-kingston-kc3000-2tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Kingston/KC3000-2048-GB-SSD/html/product/1791579",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Kingston KC3000 2TB PCIe 4.0 (SKC3000D/2048G)"
+  },
+  {
+   "productKey": "ssd-kingston-nv3-2tb",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Kingston/NV3-2-TB-SSD/html/product/100070711",
+   "intervalSec": 1800,
+   "minDropPct": 0.12,
+   "minDropEur": 30,
+   "title": "Kingston NV3 2TB PCIe 4.0 M.2 2280 (SNV3S/2000G)"
   }
  ]
 }
