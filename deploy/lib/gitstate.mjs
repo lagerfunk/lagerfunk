@@ -51,7 +51,7 @@ const retryable = (e) => !/stale info|rejected|non-fast-forward|protected branch
  * Replace the state branch with one commit holding `files` ({ name: text }). Refuses to overwrite a branch that
  * somebody else changed since we read it (force-with-lease on the sha we fetched).
  */
-export async function pushState({ git, files, expectSha = null, message = 'state', remote = 'origin', branch = STATE_BRANCH, author = { name: 'lagerfunk-runner', email: 'runner@users.noreply.github.com' }, sleep = (ms) => new Promise((r) => setTimeout(r, ms)), attempts = 4 } = {}) {
+export async function pushState({ git, files, expectSha = null, message = 'state', remote = 'origin', branch = STATE_BRANCH, author = { name: 'lagerfunk-runner', email: 'runner@users.noreply.github.com' }, sleep = (ms) => new Promise((r) => setTimeout(r, ms)), attempts = 6 } = {}) {
   const entries = [];
   for (const [name, text] of Object.entries(files)) {
     if (text === null || text === undefined) continue;
@@ -69,6 +69,8 @@ export async function pushState({ git, files, expectSha = null, message = 'state
     } catch (e) {
       lastErr = e;
       if (!retryable(e) || i === attempts) break;
+      // 2, 4, 8, 16, 32 s: about one minute in all. GitHub answered "Internal Server Error" for longer than the old
+      // 14 s window twice on 2026-10-07 (incident 2026-10-07-state-push-500), and each time one cycle's state was lost.
       await sleep(2000 * 2 ** (i - 1));
     }
   }
