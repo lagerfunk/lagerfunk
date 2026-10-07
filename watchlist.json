@@ -1222,6 +1222,7 @@
    "intervalSec": 1800,
    "minDropPct": 0.1,
    "minDropEur": 40,
+   "enabled": false,
    "title": "Corsair Vengeance DDR5-6000 CL40 64GB kit (CMK64GX5M2B6000Z40)"
   },
   {
@@ -1231,6 +1232,7 @@
    "intervalSec": 1800,
    "minDropPct": 0.1,
    "minDropEur": 40,
+   "enabled": false,
    "title": "Crucial Pro OC DDR5-6000 CL40 64GB kit (CP2K32G60C40U5B)"
   },
   {
@@ -1398,6 +1400,7 @@
    "intervalSec": 1800,
    "minDropPct": 0.12,
    "minDropEur": 30,
+   "enabled": false,
    "title": "Crucial T500 1TB PCIe 4.0 with heatsink (CT1000T500SSD5)"
   },
   {
