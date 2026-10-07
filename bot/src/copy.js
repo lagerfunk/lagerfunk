@@ -13,7 +13,7 @@ export const datenschutzUrl = (cfg) => cfg?.datenschutzUrl || String(cfg?.impres
 
 export function channelDescription(cfg) {
   const parts = [
-    'PS5 Pro, GTA VI, Grafikkarten: Restocks und Preisalarme aus deutschen Shops.',
+    'PS5 Pro, Grafikkarten, RAM und SSDs: Restocks und Preisalarme aus deutschen Shops.',
     isAmazonPartner(cfg) ? 'Enthält Affiliate-Links (Anzeige).' : 'Affiliate-Links sind als Anzeige markiert.',
     isAmazonPartner(cfg) ? AMAZON_LINE : '',
   ].filter(Boolean).join(' ');
@@ -30,6 +30,7 @@ export function pinnedPost(cfg) {
   return [
     `📡 <b>${cfg.brand}</b>`,
     'Restocks, Preisalarme und Lieferdaten für PS5 Pro, GTA VI und Grafikkarten aus deutschen Shops. Jeder Fund kommt ohne künstliche Verzögerung hierher.',
+    'Neu: RAM und SSDs. Preis, Shop und Stand bei jedem Fund, jeden Montag der Preisstand der wichtigsten Kits.',
     '',
     `🟢 Wieder da · 🚚 Lieferung vor GTA VI · 🔔 Preis-Alarm${cfg.dailyReport?.enabled ? ` · 📊 Tagesbericht um ${cfg.dailyReport.hour} Uhr` : ''}`,
     '',
