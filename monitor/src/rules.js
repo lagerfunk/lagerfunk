@@ -4,6 +4,10 @@ import { DAY_MS } from './util.js';
 
 export const DEFAULTS = {
   shipsBy: '2026-11-18', // the day before GTA VI (2026-11-19)
+  // "Lieferung vor GTA VI" only means something for consoles and games. RAM, SSDs, GPUs and the rest never get a
+  // ships_before alert (found in staging 2026-10-08: an always-in-stock SSD was posted as "ships before GTA VI").
+  // Items without a category keep the old behaviour. An explicit item.shipsBy always applies.
+  shipsByCategories: ['console', 'game'],
   rearmMinutes: 20, // an offer must be gone this long before a new restock alert (stops flapping spam)
   minDropPct: 0.03,
   minDropEur: 10,
@@ -37,13 +41,14 @@ export function evaluate({ item, check, prev, hist, adapter, now, options = {} }
   state.lastError = null;
 
   const threshold = num(item.threshold);
-  const shipsBy = item.shipsBy ?? o.shipsBy;
+  const gtaRelevant = !item.category || o.shipsByCategories.includes(item.category);
+  const shipsBy = item.shipsBy ?? (gtaRelevant ? o.shipsBy : null);
   const price = check.price;
   const seller = sellerOk(check, adapter);
   const underThreshold = threshold === null || (price !== null && price <= threshold);
   const buyable = check.inStock === true && price !== null && seller;
   const eligible = buyable && underThreshold;
-  const shipsEligible = eligible && !!check.deliveryEstimate && check.deliveryEstimate <= shipsBy;
+  const shipsEligible = eligible && !!shipsBy && !!check.deliveryEstimate && check.deliveryEstimate <= shipsBy;
 
   const base = {
     productKey: check.productKey,
