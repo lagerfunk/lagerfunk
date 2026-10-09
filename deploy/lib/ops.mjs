@@ -1,11 +1,20 @@
 // Operations an AI session (or the owner) runs by hand: rollback, tag a good version, restore, back up, retract a
 // false post, notify, promote or demote staging, print the status. Entry point: deploy/ops.mjs. Every function takes
 // its git runner, fetch and clock as arguments so the tests drive them against real local repositories.
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { fetchState } from './gitstate.mjs';
 import { parseState } from './store.mjs';
 import { parseActivity } from './activity.mjs';
 import { promotionGate, setChannel } from './stage.mjs';
 import { LEDGER_KEY, HELD_KEY, BREAKERS_KEY } from './breakers.mjs';
+import { loadOpsConfig } from './config.mjs';
+import { MARKET_LOG_KEY } from './marketlog.mjs';
+import { MARKET_REPORT_KEY, loadReportConfig, loadReportState, reportPlan, weekOf, buildReport, renderTelegram, reportItems, writeReportFiles } from './marketreport.mjs';
+import { botEnv, linkExpectations, readBrand, reportLinkFor } from './runner.mjs';
+import { loadConfig } from '../../bot/src/config.js';
+import { resolveRetailer } from '../../bot/src/affiliate.js';
+import { partitionWatchlist } from '../../monitor/src/monitor.js';
 
 export const GOOD_TAG = 'last-known-good';
 export const GOOD_PREFIX = 'lkg-';
@@ -137,4 +146,78 @@ export async function promote({ git, exec, cfg, now = Date.now(), force = false,
 export async function demote({ exec, repo = null, dryRun = false }) {
   const r = await setChannel({ to: 'staging', repo, exec, dryRun });
   return { ok: r.ok, command: r.command, error: r.error };
+}
+
+/** The watch items the report knows: watchlist.json in a runner repository, else the two source lists of the agency tree. */
+export function loadReportWatchlist(root, file = null) {
+  const files = file ? [file] : existsSync(path.join(root, 'watchlist.json')) ? [path.join(root, 'watchlist.json')] : ['monitor/watchlist.example.json', 'watchlist/watchlist.json'].map((f) => path.join(root, f)).filter(existsSync);
+  if (!files.length) throw new Error('no watchlist found: pass --watchlist <file>');
+  const raw = files.flatMap((f) => {
+    const j = JSON.parse(readFileSync(f, 'utf8'));
+    return Array.isArray(j) ? j : j.items ?? [];
+  });
+  // the monitor's own reading of the list, so every item carries the shop id the runner records it under
+  return partitionWatchlist(raw).active.map(({ _adapter, ...it }) => it);
+}
+
+async function readEntries({ git, stateDir, repo = null, fetch: fetchImpl = globalThis.fetch }) {
+  if (repo) {
+    // the state branch of a public runner repository, read over HTTPS (no clone needed)
+    if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) throw new Error(`--repo must look like owner/name, not "${repo}"`);
+    const res = await fetchImpl(`https://raw.githubusercontent.com/${repo}/state/state.json`, { signal: AbortSignal.timeout(30000) });
+    if (!res.ok) throw new Error(`could not read the state of ${repo}: HTTP ${res.status}`);
+    const p = parseState(await res.text());
+    if (!p.ok) throw new Error(`the state of ${repo} is not readable`);
+    return p.entries;
+  }
+  if (stateDir) {
+    const f = path.join(stateDir, 'state.json');
+    if (!existsSync(f)) throw new Error(`no state.json in ${stateDir}`);
+    const p = parseState(readFileSync(f, 'utf8'));
+    if (!p.ok) throw new Error(`${f} is not a readable state file`);
+    return p.entries;
+  }
+  const st = await fetchState({ git });
+  if (st.status !== 'ok') throw new Error('no state branch here: run it in a clone of the runner repository, or pass --repo <owner>/<runner repo> or --state-dir <folder with state.json>');
+  const p = parseState(st.files['state.json']);
+  if (!p.ok) throw new Error('state.json on the state branch is not readable');
+  return p.entries;
+}
+
+/**
+ * node deploy/ops.mjs report: never posts, never writes the state.
+ *   dryRun  build the report from the current state as if it were posted now (or at `at`): text, chars, files (preview)
+ *   else    export the report the runner posted for `week` (default the newest) from the state, for the site
+ * Files: <outDir>/report-YYYY-WW.html and .json.
+ */
+export async function reportCommand({ git = null, env = {}, root, dryRun = false, week = null, at = null, stateDir = null, repo = null, fetch: fetchImpl = globalThis.fetch, watchlist = null, outDir = null, now = Date.now() }) {
+  const entries = await readEntries({ git, stateDir, repo, fetch: fetchImpl });
+  const get = (k) => entries[k]?.v ?? null;
+  const ops = loadOpsConfig({ root });
+  const rc = loadReportConfig({ root });
+  const brand = readBrand(root);
+  const botCfg = loadConfig(botEnv(env, brand), { linkCheck: { enabled: ops.affiliate.checkLinks, ...linkExpectations(root, env) } });
+  const linkFor = reportLinkFor(botCfg);
+  const out = outDir ?? path.join(root, 'deploy/out');
+  const cfg = ops.marketReport;
+  if (dryRun) {
+    const t = at ? Date.parse(at) : now;
+    if (!Number.isFinite(t)) throw new Error(`--at "${at}" is not a date`);
+    const plan = reportPlan(t, cfg, get(MARKET_REPORT_KEY));
+    const wk = week ?? plan.week ?? weekOf(t, cfg.timezone);
+    const model = buildReport({
+      log: get(MARKET_LOG_KEY), items: reportItems(loadReportWatchlist(root, watchlist), rc), rc, cfg, now: t, week: wk,
+      shopName: (id) => resolveRetailer({ retailer: id }, botCfg).name, channelUrl: rc.channelUrl || brand?.telegramUrl || 'https://t.me/lagerfunk',
+    });
+    const post = renderTelegram(model, { cfg, linkFor });
+    const files = writeReportFiles({ outDir: out, model, rc, linkFor, preview: true });
+    return { mode: 'preview', week: wk, plan: { due: plan.due, reason: plan.reason }, text: post.text, chars: post.length, affiliate: post.affiliate, files: [files.html, files.json], channelUrl: files.channelUrl };
+  }
+  const st = loadReportState(get(MARKET_REPORT_KEY));
+  const w = week ?? Object.keys(st.reports).sort().at(-1);
+  const model = w ? st.reports[w] : null;
+  if (!model) throw new Error(`no stored report${w ? ` for ${w}` : ''}. Stored: ${Object.keys(st.reports).sort().join(', ') || 'none'}. Use --dry-run for a preview.`);
+  const post = renderTelegram(model, { cfg, linkFor });
+  const files = writeReportFiles({ outDir: out, model, rc, linkFor });
+  return { mode: 'export', week: w, mark: st.weeks[w] ?? null, text: post.text, chars: post.length, affiliate: post.affiliate, files: [files.html, files.json], channelUrl: files.channelUrl };
 }

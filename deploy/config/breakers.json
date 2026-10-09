@@ -74,5 +74,22 @@
     "cycleTimeoutMinutes": 8,
     "maxFailedCycles": 3,
     "pauseStopsChain": true
+  },
+  "marketReport": {
+    "enabled": true,
+    "firstDate": "2026-10-16",
+    "weekday": 5,
+    "hour": 18,
+    "timezone": "Europe/Berlin",
+    "lateHours": 24,
+    "windowDays": 7,
+    "minDays": 3,
+    "freshHours": 24,
+    "maxGapMinutes": 90,
+    "restockMinOutMinutes": 20,
+    "keepDays": 9,
+    "keepReports": 4,
+    "maxLinesPerCategory": 6,
+    "telegramMaxChars": 4000
   }
 }

@@ -30,7 +30,7 @@ export function pinnedPost(cfg) {
   return [
     `📡 <b>${cfg.brand}</b>`,
     'Restocks, Preisalarme und Lieferdaten für PS5 Pro, GTA VI und Grafikkarten aus deutschen Shops. Jeder Fund kommt ohne künstliche Verzögerung hierher.',
-    'Neu: RAM und SSDs. Preis, Shop und Stand bei jedem Fund, jeden Montag der Preisstand der wichtigsten Kits.',
+    'Neu: RAM und SSDs. Preis, Shop und Stand bei jedem Fund, jeden Freitag um 18 Uhr der Marktbericht.',
     '',
     `🟢 Wieder da · 🚚 Lieferung vor GTA VI · 🔔 Preis-Alarm${cfg.dailyReport?.enabled ? ` · 📊 Tagesbericht um ${cfg.dailyReport.hour} Uhr` : ''}`,
     '',

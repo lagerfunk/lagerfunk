@@ -1,0 +1,63 @@
+{
+  "note": "What the weekly Lagerfunk Marktbericht shows. Schedule and feature flag: marketReport in breakers.json. Categories and product groups match watchlist productKeys by regular expression or exact key; an item goes to the first group that matches, an item no group matches becomes its own group. key: true shows the week values (hours in stock, at or below the list price when the watchlist has one). variants: true names the cheapest model of a group that holds several products. Amazon is always left out, whatever this file says. A test checks that every watchlist item of these categories lands in a group here.",
+  "excludeRetailers": ["amazon"],
+  "channelUrl": "",
+  "utm": { "source": "lagerfunk-site", "medium": "marktbericht" },
+  "categories": [
+    {
+      "id": "console",
+      "label": "PS5 Pro und Konsolen",
+      "emoji": "🎮",
+      "pattern": "^(ps5-|con-)",
+      "deliveryBefore": "2026-11-19",
+      "deliveryLabel": "GTA VI",
+      "groups": [
+        { "id": "ps5-pro", "label": "PS5 Pro 2 TB", "keys": ["ps5-pro", "con-ps5-pro-2tb"], "key": true },
+        { "id": "ps5-slim-disc", "label": "PS5 Slim Disc 1 TB", "keys": ["ps5-slim-disc", "con-ps5-slim-disc-1tb"], "key": true },
+        { "id": "switch2-mkw", "label": "Switch 2 mit Mario Kart World", "keys": ["con-switch2-mario-kart-world-bundle"], "key": true },
+        { "id": "switch2", "label": "Nintendo Switch 2", "keys": ["con-switch2"], "key": true }
+      ]
+    },
+    {
+      "id": "gpu",
+      "label": "Grafikkarten",
+      "emoji": "🖥️",
+      "pattern": "^(gpu-|rtx-)",
+      "groups": [
+        { "id": "rtx5090-fe", "label": "RTX 5090 Founders Edition", "keys": ["rtx-5090-fe"], "key": true },
+        { "id": "rtx5090", "label": "RTX 5090", "pattern": "^gpu-rtx5090-", "variants": true },
+        { "id": "rtx5080", "label": "RTX 5080", "pattern": "^gpu-rtx5080-", "variants": true, "key": true },
+        { "id": "rtx5070ti", "label": "RTX 5070 Ti", "pattern": "^gpu-rtx5070ti-", "variants": true, "key": true },
+        { "id": "rtx5070", "label": "RTX 5070", "pattern": "^gpu-rtx5070-", "variants": true },
+        { "id": "rtx5060ti", "label": "RTX 5060 Ti 16 GB", "pattern": "^gpu-rtx5060ti-", "variants": true },
+        { "id": "rtx5060", "label": "RTX 5060", "pattern": "^gpu-rtx5060-", "variants": true },
+        { "id": "rx9070xt", "label": "RX 9070 XT", "pattern": "^gpu-rx9070xt-", "variants": true, "key": true },
+        { "id": "rx9070", "label": "RX 9070", "pattern": "^gpu-rx9070-", "variants": true },
+        { "id": "rx9060xt", "label": "RX 9060 XT 16 GB", "pattern": "^gpu-rx9060xt-", "variants": true }
+      ]
+    },
+    {
+      "id": "ram",
+      "label": "RAM",
+      "emoji": "🧠",
+      "pattern": "^ram-",
+      "groups": [
+        { "id": "ddr5-32-6000-cl30", "label": "32 GB DDR5-6000 CL30", "pattern": "^ram-ddr5-32gb-.*-6000-cl30$", "variants": true, "key": true },
+        { "id": "ddr5-32", "label": "32 GB DDR5, andere", "pattern": "^ram-ddr5-32gb-", "variants": true },
+        { "id": "ddr5-64", "label": "64 GB DDR5", "pattern": "^ram-ddr5-64gb-", "variants": true, "key": true },
+        { "id": "ddr4-32", "label": "32 GB DDR4", "pattern": "^ram-ddr4-32gb-", "variants": true }
+      ]
+    },
+    {
+      "id": "ssd",
+      "label": "SSDs",
+      "emoji": "💾",
+      "pattern": "^ssd-",
+      "groups": [
+        { "id": "ssd-1tb", "label": "SSD 1 TB", "pattern": "^ssd-.*-1tb$", "variants": true },
+        { "id": "ssd-2tb", "label": "SSD 2 TB", "pattern": "^ssd-.*-2tb$", "variants": true, "key": true },
+        { "id": "ssd-4tb", "label": "SSD 4 TB", "pattern": "^ssd-.*-4tb$", "variants": true }
+      ]
+    }
+  ]
+}

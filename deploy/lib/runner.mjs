@@ -11,6 +11,9 @@
 // and status.json (which carries the heartbeat the watchdog reads). When there is something to post, the state is
 // saved once BEFORE posting too (the checkpoint): if the final save then fails, the next run starts from the
 // checkpoint, sees the products as already announced and never posts them twice.
+// Every run also adds its readings to market:log (deploy/lib/marketlog.mjs); once a week (Friday 18:00 Berlin, marketReport in
+// breakers.json) the run whose slot is open builds the Marktbericht from it (deploy/lib/marketreport.mjs), marks the ISO week in
+// market:report inside the checkpoint and posts it with the alerts.
 import { readFileSync, existsSync, mkdirSync, writeFileSync, appendFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,6 +24,10 @@ import { historyKey } from '../../monitor/src/history.js';
 import { stateKey } from '../../monitor/src/rules.js';
 import { createEngine } from '../../bot/src/engine.js';
 import { loadConfig } from '../../bot/src/config.js';
+import { resolveRetailer, buildLink } from '../../bot/src/affiliate.js';
+import { guardLink } from '../../bot/src/linkcheck.js';
+import { MARKET_LOG_KEY, recordChecks } from './marketlog.mjs';
+import { MARKET_REPORT_KEY, loadReportConfig, reportPlan, markWeek, buildReport, renderTelegram, reportItems, writeReportFiles, hasCurrentData } from './marketreport.mjs';
 import { createStateStore, serializeState, parseState } from './store.mjs';
 import { collectSecrets, scrub } from './secrets.mjs';
 import { buildActivity, appendActivity, parseActivity, buildStatus } from './activity.mjs';
@@ -138,7 +145,7 @@ function clampSince(last, t0) {
   return Math.max(last, t0 - MAX_SINCE_MS);
 }
 
-function readBrand(root) {
+export function readBrand(root) {
   for (const f of ['brand.json', 'site/brand.json']) if (existsSync(path.join(root, f))) return JSON.parse(readFileSync(path.join(root, f), 'utf8'));
   return null;
 }
@@ -156,6 +163,46 @@ export function linkExpectations(root, env = {}) {
     /* no feeds config: the link check then uses AWIN_MIDS only */
   }
   return out;
+}
+
+/** Shop links for the market report, built and checked exactly like the alert links (affiliate only when the switch is on). */
+export function reportLinkFor(botCfg) {
+  return ({ url, retailer }) => {
+    if (!url) return null;
+    const r = resolveRetailer({ retailer, url }, botCfg);
+    return guardLink(buildLink(url, r, botCfg), { alert: { url, shopUrl: url }, retailer: r, cfg: botCfg });
+  };
+}
+
+/**
+ * The weekly market report, if one is due now and not yet handled for its ISO week: built from market:log, rendered and
+ * checked. Returns null when nothing is due. A report that cannot be built raises an admin alert and is tried again next
+ * cycle (the week stays unmarked).
+ */
+export async function prepareMarketReport({ store, now, ops, root, items, botCfg, brand, note = () => {}, jlog = null, admin = null }) {
+  const plan = reportPlan(now, ops.marketReport, await store.get(MARKET_REPORT_KEY));
+  if (!plan.due) return null;
+  try {
+    const rc = loadReportConfig({ root });
+    const linkFor = reportLinkFor(botCfg);
+    const model = buildReport({
+      log: await store.get(MARKET_LOG_KEY), items: reportItems(items, rc), rc, cfg: ops.marketReport, now, week: plan.week,
+      shopName: (id) => resolveRetailer({ retailer: id }, botCfg).name, channelUrl: rc.channelUrl || brand?.telegramUrl || 'https://t.me/lagerfunk',
+    });
+    if (!hasCurrentData(model)) {
+      // nothing read yet (a fresh state, every shop blocked): no empty report, the next cycle of the slot tries again
+      note('notice', `market report ${plan.week} waits: no current readings in market:log yet`);
+      return null;
+    }
+    const post = renderTelegram(model, { cfg: ops.marketReport, linkFor });
+    jlog?.info('report.built', { week: plan.week, chars: post.length, affiliate: post.affiliate });
+    return { week: plan.week, until: plan.until, id: `marktbericht:${plan.week}`, post, model, rc, linkFor };
+  } catch (e) {
+    note('error', `market report ${plan.week} not built: ${e.message}`);
+    jlog?.error('report.failed', { week: plan.week, error: e.message });
+    admin?.raise(`report:${plan.week}`, `[ALERT] The weekly market report ${plan.week} could not be built: ${e.message.slice(0, 300)}\nNothing was posted for it. The runner tries again every cycle while the slot is open. Preview: node deploy/ops.mjs report --dry-run. RUNBOOK: weekly market report.`);
+    return null;
+  }
 }
 
 /**
@@ -405,6 +452,15 @@ export async function runOnce(opts = {}) {
     }
   }
 
+  // ---------- market log: our own readings for the weekly market report (every run, also silent ones) ----------
+  // Readings the price breaker holds stay out, exactly as they stay out of the price history.
+  try {
+    const readings = [...scrape.checks, ...fed.checks].filter((c) => !priceHold.has(`${c.retailer}:${c.productKey}`));
+    await store.put(MARKET_LOG_KEY, recordChecks(await store.get(MARKET_LOG_KEY), readings, { items: itemsByKey, cfg: ops.marketReport, now: t0 }));
+  } catch (e) {
+    note('warning', `market log not updated: ${e.message}`);
+  }
+
   // ---------- guard the posts ----------
   const alerts = [...scrape.alerts, ...fed.alerts];
   const guarding = posting && !silent && !error;
@@ -449,6 +505,8 @@ export async function runOnce(opts = {}) {
   // ---------- post ----------
   let bot = null;
   let skipSave = false;
+  let weekly = null; // the weekly market report of this run, when one is due
+  let reportInfo = null;
   const stateFile = (ents) => {
     const text = serializeState(ents, { savedAt: new Date(now()).toISOString(), runId: env.GITHUB_RUN_ID ?? null });
     const clean = scrub(text, secrets);
@@ -459,6 +517,12 @@ export async function runOnce(opts = {}) {
     try {
       const linkCheck = { enabled: ops.affiliate.checkLinks, ...linkExpectations(root, env) };
       const engineWith = (more = {}) => createEngine({ store, monitorStore: store, config: loadConfig(botEnv({ ...env, ...channel.envPatch }, brand), { linkCheck, ...more }), fetch: opts.fetch, ...(opts.clock ? { clock: opts.clock } : {}), log });
+      // The weekly market report. Not while paused: it then goes out with the first run after the pause, if its slot is still open.
+      if (!cfg.pause) {
+        weekly = await prepareMarketReport({ store, now: now(), ops, root, items: [...monitor.items, ...monitor.disabledItems], botCfg: loadConfig(botEnv({ ...env, ...channel.envPatch }, brand), { linkCheck }), brand, note, jlog, admin });
+        // Marked before anything is sent and saved with the checkpoint: a retry or the next run of the chain sees the week as handled.
+        if (weekly) await store.put(MARKET_REPORT_KEY, markWeek(await store.get(MARKET_REPORT_KEY), weekly.week, { s: 'pending', at: new Date(now()).toISOString(), ch: channel.channel }, { keepReports: ops.marketReport.keepReports }));
+      }
       let plan2 = telegramPlan(breakers, now());
       if (plan2 === 'probe') {
         try {
@@ -481,7 +545,7 @@ export async function runOnce(opts = {}) {
       const botKey = `${env.STORE_PREFIX || 'bot:'}state`;
       const soon = now() + 60000;
       const queued = holding ? [] : ((await store.get(botKey))?.outbox ?? []).filter((j) => !j.inf && Math.max(j.due ?? 0, j.nx ?? 0) <= soon);
-      if ((postable.length || queued.length) && saving) {
+      if ((postable.length || queued.length || weekly) && saving) {
         for (const a of postable) ledgerRecord(ledger, a, now(), holding ? 'queued' : 'pending', channel.channel);
         await store.put(LEDGER_KEY, ledger);
         await store.put(BREAKERS_KEY, breakers);
@@ -496,9 +560,9 @@ export async function runOnce(opts = {}) {
           ents[botKey] = { ...ents[botKey], v };
         }
         try {
-          const r = await backend.save({ 'state.json': stateFile(ents), 'state.prev.json': prevOk, 'activity.jsonl': loaded.files?.['activity.jsonl'] ?? null, 'status.json': loaded.files?.['status.json'] ?? null }, { token, message: `checkpoint ${new Date(now()).toISOString()} (${cfg.mode}, ${postable.length + queued.length} to post)` });
+          const r = await backend.save({ 'state.json': stateFile(ents), 'state.prev.json': prevOk, 'activity.jsonl': loaded.files?.['activity.jsonl'] ?? null, 'status.json': loaded.files?.['status.json'] ?? null }, { token, message: `checkpoint ${new Date(now()).toISOString()} (${cfg.mode}, ${postable.length + queued.length + (weekly ? 1 : 0)} to post)` });
           token = r?.sha ?? token;
-          jlog.info('state.checkpoint', { posts: postable.length });
+          jlog.info('state.checkpoint', { posts: postable.length, report: weekly?.week ?? null });
         } catch (e) {
           skipSave = true; // the final save would make the alerts look announced without a post: let the next run detect them again
           throw Object.assign(new Error(`checkpoint save failed, nothing was posted: ${e.message}`), { checkpoint: true });
@@ -507,7 +571,26 @@ export async function runOnce(opts = {}) {
 
       const engine = engineWith(holding ? { maxPostsPerRun: 0 } : {});
       const shopUrl = (a) => itemsByKey.get(`${a.retailer}:${a.productKey}`)?.url ?? null;
-      bot = await engine.run({ alerts: postable.map((a) => ({ ...a, shopUrl: shopUrl(a) })) });
+      bot = await engine.run({ alerts: postable.map((a) => ({ ...a, shopUrl: shopUrl(a) })), posts: weekly ? [{ id: weekly.id, post: weekly.post, expiresAt: weekly.until }] : [] });
+      if (weekly) {
+        const mine = (x) => String(x.key).endsWith(`:${weekly.id}`);
+        const sent = bot.sent.find((s) => mine(s) && s.target === 'free') ?? bot.sent.find(mine);
+        const dropped = bot.failed.find((f) => mine(f) && !f.retry);
+        const status = sent ? 'sent' : dropped ? 'failed' : bot.posts ? 'queued' : 'skipped';
+        reportInfo = { week: weekly.week, status, chars: weekly.post.length, affiliate: weekly.post.affiliate };
+        await store.put(MARKET_REPORT_KEY, markWeek(await store.get(MARKET_REPORT_KEY), weekly.week, { s: status, at: new Date(now()).toISOString(), ch: channel.channel, m: sent?.messageId ?? null }, { model: weekly.model, keepReports: ops.marketReport.keepReports }));
+        try {
+          const f = writeReportFiles({ outDir: cfg.outDir, model: weekly.model, rc: weekly.rc, linkFor: weekly.linkFor });
+          reportInfo.files = [path.basename(f.html), path.basename(f.json)];
+        } catch (e) {
+          note('warning', `market report files not written: ${e.message}`);
+        }
+        // in the post ledger too, so `ops.mjs retract --key marktbericht` and `ops.mjs status` find it like any post
+        if (sent) ledger[`marktbericht|${weekly.week}`] = { at: now(), k: sent.key, s: 'sent', ch: channel.channel, m: sent.messageId ?? null, sentAt: sent.at ?? null };
+        jlog[status === 'failed' ? 'warn' : 'info'](`report.${status}`, { week: weekly.week, channel: channel.channel, messageId: sent?.messageId ?? null });
+        note(status === 'failed' ? 'warning' : 'notice', `weekly market report ${weekly.week}: ${status}${status === 'skipped' ? ' (the bot had already taken this id)' : ''}`);
+        if (status === 'failed') admin.raise(`report-send:${weekly.week}`, `[WARN] The weekly market report ${weekly.week} was not delivered: ${dropped.error}. It is not sent again by itself (one report per week). RUNBOOK: weekly market report.`);
+      }
       ledgerMarkSent(ledger, bot.sent, channel.channel);
       for (const s of bot.sent) jlog.info('post.sent', { key: s.key, target: s.target, channel: channel.channel });
       for (const f of bot.failed) jlog.warn('post.failed', { key: f.key, status: f.status ?? null, error: f.error, retry: f.retry });
@@ -529,6 +612,12 @@ export async function runOnce(opts = {}) {
       error = e;
       note('error', `${e.checkpoint ? '' : 'bot phase failed: '}${e.message}`);
       if (e.checkpoint) admin.raise('checkpoint', `[ALERT] The state could not be saved before posting, so nothing was posted in this run. The alerts will be detected again next run. Error: ${e.message.slice(0, 300)}`, { severity: 'critical' });
+      if (weekly && !reportInfo) {
+        // checkpoint failed: nothing was saved, the next run builds the report again. Bot crash after the checkpoint: the
+        // week stays marked "pending" and is not posted twice.
+        reportInfo = { week: weekly.week, status: e.checkpoint ? 'retry' : 'pending' };
+        if (!e.checkpoint) admin.raise(`report-crash:${weekly.week}`, `[WARN] The weekly market report ${weekly.week} may not have gone out (bot phase failed: ${e.message.slice(0, 200)}). It is not sent again by itself. Check the channel; RUNBOOK: weekly market report.`);
+      }
     }
   } else if (alerts.length) {
     note('notice', `${alerts.length} alert(s) detected and not posted (${cfg.dryRun ? 'dry run' : silent ? 'silent run' : 'check phase failed'})`);
@@ -601,6 +690,7 @@ export async function runOnce(opts = {}) {
       breakers: { open: openRetailers(breakers), telegram: breakers.telegram.state, surge: latched.length > 0, quarantined: Object.keys(breakers.quarantine).length, events },
       posts: { held: heldNow.length, released: released.length, duplicates: dupes.length, linkFallbacks: bot?.links?.length ?? 0 },
       admin: { sent: adminRes.sent, pending: adminRes.pending, failed: adminRes.failed },
+      ...(reportInfo ? { report: { week: reportInfo.week, status: reportInfo.status } } : {}),
     },
   });
   const activityText = scrub(appendActivity(loaded.files?.['activity.jsonl'], activity), secrets).text;
@@ -636,7 +726,7 @@ export async function runOnce(opts = {}) {
   jlog[error ? 'error' : 'info']('run.end', {
     ok: !error, durationMs: activity.durationMs, checks: activity.checks, alerts: activity.alerts, posts: activity.posts, breakers: activity.breakers, admin: activity.admin, channel: channel.channel,
   });
-  return { ok: !error, activity, alerts, bot, files, error: error ?? undefined, held, breakers, ledger, jsonLog: jlog.lines };
+  return { ok: !error, activity, alerts, bot, files, error: error ?? undefined, held, breakers, ledger, report: reportInfo, jsonLog: jlog.lines };
 }
 
 function summary(env, cfg, a, st, out) {

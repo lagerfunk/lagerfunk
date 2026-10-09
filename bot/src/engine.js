@@ -26,9 +26,12 @@ function emptyState() {
   return {
     v: 1, rev: 0, outbox: [], seen: {}, cool: {}, rate: {}, log: [],
     counts: { date: '', by: {} }, errors: [], reportSent: '', reportAt: 0,
-    lease: null, hb: 0, lastPost: null, updOffset: 0, chatMap: {}, pinned: {},
+    lease: null, hb: 0, lastPost: null, updOffset: 0, chatMap: {}, pinned: {}, once: {},
   };
 }
+
+// Ready-made posts (the weekly market report) are accepted once per id and target, ever: `once` remembers them this long.
+const ONCE_KEEP_MS = 60 * DAY;
 
 function slimAlert(a) {
   const pick = ['key', 'kind', 'productKey', 'retailer', 'title', 'url', 'price', 'listPrice', 'lowest30d', 'detectedAt',
@@ -112,6 +115,7 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
     ours.chatMap = { ...(theirs.chatMap || {}), ...ours.chatMap };
     ours.pinned = { ...(theirs.pinned || {}), ...(ours.pinned || {}) };
     ours.pinnedChat = { ...(theirs.pinnedChat || {}), ...(ours.pinnedChat || {}) };
+    ours.once = { ...(theirs.once || {}), ...(ours.once || {}) };
     ours.updOffset = Math.max(ours.updOffset || 0, theirs.updOffset || 0);
     if (theirs.lease && theirs.lease.owner !== me && !ours.lease) ours.lease = theirs.lease;
   }
@@ -158,6 +162,8 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
     if (s.log.length !== before) ctx.dirty = true;
     if (s.errors.length && now - s.errors[0].at > 7 * DAY) { s.errors = s.errors.filter((e) => now - e.at <= 7 * DAY); ctx.dirty = true; }
     for (const [t, r] of Object.entries(s.rate)) r.ts = (r.ts || []).filter((x) => now - x < MIN);
+    s.once ??= {};
+    for (const [id, at] of Object.entries(s.once)) if (now - at > ONCE_KEEP_MS) { delete s.once[id]; ctx.dirty = true; }
 
     // Crash recovery: a job still marked in-flight from a dead run may already be on Telegram.
     for (const j of [...s.outbox]) {
@@ -291,6 +297,29 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
     return n;
   }
 
+  // ---------- ready-made posts (weekly market report) ----------
+  // posts: [{ id, post: { html, discord, buttons, previewUrl, photo, affiliate }, channels?, expiresAt? }]. The caller renders
+  // and checks the text; the engine only queues it like a report. Each id goes to each target at most once (state.once), so a
+  // retry or a second caller with the same id can never post it twice. A post still queued after expiresAt (ms) is dropped.
+  function enqueuePosts(ctx, now, posts) {
+    let n = 0;
+    ctx.state.once ??= {};
+    for (const p of posts || []) {
+      if (!p || !p.id || typeof p.post?.html !== 'string' || !p.post.html.trim()) continue;
+      const wanted = new Set(p.channels || ['free', 'instant']);
+      if (discord && p.post.discord && !p.channels) wanted.add('discord');
+      for (const t of activeTargets().filter((x) => wanted.has(x))) {
+        const id = `${t}:${p.id}`;
+        if (ctx.state.once[id] || ctx.state.outbox.some((j) => j.id === id)) continue;
+        ctx.state.once[id] = now;
+        ctx.state.outbox.push({ id, t, kind: 'report', k: id, p: { buttons: null, previewUrl: null, photo: null, ...p.post }, c: now, due: now, w: false, ia: null, n: 0, nx: 0, m: 'auto', ...(Number.isFinite(p.expiresAt) ? { x: p.expiresAt } : {}) });
+        ctx.dirty = true;
+        n++;
+      }
+    }
+    return n;
+  }
+
   // ---------- rate limiting ----------
   function rateWait(ctx, t, now) {
     const r = (ctx.state.rate[t] ??= { ts: [], pause: 0 });
@@ -388,6 +417,8 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
           const age = now - toMs(j.a.detectedAt, j.c);
           const limit = (cfg.staleAfterSec * 1000) + (delayed(j.t) ? delayMs() : 0);
           if (age > limit && !j.inf) dropJob(ctx, j, now, 'veraltet');
+        } else if (j.x && now > j.x && !j.inf) {
+          dropJob(ctx, j, now, 'veraltet'); // a ready-made post with an expiry (the weekly report after its slot)
         }
       }
 
@@ -462,18 +493,19 @@ export function createEngine({ store, monitorStore = null, config, env, fetch: f
   }
 
   // ---------- public API ----------
-  async function run({ alerts = [], forceReport = false } = {}) {
+  async function run({ alerts = [], forceReport = false, posts = [] } = {}) {
     return serial(async () => {
       const t0 = clock.now();
       const ctx = await load();
       linkEvents = [];
-      const res = { accepted: [], skipped: [], sent: [], failed: [], reports: 0, queued: 0, nextDueAt: null, mode: paid() ? 'paid' : 'launch', links: linkEvents };
+      const res = { accepted: [], skipped: [], sent: [], failed: [], reports: 0, posts: 0, queued: 0, nextDueAt: null, mode: paid() ? 'paid' : 'launch', links: linkEvents };
       try {
         prune(ctx, t0);
         const ing = ingest(ctx, alerts, t0);
         res.accepted = ing.accepted;
         res.skipped = ing.skipped;
         res.reports = enqueueReport(ctx, t0, { force: forceReport });
+        res.posts = enqueuePosts(ctx, t0, posts);
         const lease = ctx.state.lease;
         const othersLease = lease && lease.owner !== me && lease.until > t0;
         if (!othersLease && ctx.state.outbox.length) await sendLoop(ctx, t0, res);

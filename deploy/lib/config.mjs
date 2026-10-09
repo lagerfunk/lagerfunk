@@ -26,6 +26,16 @@ export const OPS_DEFAULTS = Object.freeze({
   // then starts the next run itself. loopMinutes 0 switches the chain off: every run is one cycle, as before the chain.
   // pauseStopsChain: a paused run does one last cycle (posts held) and starts no successor; false = the chain keeps checking while paused.
   chain: { loopMinutes: 50, intervalMinutes: 10, feedsEveryMinutes: 60, feedsSlackMinutes: 3, handoffLeadSeconds: 90, cycleTimeoutMinutes: 8, maxFailedCycles: 3, pauseStopsChain: true },
+  // The weekly Lagerfunk Marktbericht (deploy/lib/marketreport.mjs). enabled is the feature flag. It is posted once per ISO week
+  // at weekday (0 Sunday ... 5 Friday ... 6 Saturday) and hour in timezone, or later in the same run of the chain up to lateHours
+  // after that. The runner records its own checks for it all the time (market:log in the state), also while it is off.
+  // What it shows (categories, product groups, key products) is in deploy/config/market-report.json.
+  // firstDate (YYYY-MM-DD in timezone): no report for a slot before that day, so a deploy in the middle of a week does not post
+  // a thin first issue. Empty = no start date.
+  marketReport: {
+    enabled: true, firstDate: '2026-10-16', weekday: 5, hour: 18, timezone: 'Europe/Berlin', lateHours: 24, windowDays: 7, minDays: 3, freshHours: 24,
+    maxGapMinutes: 90, restockMinOutMinutes: 20, keepDays: 9, keepReports: 4, maxLinesPerCategory: 6, telegramMaxChars: 4000,
+  },
 });
 
 function merge(base, over, at, errors) {
@@ -54,7 +64,37 @@ function merge(base, over, at, errors) {
     if (typeof over !== 'boolean') errors.push(`${at} must be true or false`);
     return typeof over === 'boolean' ? over : base;
   }
+  if (typeof base === 'string') {
+    // An empty text is allowed here (firstDate: '' = no start date); fields that need a value check it themselves.
+    if (typeof over !== 'string') errors.push(`${at} must be a text`);
+    return typeof over === 'string' ? over.trim() : base;
+  }
   return over;
+}
+
+/** A time zone name Intl knows ("Europe/Berlin"). */
+export function validTimeZone(tz) {
+  try {
+    new Intl.DateTimeFormat('en-GB', { timeZone: tz }).format(0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** The weekly report: a real weekday, hour and time zone, and windows that fit inside one week. */
+function checkMarketReport(m, errors) {
+  const at = 'breakers.marketReport';
+  if (m.firstDate && !/^\d{4}-\d{2}-\d{2}$/.test(m.firstDate)) errors.push(`${at}.firstDate must be YYYY-MM-DD or empty`);
+  if (!Number.isInteger(m.weekday) || m.weekday > 6) errors.push(`${at}.weekday must be 0 (Sunday) to 6 (Saturday)`);
+  if (!Number.isInteger(m.hour) || m.hour > 23) errors.push(`${at}.hour must be a whole hour from 0 to 23`);
+  if (!validTimeZone(m.timezone)) errors.push(`${at}.timezone "${m.timezone}" is not a time zone (use for example Europe/Berlin)`);
+  if (m.lateHours < 1 || m.lateHours >= 7 * 24) errors.push(`${at}.lateHours must be at least 1 and under a week`);
+  if (m.windowDays < 1 || m.windowDays > 7) errors.push(`${at}.windowDays must be 1 to 7`);
+  if (m.minDays < 1 || m.minDays > m.windowDays) errors.push(`${at}.minDays must be at least 1 and at most windowDays`);
+  if (m.keepDays <= m.windowDays) errors.push(`${at}.keepDays must be above windowDays, or the oldest day of the week is gone`);
+  if (m.freshHours < 1 || m.maxGapMinutes < 1 || m.keepReports < 1 || m.maxLinesPerCategory < 1) errors.push(`${at}.freshHours, maxGapMinutes, keepReports and maxLinesPerCategory must be at least 1`);
+  if (m.telegramMaxChars < 1000 || m.telegramMaxChars > 4096) errors.push(`${at}.telegramMaxChars must be 1000 to 4096 (Telegram's limit for one message)`);
 }
 
 /** The chain numbers must fit together, or a run would be killed by its own timeout or start two cycles at once. */
@@ -74,6 +114,7 @@ export function resolveOpsConfig(raw = {}) {
   const errors = [];
   const cfg = merge(OPS_DEFAULTS, raw, 'breakers', errors);
   if (!errors.length) checkChain(cfg.chain, errors);
+  if (!errors.length) checkMarketReport(cfg.marketReport, errors);
   if (errors.length) throw new Error(`${OPS_CONFIG_FILE} is invalid: ${errors.join('; ')}`);
   return cfg;
 }

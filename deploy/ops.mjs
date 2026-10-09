@@ -11,13 +11,18 @@
 //   node deploy/ops.mjs digest                     the daily digest now
 //   node deploy/ops.mjs promote [--force] [--dry-run] [--repo owner/name]   staging -> public (needs the gh CLI)
 //   node deploy/ops.mjs demote [--repo owner/name]                          public -> staging at once
+//   node deploy/ops.mjs report --dry-run [--at <ISO time>] [--state-dir <dir> | --repo owner/name] [--watchlist <file>] [--out <dir>]
+//                                                  preview the weekly market report from the current state: prints the post,
+//                                                  writes deploy/out/report-YYYY-WW.html and .json. Posts nothing, saves nothing
+//   node deploy/ops.mjs report [--week 2026-W42] [--state-dir <dir> | --repo owner/name]   export the posted report (for the site)
 import { execFile } from 'node:child_process';
+import path from 'node:path';
 import { createGit } from './lib/gitstate.mjs';
 import { ROOT } from './lib/runner.mjs';
 import { loadOpsConfig } from './lib/config.mjs';
 import { backupNow, restoreState } from './lib/backup.mjs';
 import { runWatchdog } from './lib/watchdog.mjs';
-import { tagGood, rollback, retract, notify, promote, demote, readRunnerState } from './lib/ops.mjs';
+import { tagGood, rollback, retract, notify, promote, demote, readRunnerState, reportCommand } from './lib/ops.mjs';
 
 const argv = process.argv.slice(2);
 const cmd = argv[0];
@@ -78,8 +83,19 @@ async function main() {
       if (!r.ok) process.exitCode = 1;
       return print(r);
     }
+    case 'report': {
+      // Never posts: the runner posts the report on its slot. This previews it (--dry-run) or exports the posted one.
+      const stateDir = val('--state-dir');
+      const r = await reportCommand({
+        git, env, root: ROOT, dryRun: has('--dry-run'), week: val('--week') ?? (arg && /^\d{4}-W\d{2}$/.test(arg) ? arg : null), at: val('--at'),
+        stateDir: stateDir ? path.resolve(stateDir) : null, repo: val('--repo'), watchlist: val('--watchlist') ? path.resolve(val('--watchlist')) : null, outDir: val('--out') ? path.resolve(val('--out')) : null,
+      });
+      print(r.text);
+      const { text, ...rest } = r;
+      return print(rest);
+    }
     default:
-      print('usage: node deploy/ops.mjs status | rollback [--to tag] | tag-good --sha sha | backup | restore --date YYYY-MM-DD|latest | retract [--key text] | notify --text msg | digest | promote [--force] [--dry-run] | demote');
+      print('usage: node deploy/ops.mjs status | rollback [--to tag] | tag-good --sha sha | backup | restore --date YYYY-MM-DD|latest | retract [--key text] | notify --text msg | digest | promote [--force] [--dry-run] | demote | report --dry-run [--at time] [--state-dir dir] | report [--week YYYY-Www]');
       process.exitCode = cmd ? 1 : 0;
   }
   return undefined;
