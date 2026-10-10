@@ -1,0 +1,142 @@
+{
+ "v": 1,
+ "updatedAt": "2026-10-07T01:01:15.292Z",
+ "last": {
+  "v": 1,
+  "at": "2026-10-07T01:01:15.292Z",
+  "mode": "watch",
+  "profile": "free",
+  "durationMs": 16489,
+  "ok": true,
+  "checks": {
+   "total": 16,
+   "ok": 16,
+   "failed": 0,
+   "scrape": 16,
+   "feed": 0
+  },
+  "alerts": {
+   "detected": 0,
+   "accepted": 0,
+   "sent": 0,
+   "queued": 0,
+   "failed": 0,
+   "skipped": 0
+  },
+  "errors": [],
+  "feeds": [],
+  "shops": {
+   "active": 16,
+   "disabled": 127
+  },
+  "state": {
+   "keys": 39,
+   "bytes": 9271,
+   "pushed": true,
+   "reset": false
+  },
+  "run": {
+   "id": "37554937871",
+   "attempt": "1",
+   "event": "schedule",
+   "sha": "376cd3c",
+   "idleDays": 0,
+   "code": "376cd3c"
+  },
+  "notes": [],
+  "byRetailer": {
+   "mueller": [
+    1,
+    0
+   ],
+   "psdirect": [
+    1,
+    0
+   ],
+   "alternate": [
+    13,
+    0
+   ],
+   "nvidia": [
+    1,
+    0
+   ]
+  },
+  "channel": "staging",
+  "breakers": {
+   "open": [],
+   "telegram": "closed",
+   "surge": false,
+   "quarantined": 0,
+   "events": []
+  },
+  "posts": {
+   "held": 0,
+   "released": 0,
+   "duplicates": 0,
+   "linkFallbacks": 0
+  },
+  "admin": {
+   "sent": 0,
+   "pending": 0,
+   "failed": 0
+  }
+ },
+ "last24h": {
+  "runs": 2,
+  "byMode": {
+   "watch": 2
+  },
+  "failedRuns": 0,
+  "checks": 28,
+  "checksFailed": 0,
+  "alertsDetected": 0,
+  "alertsSent": 0,
+  "feedDownloads": 0,
+  "feedBytes": 0
+ },
+ "lastOkAt": "2026-10-07T01:01:15.292Z",
+ "minutesSinceLastRun": 0,
+ "health": "ok",
+ "channel": "staging",
+ "version": "376cd3c",
+ "heartbeat": {
+  "lastRun": {
+   "at": "2026-10-07T01:01:15.292Z",
+   "ok": true,
+   "runId": "37554937871",
+   "mode": "watch",
+   "checked": 16,
+   "checksOk": 16,
+   "errors": 0,
+   "alertsSent": 0,
+   "code": "376cd3c"
+  },
+  "lastGood": {
+   "at": "2026-10-07T01:01:15.292Z",
+   "ok": true,
+   "runId": "37554937871",
+   "mode": "watch",
+   "checked": 16,
+   "checksOk": 16,
+   "errors": 0,
+   "alertsSent": 0,
+   "code": "376cd3c"
+  },
+  "lastCheckOkAt": "2026-10-07T01:01:15.292Z",
+  "minutesSinceGood": 0
+ },
+ "breakers": {
+  "retailersOpen": [],
+  "telegram": "closed",
+  "telegramKind": null,
+  "surgeLatched": [],
+  "quarantined": 0
+ },
+ "held": 0,
+ "posts24h": {
+  "held": 0,
+  "duplicates": 0,
+  "linkFallbacks": 0
+ }
+}

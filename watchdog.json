@@ -1,0 +1,44 @@
+{
+ "v": 1,
+ "status": "up",
+ "firstSeenAt": "2026-10-07T01:33:01.384Z",
+ "downSince": null,
+ "lastAlertAt": null,
+ "blind": false,
+ "blindSince": null,
+ "blindAlertAt": null,
+ "telegramAuthAlertAt": null,
+ "lastRunAt": "2026-10-10T22:32:57.032Z",
+ "digestSentFor": "2026-10-10",
+ "backups": {
+  "lastDate": "2026-10-11",
+  "dates": [
+   "2026-10-07",
+   "2026-10-08",
+   "2026-10-09",
+   "2026-10-10",
+   "2026-10-11"
+  ]
+ },
+ "keepalive": {
+  "lastAt": null,
+  "method": null
+ },
+ "schedule": {
+  "lagerfunk.yml": "active",
+  "watchdog.yml": "active"
+ },
+ "redAt": null,
+ "admin": {
+  "sent": {
+   "digest:2026-10-07": 1791362424723,
+   "digest:2026-10-08": 1791449941832,
+   "digest:2026-10-09": 1791536756725,
+   "digest:2026-10-10": 1791616148544
+  },
+  "outbox": [],
+  "pauseUntil": 0,
+  "lastError": null,
+  "lastOkAt": "2026-10-10T07:09:08.544Z"
+ }
+}
