@@ -13,7 +13,7 @@ export const datenschutzUrl = (cfg) => cfg?.datenschutzUrl || String(cfg?.impres
 
 export function channelDescription(cfg) {
   const parts = [
-    'PS5 Pro, Grafikkarten, RAM und SSDs: Restocks und Preisalarme aus deutschen Shops.',
+    'PS5 Pro, Grafikkarten, RAM, SSDs und Pokémon-Karten: Restocks und Preisalarme aus deutschen Shops.',
     isAmazonPartner(cfg) ? 'Enthält Affiliate-Links (Anzeige).' : 'Affiliate-Links sind als Anzeige markiert.',
     isAmazonPartner(cfg) ? AMAZON_LINE : '',
   ].filter(Boolean).join(' ');
@@ -30,13 +30,13 @@ export function pinnedPost(cfg) {
   return [
     `📡 <b>${cfg.brand}</b>`,
     'Restocks, Preisalarme und Lieferdaten für PS5 Pro, GTA VI und Grafikkarten aus deutschen Shops. Jeder Fund kommt ohne künstliche Verzögerung hierher.',
-    'Neu: RAM und SSDs. Preis, Shop und Stand bei jedem Fund, jeden Freitag um 18 Uhr der Marktbericht.',
+    'Neu: Pokémon-Karten (Top-Trainer-Boxen, Booster-Bundles, Kollektionen), dazu RAM und SSDs. Preis, Shop und Stand bei jedem Fund, jeden Freitag um 18 Uhr der Marktbericht.',
     '',
-    `🟢 Wieder da · 🚚 Lieferung vor GTA VI · 🔔 Preis-Alarm${cfg.dailyReport?.enabled ? ` · 📊 Tagesbericht um ${cfg.dailyReport.hour} Uhr` : ''}`,
+    `🟢 Wieder da · 🚚 Lieferung vor GTA VI · 🔔 Preis-Alarm · 🃏 Pokémon-Karten${cfg.dailyReport?.enabled ? ` · 📊 Tagesbericht um ${cfg.dailyReport.hour} Uhr` : ''}`,
     '',
     `<i>${AFFILIATE_LEGEND}${isAmazonPartner(cfg) ? ` ${AMAZON_LINE}` : ''}</i>`,
     '<i>Posts ohne "Anzeige" enthalten keinen Affiliate-Link.</i>',
-    '<i>Preise und Verfügbarkeit: Stand der Erkennung, können sich ändern. Kein Kaufversprechen. Nicht mit Sony, Nvidia oder den Shops verbunden.</i>',
+    '<i>Preise und Verfügbarkeit: Stand der Erkennung, können sich ändern. Kein Kaufversprechen. Nicht mit Sony, Nvidia, The Pokémon Company oder den Shops verbunden.</i>',
     `Impressum: ${cfg.impressumUrl}`,
     `Datenschutz: ${datenschutzUrl(cfg)}`,
   ].join('\n');

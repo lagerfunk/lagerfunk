@@ -60,6 +60,8 @@ export function resolveReportConfig(raw) {
   return {
     // Amazon is left out in code (marketlog.isExcluded); this list can only add shops.
     excludeRetailers: [...new Set(['amazon', ...(raw.excludeRetailers ?? [])].map((x) => String(x).toLowerCase()))],
+    // Watch item categories the report leaves out whatever the category patterns say (tcg: see excludeNote in the file).
+    excludeCategories: [...new Set((raw.excludeCategories ?? []).map((x) => String(x).toLowerCase()))],
     channelUrl: raw.channelUrl || '',
     utm: { source: raw.utm?.source || 'lagerfunk-site', medium: raw.utm?.medium || 'marktbericht' },
     categories,
@@ -220,6 +222,7 @@ export function reportItems(list, rc) {
     if (!it?.productKey || !it.url) continue;
     const retailer = String(it.retailer ?? '').toLowerCase() || retailerFromUrl(it.url);
     if (isExcluded(retailer, it.url, rc.excludeRetailers)) continue;
+    if (it.category && rc.excludeCategories?.includes(String(it.category).toLowerCase())) continue;
     const id = `${retailer}:${it.productKey}`;
     if (seen.has(id)) continue;
     seen.add(id);
@@ -254,7 +257,7 @@ export function buildReport({ log, items, rc, cfg, now, week = null, shopName = 
   const nowMin = Math.floor(now / MIN);
   const windowFrom = nowMin - cfg.windowDays * 1440;
   const freshMin = cfg.freshHours * 60;
-  const pool = items.filter((it) => !isExcluded(it.retailer, it.url, rc.excludeRetailers));
+  const pool = items.filter((it) => !isExcluded(it.retailer, it.url, rc.excludeRetailers) && !(it.category && rc.excludeCategories?.includes(String(it.category).toLowerCase())));
   const categories = [];
   for (const cat of rc.categories) {
     const members = pool.filter((it) => cat.re.test(it.productKey) || (it.category && it.category === cat.id));

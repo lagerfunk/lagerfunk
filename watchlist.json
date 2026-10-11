@@ -125,6 +125,7 @@
    "url": "https://www.caseking.de/asus-tuf-geforce-rtx-5090-oc-edition-32768-mb-gddr7/GCAS-652.html",
    "threshold": 5639.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
   },
   {
@@ -133,6 +134,7 @@
    "url": "https://www.computeruniverse.net/de/p/2E07-A3D",
    "threshold": 5639.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
   },
   {
@@ -141,6 +143,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/nvidia-fuer-gaming/asus/pdp/2e07-a3d/asus-tuf-gaming-geforce-rtx-5090-oc-tuf-rtx5090-o32g-gaming-grafikkarte-32-017578125-gb.html",
    "threshold": 5639.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
   },
   {
@@ -149,6 +152,7 @@
    "url": "https://www.amazon.de/dp/B0DTHWSR1X",
    "threshold": 5639.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
   },
   {
@@ -157,6 +161,7 @@
    "url": "https://www.galaxus.de/en/s1/product/asus-tuf-gaming-geforce-rtx-5090-oc-32-gb-gddr7-graphics-card-54200104",
    "threshold": 5639.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5090 OC 32GB (90YV0LY0-M0NA00)"
   },
   {
@@ -165,6 +170,7 @@
    "url": "https://www.amazon.de/dp/B0DS65KD1C",
    "threshold": 1578.26,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5080 OC 16GB (90YV0M30-M0NA00)"
   },
   {
@@ -173,6 +179,7 @@
    "url": "https://www.galaxus.de/de/s1/product/asus-tuf-gaming-geforce-rtx-5080-oc-16-gb-gddr7-grafikkarte-53888924",
    "threshold": 1578.26,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5080 OC 16GB (90YV0M30-M0NA00)"
   },
   {
@@ -181,6 +188,7 @@
    "url": "https://www.alternate.de/ASUS/GeForce-RTX-5080-TUF-GAMING-OC-Grafikkarte/html/product/100108177",
    "threshold": 1578.26,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5080 OC 16GB (90YV0M30-M0NA00)"
   },
   {
@@ -189,6 +197,7 @@
    "url": "https://www.proshop.de/Grafikkarte/ASUS-GeForce-RTX-5080-TUF-OC-16GB-GDDR7-RAM-Grafikkarte/3326549",
    "threshold": 1578.26,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS TUF Gaming GeForce RTX 5080 OC 16GB (90YV0M30-M0NA00)"
   },
   {
@@ -197,6 +206,7 @@
    "url": "https://www.galaxus.de/en/s1/product/asus-prime-geforce-rtx-5080-oc-16-gb-gddr7-graphics-card-53888927",
    "threshold": 1503.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5080 OC 16GB (90YV0LX0-M0NA00)"
   },
   {
@@ -205,6 +215,7 @@
    "url": "https://www.alternate.de/ASUS/GeForce-RTX-5080-PRIME-OC-Grafikkarte/html/product/100108203",
    "threshold": 1503.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5080 OC 16GB (90YV0LX0-M0NA00)"
   },
   {
@@ -213,6 +224,7 @@
    "url": "https://www.amazon.de/dp/B0DS65VMC6",
    "threshold": 1503.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5080 OC 16GB (90YV0LX0-M0NA00)"
   },
   {
@@ -221,6 +233,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/nvidia-fuer-gaming/asus/pdp/2e07-a39/asus-prime-geforce-rtx-5080-oc-prime-rtx5080-o16g-grafikkarte-16-gb.html",
    "threshold": 1503.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5080 OC 16GB (90YV0LX0-M0NA00)"
   },
   {
@@ -229,6 +242,7 @@
    "url": "https://www.galaxus.de/de/s1/product/gigabyte-geforce-rtx-5080-windforce-oc-sff-16-gb-gddr7-grafikkarte-53969806",
    "threshold": 1503.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "GIGABYTE GeForce RTX 5080 Windforce OC SFF 16G (GV-N5080WF3OC-16GD)"
   },
   {
@@ -237,6 +251,7 @@
    "url": "https://www.alternate.de/GIGABYTE/GeForce-RTX-5080-WINDFORCE-OC-SFF-16G-Grafikkarte/html/product/100108949",
    "threshold": 1503.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "GIGABYTE GeForce RTX 5080 Windforce OC SFF 16G (GV-N5080WF3OC-16GD)"
   },
   {
@@ -245,6 +260,7 @@
    "url": "https://www.proshop.de/Grafikkarte/GIGABYTE-GeForce-RTX-5080-WindForce-3-OC-16GB-GDDR7-RAM-Grafikkarte/3330171",
    "threshold": 1503.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "GIGABYTE GeForce RTX 5080 Windforce OC SFF 16G (GV-N5080WF3OC-16GD)"
   },
   {
@@ -253,6 +269,7 @@
    "url": "https://www.amazon.de/dp/B0DS2R7N4F",
    "threshold": 1503.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "GIGABYTE GeForce RTX 5080 Windforce OC SFF 16G (GV-N5080WF3OC-16GD)"
   },
   {
@@ -261,6 +278,7 @@
    "url": "https://www.galaxus.de/de/s1/product/msi-geforce-rtx-5080-gaming-trio-oc-16-gb-gddr7-grafikkarte-53920085",
    "threshold": 1597.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "MSI GeForce RTX 5080 16G Gaming Trio OC"
   },
   {
@@ -269,6 +287,7 @@
    "url": "https://www.computeruniverse.net/de/p/2E12-3QL",
    "threshold": 1597.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "MSI GeForce RTX 5080 16G Gaming Trio OC"
   },
   {
@@ -277,6 +296,7 @@
    "url": "https://www.amazon.de/dp/B0DSXNXTSS",
    "threshold": 1597.06,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "MSI GeForce RTX 5080 16G Gaming Trio OC"
   },
   {
@@ -285,6 +305,7 @@
    "url": "https://www.galaxus.de/de/s1/product/asus-prime-geforce-rtx-5070-ti-oc-16-gb-gddr7-grafikkarte-54606768",
    "threshold": 1185.34,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5070 Ti OC 16GB (PRIME-RTX5070TI-O16G)"
   },
   {
@@ -293,6 +314,7 @@
    "url": "https://www.alternate.de/ASUS/GeForce-RTX-5070-Ti-PRIME-GAMING-OC-Grafikkarte/html/product/100110152",
    "threshold": 1185.34,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5070 Ti OC 16GB (PRIME-RTX5070TI-O16G)"
   },
   {
@@ -301,6 +323,7 @@
    "url": "https://www.proshop.de/Grafikkarte/ASUS-GeForce-RTX-5070-Ti-Prime-OC-16GB-GDDR7-RAM-Grafikkarte/3331055",
    "threshold": 1185.34,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5070 Ti OC 16GB (PRIME-RTX5070TI-O16G)"
   },
   {
@@ -309,6 +332,7 @@
    "url": "https://www.amazon.de/dp/B0DVGVZZYY",
    "threshold": 1185.34,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5070 Ti OC 16GB (PRIME-RTX5070TI-O16G)"
   },
   {
@@ -317,6 +341,7 @@
    "url": "https://www.galaxus.de/de/s1/product/msi-geforce-rtx-5070-ti-gaming-trio-oc-16-gb-gddr7-grafikkarte-56469454",
    "threshold": 1236.1,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "MSI GeForce RTX 5070 Ti 16G Gaming Trio OC"
   },
   {
@@ -325,6 +350,7 @@
    "url": "https://www.amazon.de/dp/B0F1NJF1K4",
    "threshold": 1236.1,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "MSI GeForce RTX 5070 Ti 16G Gaming Trio OC"
   },
   {
@@ -333,6 +359,7 @@
    "url": "https://www.caseking.de/msi-geforce-rtx-5070-ti-16g-gaming-trio-oc-16384-mb-gddr7/GCMC-426.html",
    "threshold": 1236.1,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "MSI GeForce RTX 5070 Ti 16G Gaming Trio OC"
   },
   {
@@ -341,6 +368,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/nvidia-fuer-gaming/msi/pdp/2e12-3rc/msi-geforce-rtx-5070-ti-gaming-trio-oc-grafikkarte-16-gb.html",
    "threshold": 1236.1,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "MSI GeForce RTX 5070 Ti 16G Gaming Trio OC"
   },
   {
@@ -349,6 +377,7 @@
    "url": "https://www.amazon.de/dp/B0DYPFY7JG",
    "threshold": 735.99,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5070 OC 12GB (90YV0M10-M0NA00)"
   },
   {
@@ -357,6 +386,7 @@
    "url": "https://www.galaxus.de/de/s1/product/asus-prime-geforce-rtx-5070-oc-12-gb-gddr7-grafikkarte-55066624",
    "threshold": 735.99,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5070 OC 12GB (90YV0M10-M0NA00)"
   },
   {
@@ -365,6 +395,7 @@
    "url": "https://www.alternate.de/ASUS/GeForce-RTX-5070-PRIME-OC-Grafikkarte/html/product/100117271",
    "threshold": 735.99,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5070 OC 12GB (90YV0M10-M0NA00)"
   },
   {
@@ -373,6 +404,7 @@
    "url": "https://www.computeruniverse.net/de/p/2E07-A3U",
    "threshold": 735.99,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5070 OC 12GB (90YV0M10-M0NA00)"
   },
   {
@@ -381,6 +413,7 @@
    "url": "https://www.galaxus.de/de/s1/product/asus-dual-geforce-rtx-5060-ti-oc-16-gb-gddr7-grafikkarte-57354052",
    "threshold": 651.69,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Dual GeForce RTX 5060 Ti OC 16GB (90YV0MH0-M0NA00)"
   },
   {
@@ -389,6 +422,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/nvidia-fuer-gaming/asus/pdp/2e07-a44/asus-dual-geforce-rtx-5060-ti-oc-dual-rtx5060ti-o16g-grafikkarte-16-gb.html",
    "threshold": 651.69,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Dual GeForce RTX 5060 Ti OC 16GB (90YV0MH0-M0NA00)"
   },
   {
@@ -397,6 +431,7 @@
    "url": "https://www.computeruniverse.net/de/p/2E07-A44",
    "threshold": 651.69,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Dual GeForce RTX 5060 Ti OC 16GB (90YV0MH0-M0NA00)"
   },
   {
@@ -405,6 +440,7 @@
    "url": "https://www.amazon.de/dp/B0F4DVKSZ4",
    "threshold": 651.69,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Dual GeForce RTX 5060 Ti OC 16GB (90YV0MH0-M0NA00)"
   },
   {
@@ -413,6 +449,7 @@
    "url": "https://www.amazon.de/dp/B0CSFMYN1W",
    "threshold": 379.99,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime GeForce RTX 5060 OC 8GB (90YV0N10-M0NA00)"
   },
   {
@@ -421,6 +458,7 @@
    "url": "https://www.amazon.de/dp/B0DRPRZMK2",
    "threshold": 766.8,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Pulse Radeon RX 9070 XT 16GB (11348-03-20G)"
   },
   {
@@ -429,6 +467,7 @@
    "url": "https://www.galaxus.de/de/s1/product/sapphire-pulse-radeon-rx-9070-xt-16-gb-gddr6-grafikkarte-55629520",
    "threshold": 766.8,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Pulse Radeon RX 9070 XT 16GB (11348-03-20G)"
   },
   {
@@ -437,6 +476,7 @@
    "url": "https://www.proshop.de/Grafikkarte/Sapphire-Radeon-RX-9070-XT-Pulse-16GB-GDDR6-RAM-Grafikkarte/3331614",
    "threshold": 766.8,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Pulse Radeon RX 9070 XT 16GB (11348-03-20G)"
   },
   {
@@ -445,6 +485,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/amd-fuer-gaming/sapphire/pdp/2e01-7l5/sapphire-pulse-amd-radeon-rx-9070-xt-gaming-grafikkarte-16-gb.html",
    "threshold": 766.8,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Pulse Radeon RX 9070 XT 16GB (11348-03-20G)"
   },
   {
@@ -453,6 +494,7 @@
    "url": "https://www.amazon.de/dp/B0DRPPXB5X",
    "threshold": 846.92,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Nitro+ Radeon RX 9070 XT Gaming OC 16GB (11348-01-20G)"
   },
   {
@@ -461,6 +503,7 @@
    "url": "https://www.galaxus.de/en/s1/product/sapphire-nitro-radeon-rx-9070-xt-16-gb-gddr6-graphics-card-55651370",
    "threshold": 846.92,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Nitro+ Radeon RX 9070 XT Gaming OC 16GB (11348-01-20G)"
   },
   {
@@ -469,6 +512,7 @@
    "url": "https://www.caseking.de/en/sapphire-nitro-radeon-rx-9070-xt-gaming-oc-graphics-card-16384-mb-gddr6/GCSP-264.html",
    "threshold": 846.92,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Nitro+ Radeon RX 9070 XT Gaming OC 16GB (11348-01-20G)"
   },
   {
@@ -477,6 +521,7 @@
    "url": "https://www.computeruniverse.net/de/p/2E01-7L3",
    "threshold": 846.92,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Nitro+ Radeon RX 9070 XT Gaming OC 16GB (11348-01-20G)"
   },
   {
@@ -485,6 +530,7 @@
    "url": "https://www.amazon.de/dp/B0DSG52H7D",
    "threshold": 752.47,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime Radeon RX 9070 XT OC 16GB (90YV0L71-M0NA00)"
   },
   {
@@ -493,6 +539,7 @@
    "url": "https://www.galaxus.de/en/s1/product/asus-prime-rx-9070-xt-oc-16-gb-gddr6-graphics-card-54521730",
    "threshold": 752.47,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime Radeon RX 9070 XT OC 16GB (90YV0L71-M0NA00)"
   },
   {
@@ -501,6 +548,7 @@
    "url": "https://www.computeruniverse.net/de/p/2E07-A3N",
    "threshold": 752.47,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime Radeon RX 9070 XT OC 16GB (90YV0L71-M0NA00)"
   },
   {
@@ -509,6 +557,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/amd-fuer-gaming/asus/pdp/2e07-a3n/asus-prime-radeon-rx-9070-xt-oc-edition-prime-rx9070xt-o16g-grafikkarte-16-gb.html",
    "threshold": 752.47,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASUS Prime Radeon RX 9070 XT OC 16GB (90YV0L71-M0NA00)"
   },
   {
@@ -517,6 +566,7 @@
    "url": "https://www.proshop.de/Grafikkarte/GIGABYTE-Radeon-RX-9070-XT-GAMING-OC-16GB-GDDR6-RAM-Grafikkarte/3331581",
    "threshold": 784.93,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "GIGABYTE Radeon RX 9070 XT Gaming OC 16G (GV-R9070XTGAMING OC-16GD)"
   },
   {
@@ -525,6 +575,7 @@
    "url": "https://www.galaxus.de/de/s1/product/gigabyte-radeon-rx-9070-xt-gaming-oc-16g-16-gb-gddr6-grafikkarte-54089509",
    "threshold": 784.93,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "GIGABYTE Radeon RX 9070 XT Gaming OC 16G (GV-R9070XTGAMING OC-16GD)"
   },
   {
@@ -533,6 +584,7 @@
    "url": "https://www.computeruniverse.net/de/p/2E21-59A",
    "threshold": 784.93,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "GIGABYTE Radeon RX 9070 XT Gaming OC 16G (GV-R9070XTGAMING OC-16GD)"
   },
   {
@@ -541,6 +593,7 @@
    "url": "https://www.amazon.de/dp/B0DT7B79K9",
    "threshold": 784.93,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "GIGABYTE Radeon RX 9070 XT Gaming OC 16G (GV-R9070XTGAMING OC-16GD)"
   },
   {
@@ -549,6 +602,7 @@
    "url": "https://www.galaxus.de/de/s1/product/xfx-swift-radeon-rx-9070-xt-triple-fan-gaming-edition-16-gb-gddr6-grafikkarte-55651815",
    "threshold": 735.08,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "XFX Swift Radeon RX 9070 XT Triple Fan Gaming Edition (RX-97TSWF3B9)"
   },
   {
@@ -557,6 +611,7 @@
    "url": "https://www.caseking.de/xfx-swift-radeon-rx-9070-xt-triple-fan-gaming-edition-16384-mb-gddr6/GCXF-166.html",
    "threshold": 735.08,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "XFX Swift Radeon RX 9070 XT Triple Fan Gaming Edition (RX-97TSWF3B9)"
   },
   {
@@ -565,6 +620,7 @@
    "url": "https://www.galaxus.de/de/s1/product/asrock-radeon-rx-9070-challenger-16-gb-gddr6-grafikkarte-55673271",
    "threshold": 606.28,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASRock Radeon RX 9070 Challenger 16GB (90-GA5NZZ-00UANF)"
   },
   {
@@ -573,6 +629,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/grafikkarten/amd-fuer-gaming/asrock/pdp/2e33-01k/asrock-radeon-rx-9070-challenger-grafikkarte-16-gb.html",
    "threshold": 606.28,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASRock Radeon RX 9070 Challenger 16GB (90-GA5NZZ-00UANF)"
   },
   {
@@ -581,6 +638,7 @@
    "url": "https://www.proshop.de/Grafikkarte/ASRock-Radeon-RX-9070-Challenger-16GB-GDDR6-RAM-Grafikkarte/3348384",
    "threshold": 606.28,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "ASRock Radeon RX 9070 Challenger 16GB (90-GA5NZZ-00UANF)"
   },
   {
@@ -589,6 +647,7 @@
    "url": "https://www.galaxus.de/de/s1/product/sapphire-pulse-radeon-rx-9060-xt-16-gb-gddr6-grafikkarte-59129890",
    "threshold": 494.87,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Pulse Radeon RX 9060 XT 16GB (11350-03-20G)"
   },
   {
@@ -597,6 +656,7 @@
    "url": "https://www.caseking.de/sapphire-pulse-radeon-rx-9060-xt-gaming-oc-grafikkarte-16384-mb-gddr6/GCSP-272.html",
    "threshold": 494.87,
    "intervalSec": 900,
+   "category": "gpu",
    "title": "Sapphire Pulse Radeon RX 9060 XT 16GB (11350-03-20G)"
   },
   {
@@ -605,6 +665,7 @@
    "url": "https://www.galaxus.de/de/s1/product/kingston-fury-beast-2-x-32gb-6000-mhz-ddr5-ram-dimm-ram-44173697",
    "threshold": 1061.1,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
   },
   {
@@ -613,6 +674,7 @@
    "url": "https://www.amazon.de/dp/B0CYHC9FQB",
    "threshold": 1061.1,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
   },
   {
@@ -621,6 +683,7 @@
    "url": "https://www.computeruniverse.net/de/p/2424-0CW",
    "threshold": 1061.1,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
   },
   {
@@ -629,6 +692,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/pc-systeme/zubehoer/kingston/pdp/2424-0cw/64gb-2x32gb-kingston-fury-beast-ddr5-6000-cl30-ram-gaming-arbeitsspeicher.html",
    "threshold": 1061.1,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
   },
   {
@@ -637,6 +701,7 @@
    "url": "https://www.amazon.de/dp/B0C5M7J967",
    "threshold": 1036.6,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance DDR5-6000 CL30 64GB kit (CMK64GX5M2B6000Z30)"
   },
   {
@@ -645,6 +710,7 @@
    "url": "https://www.proshop.de/RAM/Corsair-Vengeance-DDR5-6000-64GB-CL30-Dual-Channel-2-pcs-AMD-EXPO-Intel-XMP-Grau/3170567",
    "threshold": 1036.6,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance DDR5-6000 CL30 64GB kit (CMK64GX5M2B6000Z30)"
   },
   {
@@ -653,6 +719,7 @@
    "url": "https://www.galaxus.de/de/s1/product/corsair-dimm-32-gb-ddr5-6000-2-x-16gb-6000-mhz-ddr5-ram-dimm-ram-37109897",
    "threshold": 535.5,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance DDR5-6000 CL30 32GB kit (CMK32GX5M2B6000Z30)"
   },
   {
@@ -661,6 +728,7 @@
    "url": "https://www.proshop.de/RAM/Corsair-Vengeance-DDR5-6000-32GB-CL30-Dual-Channel-2-pcs-AMD-EXPO-Intel-XMP-Grau/3189081",
    "threshold": 535.5,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance DDR5-6000 CL30 32GB kit (CMK32GX5M2B6000Z30)"
   },
   {
@@ -669,6 +737,7 @@
    "url": "https://www.amazon.de/dp/B0CBRJ63RT",
    "threshold": 535.5,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance DDR5-6000 CL30 32GB kit (CMK32GX5M2B6000Z30)"
   },
   {
@@ -677,6 +746,7 @@
    "url": "https://www.amazon.de/dp/B0BPTKD797",
    "threshold": 529.11,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance RGB DDR5-6000 CL30 32GB kit (CMH32GX5M2B6000Z30K)"
   },
   {
@@ -685,6 +755,7 @@
    "url": "https://www.galaxus.de/de/s1/product/corsair-vengeance-rgb-32gb-ddr5-kit-2x16gb-6000mhz-cl30-amd-expo-ddr-ram-ram-23715429",
    "threshold": 529.11,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance RGB DDR5-6000 CL30 32GB kit (CMH32GX5M2B6000Z30K)"
   },
   {
@@ -693,6 +764,7 @@
    "url": "https://www.alternate.de/Corsair/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1887078",
    "threshold": 529.11,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance RGB DDR5-6000 CL30 32GB kit (CMH32GX5M2B6000Z30K)"
   },
   {
@@ -701,6 +773,7 @@
    "url": "https://www.caseking.de/corsair-vengeance-rgb-ddr5-6000-ram-cl30-expo-32-gb-dual-kit-grau/MECS-528.html",
    "threshold": 529.11,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Corsair Vengeance RGB DDR5-6000 CL30 32GB kit (CMH32GX5M2B6000Z30K)"
   },
   {
@@ -709,6 +782,7 @@
    "url": "https://www.galaxus.de/en/s1/product/kingston-32gb-ddr5-6000mts-cl30-dimm-2-x-16gb-6000-mhz-dimm-ram-44173421",
    "threshold": 580.02,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Kingston FURY Beast DDR5-6000 CL30 32GB kit (KF560C30BBEK2-32)"
   },
   {
@@ -717,6 +791,7 @@
    "url": "https://www.alternate.de/Kingston-FURY/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/100052230",
    "threshold": 580.02,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Kingston FURY Beast DDR5-6000 CL30 32GB kit (KF560C30BBEK2-32)"
   },
   {
@@ -725,6 +800,7 @@
    "url": "https://www.amazon.de/dp/B0CYHC58P6",
    "threshold": 580.02,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Kingston FURY Beast DDR5-6000 CL30 32GB kit (KF560C30BBEK2-32)"
   },
   {
@@ -733,6 +809,7 @@
    "url": "https://www.alternate.de/G-Skill/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1868812",
    "threshold": 494.1,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "G.Skill Trident Z5 Neo RGB DDR5-6000 CL30 32GB kit (F5-6000J3038F16GX2-TZ5NR)"
   },
   {
@@ -741,6 +818,7 @@
    "url": "https://www.proshop.de/RAM/GSkill-Trident-Z5-Neo-RGB-DDR5-6000-32GB-CL30-Dual-Channel-2-pcs-AMD-EXPO-Intel-XMP-Schwarz-mit-RGB/3110528",
    "threshold": 494.1,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "G.Skill Trident Z5 Neo RGB DDR5-6000 CL30 32GB kit (F5-6000J3038F16GX2-TZ5NR)"
   },
   {
@@ -749,6 +827,7 @@
    "url": "https://www.amazon.de/dp/B0CTHXMYL8",
    "threshold": 405,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Crucial Pro Overclocking DDR5-6000 CL36 32GB kit (CP2K16G60C36U5B)"
   },
   {
@@ -757,6 +836,7 @@
    "url": "https://www.amazon.de/dp/B0CBYZ6DD1",
    "threshold": 535.92,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 PRO 4TB NVMe (MZ-V9P4T0BW)"
   },
   {
@@ -765,6 +845,7 @@
    "url": "https://www.galaxus.de/de/s1/product/samsung-990-pro-4000-gb-m2-2280-ssd-37073751",
    "threshold": 535.92,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 PRO 4TB NVMe (MZ-V9P4T0BW)"
   },
   {
@@ -773,6 +854,7 @@
    "url": "https://www.galaxus.de/de/s1/product/samsung-9100-pro-2000-gb-m2-2280-ssd-54423175",
    "threshold": 368.72,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 9100 PRO 2TB PCIe 5.0 (MZ-VAP2T0BW)"
   },
   {
@@ -781,6 +863,7 @@
    "url": "https://www.alternate.de/Samsung/9100-PRO-2-TB-SSD/html/product/100118132",
    "threshold": 368.72,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 9100 PRO 2TB PCIe 5.0 (MZ-VAP2T0BW)"
   },
   {
@@ -789,6 +872,7 @@
    "url": "https://www.galaxus.de/de/s1/product/samsung-990-pro-2000-gb-m2-2280-ssd-22097721",
    "threshold": 302.63,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
   },
   {
@@ -797,6 +881,7 @@
    "url": "https://www.amazon.de/dp/B0B9C4DKKG",
    "threshold": 302.63,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
   },
   {
@@ -805,6 +890,7 @@
    "url": "https://www.computeruniverse.net/de/p/3306-06Y",
    "threshold": 302.63,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
   },
   {
@@ -813,6 +899,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/festplatten-ssds/ssd-solid-state-disk/samsung/pdp/3306-06y/samsung-990-pro-nvme-ssd-2-tb-m-2-pcie-4-0-3d-nand-tlc.html",
    "threshold": 302.63,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
   },
   {
@@ -821,6 +908,7 @@
    "url": "https://www.amazon.de/dp/B0B7CMZ3QH",
    "threshold": 299.19,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "WD_BLACK SN850X 2TB NVMe (WDS200T2X0E)"
   },
   {
@@ -829,6 +917,7 @@
    "url": "https://www.proshop.de/SSD/SANDISK-WD-Black-SN850X-SSD-2TB-M2-2280-PCIe-40-Without-heatsink/3097426",
    "threshold": 299.19,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "WD_BLACK SN850X 2TB NVMe (WDS200T2X0E)"
   },
   {
@@ -837,6 +926,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/festplatten-ssds/ssd-solid-state-disk/samsung/pdp/3306-07j/samsung-990-evo-plus-nvme-2-0-ssd-2-tb-m-2-2280-tlc.html",
    "threshold": 263.12,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 EVO Plus 2TB NVMe (MZ-V9S2T0BW)"
   },
   {
@@ -845,6 +935,7 @@
    "url": "https://www.amazon.de/dp/B0DGHB9V34",
    "threshold": 263.12,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 EVO Plus 2TB NVMe (MZ-V9S2T0BW)"
   },
   {
@@ -853,6 +944,7 @@
    "url": "https://www.galaxus.de/de/s1/product/asus-rog-strix-oled-xg27aqwmg-2560-x-1440-pixel-2650-monitor-64742547",
    "threshold": 433.25,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "ASUS ROG Strix OLED XG27AQWMG 27in QHD 280Hz"
   },
   {
@@ -861,6 +953,7 @@
    "url": "https://www.proshop.de/Bildschirm/265-ASUS-ROG-Strix-XG27AQWMG-2560x1440-280Hz-WOLED/3420137",
    "threshold": 433.25,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "ASUS ROG Strix OLED XG27AQWMG 27in QHD 280Hz"
   },
   {
@@ -869,6 +962,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/monitore/gaming-monitore/asus/pdp/6135-0qa/asus-rog-strix-xg27aqwmg-26-5-zoll-wqhd-woled-panel-16-9-280-hz-gaming-monitor.html",
    "threshold": 433.25,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "ASUS ROG Strix OLED XG27AQWMG 27in QHD 280Hz"
   },
   {
@@ -877,6 +971,7 @@
    "url": "https://www.alternate.de/ASUS/ROG-Strix-XG27AQWMG-OLED-Gaming-Monitor/html/product/100165597",
    "threshold": 433.25,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "ASUS ROG Strix OLED XG27AQWMG 27in QHD 280Hz"
   },
   {
@@ -886,6 +981,7 @@
    "threshold": 675.8,
    "listPrice": 829,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "Dell Alienware AW3426DW 34in QD-OLED 280Hz"
   },
   {
@@ -895,6 +991,7 @@
    "threshold": 675.8,
    "listPrice": 829,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "Dell Alienware AW3426DW 34in QD-OLED 280Hz"
   },
   {
@@ -904,6 +1001,7 @@
    "threshold": 675.8,
    "listPrice": 829,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "Dell Alienware AW3426DW 34in QD-OLED 280Hz"
   },
   {
@@ -913,6 +1011,7 @@
    "threshold": 675.8,
    "listPrice": 829,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "Dell Alienware AW3426DW 34in QD-OLED 280Hz"
   },
   {
@@ -921,6 +1020,7 @@
    "url": "https://www.caseking.de/asus-rog-strix-oled-xg27aqdmg-gen2-26-5-zoll-wqhd-oled-gaming-monitor-240hz-oled-g-sync-compatible/TFAS-331.html",
    "threshold": 381.65,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "ASUS ROG Strix OLED XG27AQDMG Gen2 27in QHD 240Hz"
   },
   {
@@ -929,6 +1029,7 @@
    "url": "https://www.galaxus.de/de/s1/product/asus-rog-strix-xg27aqdmg-gen2-2560-x-1440-pixel-2650-monitor-62772145",
    "threshold": 381.65,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "ASUS ROG Strix OLED XG27AQDMG Gen2 27in QHD 240Hz"
   },
   {
@@ -937,6 +1038,7 @@
    "url": "https://www.amazon.de/dp/B09CD32DNH",
    "threshold": 381.65,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "ASUS ROG Strix OLED XG27AQDMG Gen2 27in QHD 240Hz"
   },
   {
@@ -946,6 +1048,7 @@
    "threshold": 329.8,
    "listPrice": 599,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "LG UltraGear OLED 27GX704A-B 27in QHD 240Hz"
   },
   {
@@ -955,6 +1058,7 @@
    "threshold": 329.8,
    "listPrice": 599,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "LG UltraGear OLED 27GX704A-B 27in QHD 240Hz"
   },
   {
@@ -963,6 +1067,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/monitore/gaming-monitore/samsung/pdp/6110-4gt/samsung-odyssey-g50sf-ls27fg506suxen-27-zoll-wqhd-quantum-dot-panel-16-9-180-hz-gaming-monitor.html",
    "threshold": 274.9,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "Samsung Odyssey OLED G5 G50SF 27in QHD 180Hz"
   },
   {
@@ -971,6 +1076,7 @@
    "url": "https://www.galaxus.de/de/s1/product/samsung-odyssey-oled-g5-g50sf-2560-x-1440-pixel-27-monitor-63948891",
    "threshold": 274.9,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "Samsung Odyssey OLED G5 G50SF 27in QHD 180Hz"
   },
   {
@@ -979,6 +1085,7 @@
    "url": "https://www.amazon.de/dp/B0FZC6S38Q",
    "threshold": 274.9,
    "intervalSec": 1800,
+   "category": "monitor",
    "title": "Samsung Odyssey OLED G5 G50SF 27in QHD 180Hz"
   },
   {
@@ -988,6 +1095,7 @@
    "threshold": 899.99,
    "listPrice": 899.99,
    "intervalSec": 180,
+   "category": "console",
    "title": "Sony PlayStation 5 Pro 2TB"
   },
   {
@@ -997,6 +1105,7 @@
    "threshold": 899.99,
    "listPrice": 899.99,
    "intervalSec": 180,
+   "category": "console",
    "title": "Sony PlayStation 5 Pro 2TB"
   },
   {
@@ -1006,6 +1115,7 @@
    "threshold": 899.99,
    "listPrice": 899.99,
    "intervalSec": 180,
+   "category": "console",
    "title": "Sony PlayStation 5 Pro 2TB"
   },
   {
@@ -1015,6 +1125,7 @@
    "threshold": 649,
    "listPrice": 649.99,
    "intervalSec": 300,
+   "category": "console",
    "title": "Sony PlayStation 5 Slim Disc 1TB (1000040586)"
   },
   {
@@ -1024,6 +1135,7 @@
    "threshold": 649,
    "listPrice": 649.99,
    "intervalSec": 300,
+   "category": "console",
    "title": "Sony PlayStation 5 Slim Disc 1TB (1000040586)"
   },
   {
@@ -1033,6 +1145,7 @@
    "threshold": 649,
    "listPrice": 649.99,
    "intervalSec": 300,
+   "category": "console",
    "title": "Sony PlayStation 5 Slim Disc 1TB (1000040586)"
   },
   {
@@ -1042,6 +1155,7 @@
    "threshold": 649,
    "listPrice": 649.99,
    "intervalSec": 300,
+   "category": "console",
    "title": "Sony PlayStation 5 Slim Disc 1TB (1000040586)"
   },
   {
@@ -1050,6 +1164,7 @@
    "url": "https://www.galaxus.de/de/s1/product/nintendo-switch-2-spielkonsole-57348152",
    "threshold": 414,
    "intervalSec": 300,
+   "category": "console",
    "title": "Nintendo Switch 2 (10015151)"
   },
   {
@@ -1058,6 +1173,7 @@
    "url": "https://www.amazon.de/dp/B0F2J4SYJ2",
    "threshold": 414,
    "intervalSec": 300,
+   "category": "console",
    "title": "Nintendo Switch 2 (10015151)"
   },
   {
@@ -1066,6 +1182,7 @@
    "url": "https://www.computeruniverse.net/de/p/7D09-02T",
    "threshold": 414,
    "intervalSec": 300,
+   "category": "console",
    "title": "Nintendo Switch 2 (10015151)"
   },
   {
@@ -1074,6 +1191,7 @@
    "url": "https://www.proshop.de/Spielkonsolen/Nintendo-Switch-2/3346797",
    "threshold": 414,
    "intervalSec": 300,
+   "category": "console",
    "title": "Nintendo Switch 2 (10015151)"
   },
   {
@@ -1082,6 +1200,7 @@
    "url": "https://www.galaxus.de/de/s1/product/nintendo-switch-2-mario-kart-world-set-spielkonsole-57348159",
    "threshold": 512.05,
    "intervalSec": 300,
+   "category": "console",
    "title": "Nintendo Switch 2 + Mario Kart World bundle (10015920)"
   },
   {
@@ -1090,6 +1209,7 @@
    "url": "https://www.proshop.de/Spielkonsolen/Nintendo-Switch-2-Mario-Kart-World/3360042",
    "threshold": 512.05,
    "intervalSec": 300,
+   "category": "console",
    "title": "Nintendo Switch 2 + Mario Kart World bundle (10015920)"
   },
   {
@@ -1098,6 +1218,7 @@
    "url": "https://www.galaxus.de/de/s1/product/amd-ryzen-7-9800x3d-am5-470-ghz-8-core-prozessor-52410996",
    "threshold": 358.67,
    "intervalSec": 1800,
+   "category": "cpu",
    "title": "AMD Ryzen 7 9800X3D boxed (100-100001084WOF)"
   },
   {
@@ -1106,6 +1227,7 @@
    "url": "https://www.proshop.de/CPU/AMD-Ryzen-7-9800X3D-CPU-8-Kerne-47-GHz-AMD-AM5-AMD-Boxed-ohne-Kuehler/3310690",
    "threshold": 358.67,
    "intervalSec": 1800,
+   "category": "cpu",
    "title": "AMD Ryzen 7 9800X3D boxed (100-100001084WOF)"
   },
   {
@@ -1114,6 +1236,7 @@
    "url": "https://www.alternate.de/AMD/Ryzen-7-9800X3D-Prozessor/html/product/100093605",
    "threshold": 358.67,
    "intervalSec": 1800,
+   "category": "cpu",
    "title": "AMD Ryzen 7 9800X3D boxed (100-100001084WOF)"
   },
   {
@@ -1122,6 +1245,7 @@
    "url": "https://www.cyberport.de/pc-und-zubehoer/komponenten/prozessoren-cpu/amd/pdp/2001-740/amd-ryzen-7-9800x3d-8-kern-cpu-sockel-am5-boxed-ohne-kuehler-.html",
    "threshold": 358.67,
    "intervalSec": 1800,
+   "category": "cpu",
    "title": "AMD Ryzen 7 9800X3D boxed (100-100001084WOF)"
   },
   {
@@ -1130,6 +1254,7 @@
    "url": "https://www.galaxus.de/de/s1/product/steelseries-arctis-nova-pro-wireless-kabellos-gaming-headset-20796801",
    "threshold": 191.2,
    "intervalSec": 3600,
+   "category": "headset",
    "title": "SteelSeries Arctis Nova Pro Wireless (61520)"
   },
   {
@@ -1138,6 +1263,7 @@
    "url": "https://www.amazon.de/dp/B09ZLRCH1H",
    "threshold": 191.2,
    "intervalSec": 3600,
+   "category": "headset",
    "title": "SteelSeries Arctis Nova Pro Wireless (61520)"
   },
   {
@@ -1146,6 +1272,7 @@
    "url": "https://www.amazon.de/dp/B0F93TKTGY",
    "threshold": 151.2,
    "intervalSec": 3600,
+   "category": "headset",
    "title": "Razer BlackShark V3 Pro black (RZ04-05400100-R3M1)"
   },
   {
@@ -1154,6 +1281,7 @@
    "url": "https://www.galaxus.de/de/s1/product/razer-blackshark-v3-pro-kabelgebunden-kabellos-gaming-headset-60453927",
    "threshold": 151.2,
    "intervalSec": 3600,
+   "category": "headset",
    "title": "Razer BlackShark V3 Pro black (RZ04-05400100-R3M1)"
   },
   {
@@ -1162,6 +1290,7 @@
    "url": "https://www.alternate.de/Razer/BlackShark-V3-Pro-Gaming-Headset/html/product/100145937",
    "threshold": 151.2,
    "intervalSec": 3600,
+   "category": "headset",
    "title": "Razer BlackShark V3 Pro black (RZ04-05400100-R3M1)"
   },
   {
@@ -1170,6 +1299,7 @@
    "url": "https://www.amazon.de/dp/B07W6H7PY2",
    "threshold": 127.86,
    "intervalSec": 3600,
+   "category": "headset",
    "title": "Logitech G Pro X 2 Lightspeed black (981-001263)"
   },
   {
@@ -1178,6 +1308,7 @@
    "url": "https://www.galaxus.de/de/s1/product/logitech-g-pro-x-2-lightspeed-kabelgebunden-kabellos-gaming-headset-35835163",
    "threshold": 127.86,
    "intervalSec": 3600,
+   "category": "headset",
    "title": "Logitech G Pro X 2 Lightspeed black (981-001263)"
   },
   {
@@ -1186,6 +1317,7 @@
    "url": "https://www.alternate.de/Kingston-FURY/DIMM-64-GB-DDR5-6000-2x-32-GB-Dual-Kit-Arbeitsspeicher/html/product/100052231",
    "threshold": 1061.1,
    "intervalSec": 1800,
+   "category": "ram",
    "title": "Kingston FURY Beast DDR5-6000 CL30 64GB kit (KF560C30BBEK2-64)"
   },
   {
@@ -1193,6 +1325,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Team-Group/DIMM-64-GB-DDR5-6000-2x-32-GB-Dual-Kit-Arbeitsspeicher/html/product/1886607",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "Team Group T-Force Delta RGB DDR5-6000 CL38 64GB kit, white (FF4D564G6000HC38ADC01)"
@@ -1202,6 +1335,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Patriot/DIMM-64-GB-DDR5-6000-(2x-32-GB)-Dual-Kit-Arbeitsspeicher/html/product/100006896",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "Patriot Viper Venom DDR5-6000 CL36 64GB kit (PVV564G600C36K)"
@@ -1211,6 +1345,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/G-Skill/DIMM-64-GB-DDR5-6000-Kit-Arbeitsspeicher/html/product/1863753",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "G.Skill Trident Z5 DDR5-6000 CL32 64GB kit (F5-6000J3238G32GX2-TZ5K)"
@@ -1220,6 +1355,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Corsair/DIMM-64-GB-DDR5-6000-Kit-Arbeitsspeicher/html/product/1881188",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "enabled": false,
@@ -1230,6 +1366,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Crucial/DIMM-64-GB-DDR5-6000-(2x-32-GB)-Dual-Kit-Arbeitsspeicher/html/product/100114534",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "enabled": false,
@@ -1240,6 +1377,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Patriot/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/100063948",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "Patriot Viper Venom DDR5-6000 CL30 32GB kit (PVV532G600C30K)"
@@ -1249,6 +1387,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Team-Group/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1853819",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "Team Group T-Force Delta RGB DDR5-6000 CL30 32GB kit, black (FF3D532G6000HC30DC01)"
@@ -1258,6 +1397,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/G-Skill/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1906541",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "G.Skill Flare X5 DDR5-6000 CL30 32GB kit (F5-6000J3038F16GX2-FX5)"
@@ -1267,6 +1407,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/ADATA/DIMM-32-GB-DDR5-6000-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/100011564",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "ADATA XPG Lancer Blade RGB DDR5-6000 CL30 32GB kit (AX5U6000C3016G-DTLABRBK)"
@@ -1276,6 +1417,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Kingston-FURY/DIMM-32-GB-DDR5-5600-Kit-Arbeitsspeicher/html/product/1805062",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "Kingston FURY Beast DDR5-5600 CL40 32GB kit (KF556C40BBK2-32)"
@@ -1285,6 +1427,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Patriot/DIMM-32-GB-DDR5-5600-(2x-16-GB)-Dual-Kit-Arbeitsspeicher/html/product/1855435",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "Patriot Viper Venom DDR5-5600 CL36 32GB kit (PVV532G560C36K)"
@@ -1294,6 +1437,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Corsair/DIMM-32-GB-DDR4-3200-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1548588",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "Corsair Vengeance LPX DDR4-3200 CL16 32GB kit (CMK32GX4M2E3200C16)"
@@ -1303,6 +1447,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Kingston-FURY/DIMM-32-GB-DDR4-3200-2x-16-GB-Dual-Kit-Arbeitsspeicher/html/product/1765499",
    "intervalSec": 1800,
+   "category": "ram",
    "minDropPct": 0.1,
    "minDropEur": 40,
    "title": "Kingston FURY Beast DDR4-3200 CL16 32GB kit (KF432C16BB1K2/32)"
@@ -1312,6 +1457,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Samsung/990-PRO-1-TB-SSD/html/product/1864239",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "Samsung 990 PRO 1TB PCIe 4.0 (MZ-V9P1T0BW)"
@@ -1322,6 +1468,7 @@
    "url": "https://www.alternate.de/Samsung/990-PRO-2-TB-SSD/html/product/1864243",
    "threshold": 302.63,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 PRO 2TB NVMe (MZ-V9P2T0BW)"
   },
   {
@@ -1330,6 +1477,7 @@
    "url": "https://www.alternate.de/Samsung/990-PRO-4-TB-SSD/html/product/100011336",
    "threshold": 535.92,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 PRO 4TB NVMe (MZ-V9P4T0BW)"
   },
   {
@@ -1337,6 +1485,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Samsung/9100-PRO-1-TB-SSD/html/product/100118126",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "Samsung 9100 PRO 1TB PCIe 5.0 (MZ-VAP1T0BW)"
@@ -1346,6 +1495,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Samsung/9100-PRO-4-TB-SSD/html/product/100118135",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "Samsung 9100 PRO 4TB PCIe 5.0 (MZ-VAP4T0BW)"
@@ -1355,6 +1505,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Samsung/990-EVO-Plus-1-TB-SSD/html/product/100080160",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "Samsung 990 EVO Plus 1TB PCIe 4.0 x4 / 5.0 x2 (MZ-V9S1T0BW)"
@@ -1365,6 +1516,7 @@
    "url": "https://www.alternate.de/Samsung/990-EVO-Plus-2-TB-SSD/html/product/100080170",
    "threshold": 263.12,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "Samsung 990 EVO Plus 2TB NVMe (MZ-V9S2T0BW)"
   },
   {
@@ -1372,6 +1524,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Samsung/990-EVO-Plus-4-TB-SSD/html/product/100080174",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "Samsung 990 EVO Plus 4TB PCIe 4.0 x4 / 5.0 x2 (MZ-V9S4T0BW)"
@@ -1381,6 +1534,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/SanDisk/Black-SN850X-NVMe-SSD-1-TB/html/product/1862682",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "WD_BLACK SN850X 1TB PCIe 4.0, no heatsink (WDS100T2X0E)"
@@ -1391,6 +1545,7 @@
    "url": "https://www.alternate.de/SanDisk/Black-SN850X-NVMe-SSD-2-TB/html/product/1862684",
    "threshold": 299.19,
    "intervalSec": 1800,
+   "category": "ssd",
    "title": "WD_BLACK SN850X 2TB NVMe (WDS200T2X0E)"
   },
   {
@@ -1398,6 +1553,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Crucial/T500-1-TB-SSD/html/product/100022304",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "enabled": false,
@@ -1408,6 +1564,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Kingston/KC3000-1024-GB-SSD/html/product/1791577",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "Kingston KC3000 1TB PCIe 4.0 (SKC3000S/1024G)"
@@ -1417,6 +1574,7 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Kingston/KC3000-2048-GB-SSD/html/product/1791579",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "Kingston KC3000 2TB PCIe 4.0 (SKC3000D/2048G)"
@@ -1426,9 +1584,120 @@
    "retailer": "alternate",
    "url": "https://www.alternate.de/Kingston/NV3-2-TB-SSD/html/product/100070711",
    "intervalSec": 1800,
+   "category": "ssd",
    "minDropPct": 0.12,
    "minDropEur": 30,
    "title": "Kingston NV3 2TB PCIe 4.0 M.2 2280 (SNV3S/2000G)"
+  },
+  {
+   "productKey": "tcg-30j-top-trainer-box",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Pok%C3%A9mon/Pok%C3%A9mon-TCG-30-Jahre-Top-Trainer-Box-Sammelkarten/html/product/100210025",
+   "threshold": 54.99,
+   "listPrice": 54.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Top-Trainer-Box (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-booster-bundle",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Pok%C3%A9mon/Pok%C3%A9mon-TCG-30-Jahre-Boosterbundle-Sammelkarten/html/product/100223357",
+   "threshold": 29.99,
+   "listPrice": 29.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Booster-Bundle (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-feelinara-ex-kollektion",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Pok%C3%A9mon/Pok%C3%A9mon-TCG-30-Jahre-Feelinara-ex-Kollektion-Sammelkarten/html/product/100210028",
+   "threshold": 24.99,
+   "listPrice": 24.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Feelinara-ex-Kollektion (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-quajutsu-ex-kollektion",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Pok%C3%A9mon/Pok%C3%A9mon-TCG-30-Jahre-Quajutsu-ex-Kollektion-Sammelkarten/html/product/100210031",
+   "threshold": 24.99,
+   "listPrice": 24.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Quajutsu-ex-Kollektion (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-poster-kollektion",
+   "retailer": "alternate",
+   "url": "https://www.alternate.de/Pok%C3%A9mon/Pok%C3%A9mon-TCG-30-Jahre-Poster-Kollektion-Sammelkarten/html/product/100210038",
+   "threshold": 23.99,
+   "listPrice": 23.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Poster-Kollektion (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-top-trainer-box",
+   "retailer": "smyths",
+   "url": "https://www.smythstoys.com/de/de-de/spielzeug/action-spielzeug/pokemon/pokemon-karten/pokemon-karten-top-trainer-box-30-jahre-edition/p/264148",
+   "threshold": 54.99,
+   "listPrice": 54.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Top-Trainer-Box (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-booster-bundle",
+   "retailer": "smyths",
+   "url": "https://www.smythstoys.com/de/de-de/spielzeug/action-spielzeug/pokemon/pokemon-figuren-und-sets/pokemon-30-jahre-boosterbundle/p/265602",
+   "threshold": 29.99,
+   "listPrice": 29.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Booster-Bundle (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-quajutsu-ex-kollektion",
+   "retailer": "smyths",
+   "url": "https://www.smythstoys.com/de/de-de/spielzeug/action-spielzeug/pokemon/pokemon-karten/pokemon-30-jahre-edition-quajutsu-ex/p/264149",
+   "threshold": 24.99,
+   "listPrice": 24.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Quajutsu-ex-Kollektion (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-poster-kollektion",
+   "retailer": "smyths",
+   "url": "https://www.smythstoys.com/de/de-de/spielzeug/action-spielzeug/pokemon/pokemon-karten/pokemon-poster-kollektion-30-jahre-edition/p/264190",
+   "threshold": 23.99,
+   "listPrice": 23.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Poster-Kollektion (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-30j-tin-feelinara-ex",
+   "retailer": "smyths",
+   "url": "https://www.smythstoys.com/de/de-de/spielzeug/action-spielzeug/pokemon/pokemon-karten/pokemon-tin-box-mit-feelinara-ex-30-jahre-edition/p/264163",
+   "threshold": 24.99,
+   "listPrice": 24.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "30 Jahre Tin-Box Feelinara-ex (Pokémon TCG, deutsch)"
+  },
+  {
+   "productKey": "tcg-me05-dunkelnacht-top-trainer-box",
+   "retailer": "smyths",
+   "url": "https://www.smythstoys.com/de/de-de/spielzeug/action-spielzeug/pokemon/pokemon-karten/pokemon-karten-top-trainer-box-mega-entwicklung-dunkelnacht/p/263149",
+   "threshold": 54.99,
+   "listPrice": 54.99,
+   "intervalSec": 300,
+   "category": "tcg",
+   "title": "Dunkelnacht Top-Trainer-Box (Pokémon TCG, deutsch)"
   }
  ]
 }

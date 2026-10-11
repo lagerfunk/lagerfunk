@@ -1,6 +1,8 @@
 {
   "note": "What the weekly Lagerfunk Marktbericht shows. Schedule and feature flag: marketReport in breakers.json. Categories and product groups match watchlist productKeys by regular expression or exact key; an item goes to the first group that matches, an item no group matches becomes its own group. key: true shows the week values (hours in stock, at or below the list price when the watchlist has one). variants: true names the cheapest model of a group that holds several products. Amazon is always left out, whatever this file says. A test checks that every watchlist item of these categories lands in a group here.",
   "excludeRetailers": ["amazon"],
+  "excludeCategories": ["tcg"],
+  "excludeNote": "Pokémon TCG rows (category tcg) stay out of the report: it is the hardware market report, and the only tcg shop the free runner reads (ALTERNATE) sold the 30 Jahre line far above the UVP in October 2026, so a lowest-price line would show that price. Remove tcg here and add a category with groups per product type once a shop that sells at UVP (Smyths) can be read.",
   "channelUrl": "",
   "utm": { "source": "lagerfunk-site", "medium": "marktbericht" },
   "categories": [

@@ -10,6 +10,12 @@ const KIND = {
   lowest_30d: { emoji: '📉', label: '30-TAGE-TIEFSTPREIS' },
 };
 
+// A tag line under the headline for categories outside the PC and console hardware the channel started with, so a
+// reader sees at a glance what the post is about. The category comes from the watch item (monitor alert.category).
+export const CATEGORY_TAG = {
+  tcg: { emoji: '🃏', label: 'Pokémon TCG' },
+};
+
 // Retailer titles sometimes carry "-20%" or "statt 99 €"; strip that so the post never implies a reduction.
 export function cleanTitle(t) {
   return truncate(
@@ -92,6 +98,8 @@ export function renderAlertPost(alert, ctx) {
   const h = headline(alert, facts, cfg);
   const shop = retailer.name || 'Shop';
   add(`${h.emoji} <b>${esc(h.text)}</b> · ${esc(shop)}`, `${h.emoji} **${mdEscape(h.text)}** · ${mdEscape(shop)}`, `${h.text} ${shop}`);
+  const tag = CATEGORY_TAG[alert.category];
+  if (tag) add(`${tag.emoji} ${esc(tag.label)}`, `${tag.emoji} ${mdEscape(tag.label)}`, tag.label);
 
   const title = cleanTitle(alert.title);
   tg.push(`<b>${esc(title)}</b>`); dc.push(`**${mdEscape(title)}**`);

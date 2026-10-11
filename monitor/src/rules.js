@@ -72,6 +72,7 @@ export function evaluate({ item, check, prev, hist, adapter, now, options = {} }
     lowest30dSource: 'own',
     listPriceType: item.listPriceType ?? null,
     imageUrl: check.imageUrl ?? null,
+    category: item.category ?? null, // the bot labels some categories (tcg: "Pokémon TCG")
   };
 
   // Re-arm logic for restock: the item must have been non-eligible for rearmMinutes.

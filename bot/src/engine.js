@@ -36,7 +36,7 @@ const ONCE_KEEP_MS = 60 * DAY;
 function slimAlert(a) {
   const pick = ['key', 'kind', 'productKey', 'retailer', 'title', 'url', 'price', 'listPrice', 'lowest30d', 'detectedAt',
     'imageUrl', 'inStock', 'stockText', 'listPriceType', 'lowest30dSource', 'historyDays', 'firstSeenAt',
-    'deliveryEstimate', 'deliveryAssumed', 'isPreorder', 'isBackorder', 'shipsBy', 'soldBy', 'shopUrl'];
+    'deliveryEstimate', 'deliveryAssumed', 'isPreorder', 'isBackorder', 'shipsBy', 'soldBy', 'shopUrl', 'category'];
   const o = {};
   for (const k of pick) if (a[k] !== undefined && a[k] !== null) o[k] = a[k];
   o.title = truncate(o.title || a.productKey || 'Produkt', 200);
