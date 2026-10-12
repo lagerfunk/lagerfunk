@@ -311,7 +311,9 @@ export function buildReport({ log, items, rc, cfg, now, week = null, shopName = 
         lastRestock: enough && restockAt.length ? { at: iso(restockAt.at(-1).t), shop: shopName(restockAt.at(-1).retailer) } : null,
         delivery: null,
       };
-      if (enough && out.key) {
+      // Week values only for a group we actually read: a key product watched only at shops the runner does not read (or
+      // only on Amazon) has no readings, and "0 von 168 Std." would claim it was never kaufbar when we simply never looked.
+      if (enough && out.key && entries.length) {
         const ex = entries.map((x) => x.e);
         out.week = {
           from: iso(from),
