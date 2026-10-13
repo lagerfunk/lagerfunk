@@ -1,35 +1,69 @@
 {
-  "note": "Hot watcher (deploy/hot.mjs, workflow hot.yml). Checks the NVIDIA Founders Edition every 10 s and ALTERNATE's RTX 50 listings (cheapest 24 per model) about once every 10 s in total. A DROP is a card that can be ordered at or under its model's buyBelow (default: UVP + tolerancePct). Every drop is logged on the 'drops' branch (start, end, duration, price); models with alert true also message the owner's admin chat, with the buy link and when the last drop was. It never orders anything. uvp = NVIDIA's euro list price (PCGH, 19.08.2025; 5050 is an assumption from the USD 249 MSRP).",
+  "note": "Hot watcher (deploy/hot.mjs, workflow hot.yml), RTX 5090 only (owner, 13 Oct 2026). NVIDIA Founders Edition every 10 s, ALTERNATE's 5090 listing (cheapest 24) every 10 s. A DROP is a 5090 that can be ordered at or under buyBelow. Every drop is logged on the 'drops' branch (start, end, duration, price) and messaged to the owner's admin chat with the buy link and when the last drop was. pastDrops seeds the log with public reports of earlier German FE drops. It never orders anything.",
   "loopMinutes": 50,
   "remindMinutes": 15,
   "failAlertAfter": 20,
   "saveEverySec": 60,
   "tolerancePct": 10,
   "models": {
-    "rtx-5090": { "label": "RTX 5090", "uvp": 2099, "buyBelow": 4500, "alert": true },
-    "rtx-5080": { "label": "RTX 5080", "uvp": 1059, "alert": true },
-    "rtx-5070-ti": { "label": "RTX 5070 Ti", "uvp": 879, "alert": true },
-    "rtx-5070": { "label": "RTX 5070", "uvp": 649, "alert": false },
-    "rtx-5060-ti": { "label": "RTX 5060 Ti", "uvp": 399, "alert": false },
-    "rtx-5060": { "label": "RTX 5060", "uvp": 319, "alert": false },
-    "rtx-5050": { "label": "RTX 5050", "uvp": 279, "alert": false }
+    "rtx-5090": {
+      "label": "RTX 5090",
+      "uvp": 2099,
+      "buyBelow": 4500,
+      "alert": true
+    }
   },
-  "trackingSince": { "rtx-5090": "2026-10-06T23:54:23Z" },
+  "trackingSince": {
+    "rtx-5090": "2026-10-06T23:54:23Z"
+  },
   "sources": [
     {
       "id": "nvidia-fe",
       "type": "nvidia",
       "everySec": 10,
       "items": [
-        { "key": "nvidia:rtx-5090-fe", "model": "rtx-5090", "sku": "PROFESHOP5090", "title": "RTX 5090 Founders Edition", "url": "https://marketplace.nvidia.com/de-de/consumer/graphics-cards/nvidia-geforce-rtx-5090/", "remind": true }
+        {
+          "key": "nvidia:rtx-5090-fe",
+          "model": "rtx-5090",
+          "sku": "PROFESHOP5090",
+          "title": "RTX 5090 Founders Edition",
+          "url": "https://marketplace.nvidia.com/de-de/consumer/graphics-cards/nvidia-geforce-rtx-5090/",
+          "remind": true
+        }
       ]
     },
-    { "id": "alternate-rtx-5090", "type": "alternate-listing", "model": "rtx-5090", "everySec": 30, "url": "https://www.alternate.de/Grafikkarten/NVIDIA-Grafikkarten/RTX-5090?s=price_asc" },
-    { "id": "alternate-rtx-5080", "type": "alternate-listing", "model": "rtx-5080", "everySec": 60, "url": "https://www.alternate.de/Grafikkarten/NVIDIA-Grafikkarten/RTX-5080?s=price_asc" },
-    { "id": "alternate-rtx-5070-ti", "type": "alternate-listing", "model": "rtx-5070-ti", "everySec": 60, "url": "https://www.alternate.de/Grafikkarten/NVIDIA-Grafikkarten/RTX-5070-Ti?s=price_asc" },
-    { "id": "alternate-rtx-5070", "type": "alternate-listing", "model": "rtx-5070", "everySec": 120, "url": "https://www.alternate.de/Grafikkarten/NVIDIA-Grafikkarten/RTX-5070?s=price_asc" },
-    { "id": "alternate-rtx-5060-ti", "type": "alternate-listing", "model": "rtx-5060-ti", "everySec": 120, "url": "https://www.alternate.de/Grafikkarten/NVIDIA-Grafikkarten/RTX-5060-Ti?s=price_asc" },
-    { "id": "alternate-rtx-5060", "type": "alternate-listing", "model": "rtx-5060", "everySec": 120, "url": "https://www.alternate.de/Grafikkarten/NVIDIA-Grafikkarten/RTX-5060?s=price_asc" },
-    { "id": "alternate-rtx-5050", "type": "alternate-listing", "model": "rtx-5050", "everySec": 120, "url": "https://www.alternate.de/Grafikkarten/NVIDIA-Grafikkarten/RTX-5050?s=price_asc" }
+    {
+      "id": "alternate-rtx-5090",
+      "type": "alternate-listing",
+      "model": "rtx-5090",
+      "everySec": 10,
+      "url": "https://www.alternate.de/Grafikkarten/NVIDIA-Grafikkarten/RTX-5090?s=price_asc"
+    }
+  ],
+  "pastDrops": [
+    {
+      "id": "history:nvidia-fe@2025-12-01",
+      "key": "nvidia:rtx-5090-fe",
+      "model": "rtx-5090",
+      "title": "RTX 5090 Founders Edition",
+      "shop": "NVIDIA",
+      "start": "2025-12-01T12:55:00Z",
+      "durationSec": 1980,
+      "price": 2099,
+      "approx": true,
+      "source": "PCGH 01.12.2025: whole allocation gone after a little over 30 minutes; start time not published (a reader's alert said 13:55)"
+    },
+    {
+      "id": "history:nvidia-fe@2026-01-30",
+      "key": "nvidia:rtx-5090-fe",
+      "model": "rtx-5090",
+      "title": "RTX 5090 Founders Edition",
+      "shop": "NVIDIA",
+      "start": "2026-01-30T09:00:00Z",
+      "durationSec": 480,
+      "price": 2099,
+      "approx": true,
+      "source": "ComputerBase 30.01.2026: first FE drop since early December, shortly after 10:00, the 5090 sold out in about 8 minutes"
+    }
   ]
 }

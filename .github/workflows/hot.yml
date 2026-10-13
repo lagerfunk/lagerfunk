@@ -1,5 +1,5 @@
-# Hot watcher: the RTX 5090 Founders Edition every 10 s and ALTERNATE's RTX 50 listings about once every 10 s in total, with
-# a retail-price check and a log of every stock drop (drops.json on the branch "drops"), for about 50 minutes per run; then
+# Hot watcher, RTX 5090 only: the Founders Edition at NVIDIA and ALTERNATE's 5090 listing every 10 s each, with a price
+# limit and a log of every stock drop (drops.json on the branch "drops"), for about 50 minutes per run; then
 # the run starts the next one itself (deploy/hot.mjs). Alerts go ONLY to the owner's admin chat (TELEGRAM_ADMIN_CHAT_ID)
 # and any chat in HOT_EXTRA_CHAT_IDS, never to the channel. Nothing is ever ordered. Models, limits, shops:
 # deploy/config/hot.json. Stop: Settings, Variables, HOT_PAUSE = 1 (or disable this workflow). Start: Actions, hot, Run workflow.

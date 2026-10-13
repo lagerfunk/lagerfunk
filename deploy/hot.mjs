@@ -11,7 +11,7 @@
 import { readFileSync, appendFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { normalizeHot, runHot, fetchSource, isDrop, loadDb, summaryMessage, telegramSender, HOT_CONFIG_FILE } from './lib/hot.mjs';
+import { normalizeHot, runHot, fetchSource, isDrop, loadDb, seedPastDrops, summaryMessage, telegramSender, HOT_CONFIG_FILE } from './lib/hot.mjs';
 import { createHotStore } from './lib/hotstore.mjs';
 import { createGithubApi } from './lib/chain.mjs';
 
@@ -56,9 +56,12 @@ try {
   db = loadDb(null);
 }
 db.firstRunAt ??= new Date().toISOString();
+for (const [k, p] of Object.entries(db.products)) if (!cfg.models[p.model]) delete db.products[k]; // models no longer watched
+const seeded = seedPastDrops(db, cfg);
+if (seeded) console.log(`added ${seeded} earlier drops from public reports to the log`);
 
 if (on(env.ANNOUNCE)) {
-  const r = await send(`[hot watcher] on: NVIDIA FE every 10 s, ALTERNATE RTX 50 listings about every 10 s. A drop = in stock at or under the model's limit. Nothing is bought automatically.\n${summaryMessage(db, cfg)}`);
+  const r = await send(`[hot watcher] on, RTX 5090 only: NVIDIA FE and ALTERNATE every 10 s. A drop = orderable at or under the limit. Nothing is bought automatically.\n${summaryMessage(db, cfg)}`);
   console.log(`announce: ${r.ok ? 'sent' : r.error}`);
 }
 

@@ -36,6 +36,7 @@ export function normalizeHot(raw) {
     tolerancePct: tol,
     models,
     trackingSince: raw?.trackingSince ?? {},
+    pastDrops: Array.isArray(raw?.pastDrops) ? raw.pastDrops : [],
     sources,
   };
 }
@@ -111,8 +112,22 @@ export function loadDb(raw) {
 export const capFor = (cfg, model) => cfg.models[model]?.buyBelow ?? null;
 
 export function isDrop(cfg, p) {
+  if (!cfg.models[p.model]) return false; // a model we do not watch
   const cap = capFor(cfg, p.model);
   return p.inStock === true && p.price != null && (cap == null || p.price <= cap);
+}
+
+/** Add publicly reported earlier drops (config pastDrops) that the log does not hold yet, oldest first. */
+export function seedPastDrops(db, cfg) {
+  let added = 0;
+  for (const pd of cfg.pastDrops ?? []) {
+    if (!pd?.id || !pd.start || db.drops.some((d) => d.id === pd.id)) continue;
+    const end = pd.durationSec != null ? new Date(Date.parse(pd.start) + pd.durationSec * 1000).toISOString() : pd.end ?? null;
+    db.drops.push({ url: null, uvp: cfg.models[pd.model]?.uvp ?? null, minPrice: pd.price ?? null, ...pd, end });
+    added++;
+  }
+  if (added) db.drops.sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
+  return added;
 }
 
 /** The most recent drop of a model other than `exceptId` (open or closed). */
@@ -181,7 +196,7 @@ function closeDrop(drop, endIso) {
 
 const euro = (n) => (n == null ? 'Preis ?' : `${n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EUR`);
 const berlin = (iso, withDate = true) =>
-  new Date(iso).toLocaleString('de-DE', { timeZone: 'Europe/Berlin', ...(withDate ? { day: '2-digit', month: '2-digit' } : {}), hour: '2-digit', minute: '2-digit', ...(withDate ? {} : { second: '2-digit' }) });
+  new Date(iso).toLocaleString('de-DE', { timeZone: 'Europe/Berlin', ...(withDate ? { day: '2-digit', month: '2-digit', year: '2-digit' } : {}), hour: '2-digit', minute: '2-digit', ...(withDate ? {} : { second: '2-digit' }) });
 
 export function duration(sec) {
   if (sec == null) return 'still open';
@@ -197,7 +212,7 @@ export function lastDropLine(db, cfg, model, exceptId) {
     const since = cfg.trackingSince?.[model] ?? db.firstRunAt ?? null;
     return `Last ${label} drop: none seen${since ? ` since ${berlin(since)}` : ''}`;
   }
-  return `Last ${label} drop: ${berlin(d.start)}, ${d.end ? `lasted ${duration(d.durationSec)}` : 'still open'}, ${euro(d.minPrice ?? d.price)} at ${d.shop}`;
+  return `Last ${label} drop: ${d.approx ? 'about ' : ''}${berlin(d.start)}, ${d.end ? `lasted ${d.approx ? 'about ' : ''}${duration(d.durationSec)}` : 'still open'}, ${euro(d.minPrice ?? d.price)} at ${d.shop}`;
 }
 
 export function dropMessage(ev, db, cfg, nowMs) {
