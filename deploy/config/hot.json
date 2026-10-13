@@ -3,7 +3,7 @@
   "loopMinutes": 50,
   "remindMinutes": 15,
   "failAlertAfter": 20,
-  "saveEverySec": 60,
+  "saveEverySec": 30,
   "tolerancePct": 10,
   "models": {
     "rtx-5090": {

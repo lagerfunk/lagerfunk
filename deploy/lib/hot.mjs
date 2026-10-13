@@ -318,6 +318,26 @@ export function summaryMessage(db, cfg) {
 
 // ---------- the loop ----------
 
+/** Per-shop health and today's limit per model, kept in the log so the monitor page can show them. */
+export function noteSource(db, cfg, src, r, nowMs) {
+  const at = new Date(nowMs).toISOString();
+  db.sources ??= {};
+  const s = (db.sources[src.id] ??= { streak: 0 });
+  s.type = src.type;
+  s.everySec = src.everySec;
+  s.checks = (s.checks ?? 0) + 1;
+  if (r.ok) {
+    const inStock = r.products.filter((p) => p.inStock && p.price != null);
+    Object.assign(s, { lastOkAt: at, streak: 0, cards: r.products.length, inStock: inStock.length, cheapest: inStock.length ? Math.min(...inStock.map((p) => p.price)) : null });
+  } else {
+    Object.assign(s, { lastErrorAt: at, lastError: String(r.error ?? 'unknown').slice(0, 120), streak: (s.streak ?? 0) + 1 });
+  }
+  db.limits ??= {};
+  for (const [model, m] of Object.entries(cfg.models)) {
+    db.limits[model] = { label: m.label, uvp: m.uvp, buyBelow: m.buyBelow, dipPct: m.dipPct, floorDays: m.floorDays, floor: floorOf(cfg, db, model, nowMs), cap: capFor(cfg, model, db, nowMs) };
+  }
+}
+
 /**
  * Run every source on its own timer until `untilMs`.
  * send(text) posts to the chats and resolves { ok }. save(db) persists the log and resolves { ok }.
@@ -370,6 +390,8 @@ export async function runHot({ cfg, db, fetch: fetchImpl, send, save = async () 
       const startedAt = now();
       const r = await fetchSource(src, { fetch: fetchImpl, now });
       st.checks++;
+      noteSource(db, cfg, src, r, now());
+      dirty = true;
       if (!r.ok) {
         st.fails++;
         st.streak++;
