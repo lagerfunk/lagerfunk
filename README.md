@@ -11,6 +11,8 @@ the Telegram channel [t.me/lagerfunk](https://t.me/lagerfunk) and posts restocks
   40 minutes, alerts the owner's admin chat, re-enables a disabled schedule, backs up the state daily and sends a digest.
 - `.github/workflows/smoke.yml` tests every push to main (fixtures, then a live dry run) before it goes live.
 - `.github/workflows/ops.yml`: rollback, restore, backup, retract a false post, digest, status. By hand only.
+- `.github/workflows/hot.yml` runs `deploy/hot.mjs`: a few products from `deploy/config/hot.json` every 30 s to 5 min,
+  messages to the owner's admin chat only, never to the channel. It never orders anything. Stop: variable `HOT_PAUSE` = 1.
 - `deploy/config/breakers.json` holds every safety threshold (circuit breakers, dead-man switch, backups).
 - `watchlist.json` is the list of products. `monitor/` reads shops and feeds, `bot/` writes the Telegram posts.
 - The `state` branch holds the run state (price history, what was already posted), `activity.jsonl` (one line per

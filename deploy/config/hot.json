@@ -1,0 +1,25 @@
+{
+  "note": "Hot watcher (deploy/hot.mjs, workflow hot.yml): a few products checked every 30 s to 5 min, alerts ONLY to the owner's private admin chat, never to the channel. It never orders anything. An item alerts when it can be ordered at or under maxPrice; it alerts again only after it was gone and comes back, or after remindMinutes while it stays.",
+  "loopMinutes": 50,
+  "remindMinutes": 15,
+  "failAlertAfter": 20,
+  "items": [
+    {
+      "key": "rtx-5090-fe",
+      "retailer": "nvidia",
+      "sku": "PROFESHOP5090",
+      "url": "https://marketplace.nvidia.com/de-de/consumer/graphics-cards/nvidia-geforce-rtx-5090/",
+      "title": "RTX 5090 Founders Edition",
+      "everySec": 30,
+      "maxPrice": 2600
+    },
+    { "key": "rtx-5090-inno3d-frostbite", "retailer": "alternate", "url": "https://www.alternate.de/INNO3D/GeForce-RTX-5090-ICHILL-Frostbite-Grafikkarte/html/product/100109383", "title": "INNO3D RTX 5090 iChill Frostbite", "everySec": 300, "maxPrice": 4500 },
+    { "key": "rtx-5090-inno3d-x3-oc", "retailer": "alternate", "url": "https://www.alternate.de/INNO3D/GeForce-RTX-5090-X3-OC-Grafikkarte/html/product/100121077", "title": "INNO3D RTX 5090 X3 OC", "everySec": 300, "maxPrice": 4500 },
+    { "key": "rtx-5090-inno3d-x3", "retailer": "alternate", "url": "https://www.alternate.de/INNO3D/GeForce-RTX-5090-X3-Grafikkarte/html/product/100109380", "title": "INNO3D RTX 5090 X3", "everySec": 300, "maxPrice": 4500 },
+    { "key": "rtx-5090-msi-gaming-trio-oc", "retailer": "alternate", "url": "https://www.alternate.de/MSI/GeForce-RTX-5090-32G-GAMING-TRIO-OC-Grafikkarte/html/product/100109565", "title": "MSI RTX 5090 Gaming Trio OC", "everySec": 300, "maxPrice": 4500 },
+    { "key": "rtx-5090-asus-tuf", "retailer": "alternate", "url": "https://www.alternate.de/ASUS/GeForce-RTX-5090-TUF-GAMING-Grafikkarte/html/product/100110148", "title": "ASUS RTX 5090 TUF Gaming", "everySec": 300, "maxPrice": 4500 },
+    { "key": "rtx-5090-asus-tuf-oc", "retailer": "alternate", "url": "https://www.alternate.de/ASUS/GeForce-RTX-5090-TUF-GAMING-OC-Grafikkarte/html/product/100110147", "title": "ASUS RTX 5090 TUF Gaming OC", "everySec": 300, "maxPrice": 4500 },
+    { "key": "rtx-5090-gigabyte-windforce", "retailer": "alternate", "url": "https://www.alternate.de/GIGABYTE/GeForce-RTX-5090-WINDFORCE-OC-32G-Grafikkarte/html/product/100108938", "title": "GIGABYTE RTX 5090 Windforce OC", "everySec": 300, "maxPrice": 4500 },
+    { "key": "rtx-5090-asus-astral-btf", "retailer": "alternate", "url": "https://www.alternate.de/ASUS/GeForce-RTX-5090-ROG-ASTRAL-GAMING-BTF-Grafikkarte/html/product/100147574", "title": "ASUS RTX 5090 ROG Astral BTF", "everySec": 300, "maxPrice": 4500 }
+  ]
+}
