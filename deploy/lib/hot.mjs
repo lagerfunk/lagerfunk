@@ -23,7 +23,16 @@ export function normalizeHot(raw) {
   const models = {};
   for (const [id, m] of Object.entries(raw?.models ?? {})) {
     const uvp = m.uvp == null ? null : Number(m.uvp);
-    models[id] = { id, label: m.label ?? id, uvp, buyBelow: m.buyBelow != null ? Number(m.buyBelow) : uvp != null ? Math.round(uvp * (1 + tol / 100) * 100) / 100 : null, alert: m.alert !== false };
+    models[id] = {
+      id,
+      label: m.label ?? id,
+      uvp,
+      buyBelow: m.buyBelow != null ? Number(m.buyBelow) : uvp != null ? Math.round(uvp * (1 + tol / 100) * 100) / 100 : null,
+      alert: m.alert !== false,
+      dipPct: m.dipPct == null ? null : Number(m.dipPct), // also a drop: this much under the recent market low
+      floorDays: Math.max(3, Number(m.floorDays) || 14),
+      floorSeed: m.floorSeed ?? {},
+    };
   }
   const sources = (raw?.sources ?? [])
     .filter((s) => s && s.id && s.type && s.enabled !== false)
@@ -65,6 +74,33 @@ export function parseAlternateListing(html, model) {
   return out;
 }
 
+const MF_NOT_A_CARD = /^(PC|Gaming[- ]?PC|Notebook|Laptop)\b|alphacool|\bEK[- ]|water ?blocks?|watercool|heatkiller|bitspower|grizzly|wasserk|k(ü|ue|\S)hler|backplate|halterung|kabel|adapter|\bblock\b/i;
+
+/**
+ * Graphics cards from a Mindfactory search result page (server HTML, Latin-1 read as UTF-8, so umlauts may be garbled:
+ * the patterns allow for that). Only real cards of the model pass: no PCs, notebooks, water blocks or accessories.
+ * Returns { tiles, products }: tiles counts every result, so an empty card list on a real page is not a failure.
+ */
+export function parseMindfactorySearch(html, model, cardPattern) {
+  const blocks = String(html ?? '').split(/<div class="p">/).slice(1);
+  const want = new RegExp(cardPattern ?? 'RTX\\s?5090', 'i');
+  const products = [];
+  let tiles = 0;
+  for (const b of blocks) {
+    const name = cleanText((b.match(/<div class="pname">([\s\S]*?)<\/div>/) ?? [])[1] ?? '');
+    if (!name) continue;
+    tiles++;
+    if (!want.test(name) || MF_NOT_A_CARD.test(name)) continue;
+    const link = b.match(/href="(https:\/\/www\.mindfactory\.de\/product_info\.php\/(?:search\/true\/)?([^"]*?)_(\d+)\.html)"/);
+    if (!link) continue;
+    const rawPrice = ((b.match(/<div class="pprice">([\s\S]*?)<\/div>/) ?? [])[1] ?? '').replace(/<[^>]+>|&nbsp;|&euro;|\*/g, ' ').replace(/,-/, ',00');
+    const stockText = cleanText(((b.match(/<div class="pshipping[^"]*">\s*<span[^>]*>([\s\S]*?)<\/span>/) ?? [])[1] ?? '').replace(/<[^>]+>/g, ' ')) || null;
+    const inStock = Boolean(stockText) && /lagernd|verf\S{0,2}gbar/i.test(stockText) && !/nicht|\bab\b|bestellt|\d{2}\.\d{2}\./i.test(stockText);
+    products.push({ key: `mindfactory:${link[3]}`, retailer: 'mindfactory', shop: 'Mindfactory', model, title: name, url: `https://www.mindfactory.de/product_info.php/${link[2]}_${link[3]}.html`, price: parseEuro(rawPrice), inStock, stockText });
+  }
+  return { tiles, products };
+}
+
 /** One fetch of one source. Never throws. Returns { ok, products } or { ok: false, error }. */
 export async function fetchSource(src, { fetch: fetchImpl, now = () => Date.now() }) {
   if (src.type === 'alternate-listing') {
@@ -72,6 +108,13 @@ export async function fetchSource(src, { fetch: fetchImpl, now = () => Date.now(
     if (res.error) return { ok: false, error: res.error };
     const products = parseAlternateListing(res.text, src.model);
     if (!products.length) return { ok: false, error: classifyFailure(res.status, res.text) ?? `parse:no_tiles (${res.status})` };
+    return { ok: true, products };
+  }
+  if (src.type === 'mindfactory-search') {
+    const res = await fetchText(fetchImpl, { url: src.url, headers: BROWSER_HEADERS }, { timeoutMs: 15000 });
+    if (res.error) return { ok: false, error: res.error };
+    const { tiles, products } = parseMindfactorySearch(res.text, src.model, src.cardPattern);
+    if (!tiles) return { ok: false, error: classifyFailure(res.status, res.text) ?? `parse:no_tiles (${res.status})` };
     return { ok: true, products };
   }
   if (src.type === 'nvidia') {
@@ -109,11 +152,43 @@ export function loadDb(raw) {
   return { ...e, ...raw, products: { ...(raw.products ?? {}) }, drops: [...(raw.drops ?? [])] };
 }
 
-export const capFor = (cfg, model) => cfg.models[model]?.buyBelow ?? null;
+const dayOf = (ms) => new Date(ms).toISOString().slice(0, 10);
 
-export function isDrop(cfg, p) {
+/** The lowest orderable price seen per day for each model (ours, merged over the config's seed), last 60 days. */
+export function recordFloor(db, model, price, nowMs) {
+  if (price == null) return;
+  db.floor ??= {};
+  const f = (db.floor[model] ??= {});
+  const d = dayOf(nowMs);
+  if (f[d] == null || price < f[d]) f[d] = price;
+  for (const k of Object.keys(f)) if (Date.parse(k) < nowMs - 60 * 86400000) delete f[k];
+}
+
+/** Median of the daily lows of the last floorDays days before today; null with fewer than 3 days. */
+export function floorOf(cfg, db, model, nowMs) {
+  const m = cfg.models[model];
+  if (!m) return null;
+  const today = dayOf(nowMs);
+  const from = dayOf(nowMs - m.floorDays * 86400000);
+  const days = { ...(m.floorSeed ?? {}), ...(db?.floor?.[model] ?? {}) };
+  const vals = Object.entries(days).filter(([d]) => d >= from && d < today).map(([, v]) => Number(v)).filter(Number.isFinite).sort((a, b) => a - b);
+  if (vals.length < 3) return null;
+  return vals[Math.floor(vals.length / 2)];
+}
+
+/** The price at or under which an orderable card counts as a drop: buyBelow, or dipPct under the recent low, whichever is higher. */
+export function capFor(cfg, model, db = null, nowMs = Date.now()) {
+  const m = cfg.models[model];
+  if (!m) return null;
+  const floor = m.dipPct != null && db ? floorOf(cfg, db, model, nowMs) : null;
+  const dip = floor != null ? Math.round(floor * (1 - m.dipPct / 100)) : null;
+  if (m.buyBelow == null) return dip;
+  return dip == null ? m.buyBelow : Math.max(m.buyBelow, dip);
+}
+
+export function isDrop(cfg, p, db = null, nowMs = Date.now()) {
   if (!cfg.models[p.model]) return false; // a model we do not watch
-  const cap = capFor(cfg, p.model);
+  const cap = capFor(cfg, p.model, db, nowMs);
   return p.inStock === true && p.price != null && (cap == null || p.price <= cap);
 }
 
@@ -148,10 +223,13 @@ export function applyReadings(db, cfg, src, products, nowMs) {
   const at = new Date(nowMs).toISOString();
   const events = [];
   const seen = new Set();
+  // The day's low is recorded after the drop check, so a dip never lowers its own reference.
+  const lows = {};
+  for (const p of products) if (p.inStock && p.price != null && cfg.models[p.model]) lows[p.model] = Math.min(lows[p.model] ?? Infinity, p.price);
   for (const p of products) {
     seen.add(p.key);
     const prev = db.products[p.key] ?? null;
-    const hit = isDrop(cfg, p);
+    const hit = isDrop(cfg, p, db, nowMs);
     const rec = { model: p.model, title: p.title, shop: p.shop, url: p.url, price: p.price, inStock: p.inStock, stockText: p.stockText, lastSeenAt: at, lastInStockAt: p.inStock ? at : prev?.lastInStockAt ?? null, openDrop: prev?.openDrop ?? null, lastSentAt: prev?.lastSentAt ?? 0 };
     if (hit && !rec.openDrop) {
       const drop = { id: `${p.key}@${at}`, key: p.key, model: p.model, title: p.title, shop: p.shop, url: p.url, start: at, end: null, durationSec: null, price: p.price, minPrice: p.price, uvp: cfg.models[p.model]?.uvp ?? null };
@@ -172,10 +250,11 @@ export function applyReadings(db, cfg, src, products, nowMs) {
     }
     db.products[p.key] = rec;
   }
+  for (const [model, low] of Object.entries(lows)) recordFloor(db, model, low, nowMs);
   // Cards of this source's model that vanished from the listing: close their open drop after a while.
-  if (src.type === 'alternate-listing') {
+  if (src.type === 'alternate-listing' || src.type === 'mindfactory-search') {
     for (const [key, rec] of Object.entries(db.products)) {
-      if (seen.has(key) || rec.model !== src.model || !key.startsWith('alternate:') || !rec.openDrop) continue;
+      if (seen.has(key) || rec.model !== src.model || !key.startsWith(`${src.type.split('-')[0]}:`) || !rec.openDrop) continue;
       if (nowMs - Date.parse(rec.lastSeenAt) >= MISSING_CLOSE_MIN * 60000) {
         const drop = db.drops.find((d) => d.id === rec.openDrop);
         if (drop) closeDrop(drop, rec.lastSeenAt);
@@ -219,10 +298,13 @@ export function dropMessage(ev, db, cfg, nowMs) {
   const m = cfg.models[ev.drop.model] ?? {};
   const p = ev.product;
   const vs = m.uvp ? ` (UVP ${euro(m.uvp)}, ${p.price >= m.uvp ? '+' : ''}${(((p.price - m.uvp) / m.uvp) * 100).toFixed(0)}%)` : '';
+  const floor = floorOf(cfg, db, ev.drop.model, nowMs);
+  const low = floor != null && p.price != null ? `Market low, last ${m.floorDays} days: ${euro(floor)} (this is ${Math.round((1 - p.price / floor) * 100)}% under)` : null;
   return [
     ev.type === 'remind' ? `STILL IN STOCK: ${m.label ?? ev.drop.model}` : `DROP: ${m.label ?? ev.drop.model}`,
     p.title ?? ev.drop.title ?? p.key,
     `${euro(p.price)} at ${p.shop}${vs}`,
+    ...(low ? [low] : []),
     `Buy: ${p.url}`,
     lastDropLine(db, cfg, ev.drop.model, ev.drop.id),
     `Checked ${berlin(new Date(nowMs).toISOString(), false)} Berlin. Max 1 per customer at most shops.`,

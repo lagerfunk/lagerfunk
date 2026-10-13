@@ -11,7 +11,7 @@
 import { readFileSync, appendFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { normalizeHot, runHot, fetchSource, isDrop, loadDb, seedPastDrops, summaryMessage, telegramSender, HOT_CONFIG_FILE } from './lib/hot.mjs';
+import { normalizeHot, runHot, fetchSource, isDrop, capFor, loadDb, seedPastDrops, summaryMessage, telegramSender, HOT_CONFIG_FILE } from './lib/hot.mjs';
 import { createHotStore } from './lib/hotstore.mjs';
 import { createGithubApi } from './lib/chain.mjs';
 
@@ -29,7 +29,7 @@ if (process.argv.includes('--once')) {
       continue;
     }
     const inStock = r.products.filter((p) => p.inStock);
-    const drops = r.products.filter((p) => isDrop(cfg, p));
+    const drops = r.products.filter((p) => isDrop(cfg, p, null));
     console.log(`${src.id}: ${r.products.length} cards, ${inStock.length} in stock, ${drops.length} at or under ${cfg.models[src.model ?? r.products[0]?.model]?.buyBelow ?? '?'} EUR`);
     for (const p of drops) console.log(`  DROP ${p.title} ${p.price} EUR ${p.url}`);
   }
@@ -61,7 +61,8 @@ const seeded = seedPastDrops(db, cfg);
 if (seeded) console.log(`added ${seeded} earlier drops from public reports to the log`);
 
 if (on(env.ANNOUNCE)) {
-  const r = await send(`[hot watcher] on, RTX 5090 only: NVIDIA FE and ALTERNATE every 10 s. A drop = orderable at or under the limit. Nothing is bought automatically.\n${summaryMessage(db, cfg)}`);
+  const capNow = capFor(cfg, 'rtx-5090', db, Date.now());
+  const r = await send(`[hot watcher] on, RTX 5090 only: NVIDIA FE and ALTERNATE every 10 s, Mindfactory every 30 s. A drop = orderable at or under ${capNow ?? '?'} EUR today (EUR 4,500, or 10% under the 14-day market low, whichever is higher). Nothing is bought automatically.\n${summaryMessage(db, cfg)}`);
   console.log(`announce: ${r.ok ? 'sent' : r.error}`);
 }
 
