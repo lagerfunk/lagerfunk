@@ -1,5 +1,5 @@
 {
-  "note": "Hot watcher (deploy/hot.mjs, workflow hot.yml), RTX 5090 only (owner, 13 Oct 2026). NVIDIA Founders Edition every 10 s, ALTERNATE's 5090 listing (cheapest 24) every 10 s, Mindfactory's 5090 search every 30 s (no bot wall, search allowed by its robots.txt). A DROP is a 5090 that can be ordered at or under buyBelow, or dipPct under the market low of the last floorDays days, whichever is higher. floorSeed: geizhals.de daily lowest 5090 price across all German shops (read 13 Oct 2026; may include offers that were not orderable); our own daily lows replace it day by day. Every drop is logged on the 'drops' branch (start, end, duration, price) and messaged to the owner's admin chat with the buy link and when the last drop was. pastDrops seeds the log with public reports of earlier German FE drops. It never orders anything.",
+  "note": "Hot watcher (deploy/hot.mjs, workflow hot.yml), RTX 5090 only (owner, 13 Oct 2026). NVIDIA Founders Edition every 10 s, ALTERNATE's 5090 listing (cheapest 24) every 10 s; Mindfactory's search is configured but off (it answers GitHub's servers with a script check). A DROP is a 5090 that can be ordered at or under buyBelow, or dipPct under the market low of the last floorDays days, whichever is higher. floorSeed: geizhals.de daily lowest 5090 price across all German shops (read 13 Oct 2026; may include offers that were not orderable); our own daily lows replace it day by day. Every drop is logged on the 'drops' branch (start, end, duration, price) and messaged to the owner's admin chat with the buy link and when the last drop was. pastDrops seeds the log with public reports of earlier German FE drops. It never orders anything.",
   "loopMinutes": 50,
   "remindMinutes": 15,
   "failAlertAfter": 20,
@@ -62,7 +62,9 @@
       "model": "rtx-5090",
       "everySec": 30,
       "url": "https://www.mindfactory.de/search_result.php?search_query=rtx+5090",
-      "cardPattern": "RTX\\s?5090"
+      "cardPattern": "RTX\\s?5090",
+      "enabled": false,
+      "reason": "From GitHub's servers Mindfactory answers with a 2 KB script page instead of the shop (13 Oct 2026), a bot check we do not get around. Kept for a later test from another network."
     }
   ],
   "pastDrops": [

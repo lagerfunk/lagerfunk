@@ -62,7 +62,7 @@ if (seeded) console.log(`added ${seeded} earlier drops from public reports to th
 
 if (on(env.ANNOUNCE)) {
   const capNow = capFor(cfg, 'rtx-5090', db, Date.now());
-  const r = await send(`[hot watcher] on, RTX 5090 only: NVIDIA FE and ALTERNATE every 10 s, Mindfactory every 30 s. A drop = orderable at or under ${capNow ?? '?'} EUR today (EUR 4,500, or 10% under the 14-day market low, whichever is higher). Nothing is bought automatically.\n${summaryMessage(db, cfg)}`);
+  const r = await send(`[hot watcher] on, RTX 5090 only: NVIDIA FE and ALTERNATE every 10 s. A drop = orderable at or under ${capNow ?? '?'} EUR today (EUR 4,500, or 10% under the 14-day market low, whichever is higher). Nothing is bought automatically.\n${summaryMessage(db, cfg)}`);
   console.log(`announce: ${r.ok ? 'sent' : r.error}`);
 }
 
