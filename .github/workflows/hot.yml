@@ -1,9 +1,10 @@
-# Hot watcher: the RTX 5090 Founders Edition every 30 s and a few 5090 partner cards every 5 min, for about 50 minutes per
-# run, then the run starts the next one itself (deploy/hot.mjs). Alerts go ONLY to the owner's private admin chat
-# (TELEGRAM_ADMIN_CHAT_ID), never to the channel. Nothing is ever ordered. Products and caps: deploy/config/hot.json.
-# Stop: Settings, Variables, HOT_PAUSE = 1 (or disable this workflow). Start: Actions, hot, Run workflow.
+# Hot watcher: the RTX 5090 Founders Edition every 10 s and ALTERNATE's RTX 50 listings about once every 10 s in total, with
+# a retail-price check and a log of every stock drop (drops.json on the branch "drops"), for about 50 minutes per run; then
+# the run starts the next one itself (deploy/hot.mjs). Alerts go ONLY to the owner's admin chat (TELEGRAM_ADMIN_CHAT_ID)
+# and any chat in HOT_EXTRA_CHAT_IDS, never to the channel. Nothing is ever ordered. Models, limits, shops:
+# deploy/config/hot.json. Stop: Settings, Variables, HOT_PAUSE = 1 (or disable this workflow). Start: Actions, hot, Run workflow.
 #
-# Runs main, not last-known-good: it only reads shop pages and messages the owner, it does not touch the state branch.
+# Runs main, not last-known-good. It writes only the "drops" branch, never the runner's "state" branch.
 name: hot
 
 on:
@@ -13,13 +14,13 @@ on:
   workflow_dispatch:
     inputs:
       announce:
-        description: 'Send one "watcher is on" message to the admin chat first'
+        description: 'Send one "watcher is on" message with the last drop of every model first'
         type: boolean
         default: false
 
 permissions:
-  contents: read
-  actions: write
+  contents: write # the drops branch
+  actions: write # start the next run
 
 # One run at a time; a waiting run never cancels the running one.
 concurrency:
@@ -42,5 +43,6 @@ jobs:
           HOT_PAUSE: ${{ vars.HOT_PAUSE }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
+          HOT_EXTRA_CHAT_IDS: ${{ secrets.HOT_EXTRA_CHAT_IDS }}
           GITHUB_TOKEN: ${{ github.token }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
