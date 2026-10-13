@@ -101,20 +101,22 @@ export function parseMindfactorySearch(html, model, cardPattern) {
   return { tiles, products };
 }
 
+const pageTitle = (html) => (cleanText((String(html).match(/<title[^>]*>([\s\S]{0,200}?)<\/title>/i) ?? [])[1] ?? '') ?? '').slice(0, 60);
+
 /** One fetch of one source. Never throws. Returns { ok, products } or { ok: false, error }. */
 export async function fetchSource(src, { fetch: fetchImpl, now = () => Date.now() }) {
   if (src.type === 'alternate-listing') {
     const res = await fetchText(fetchImpl, { url: src.url, headers: BROWSER_HEADERS }, { timeoutMs: 15000 });
     if (res.error) return { ok: false, error: res.error };
     const products = parseAlternateListing(res.text, src.model);
-    if (!products.length) return { ok: false, error: classifyFailure(res.status, res.text) ?? `parse:no_tiles (${res.status})` };
+    if (!products.length) return { ok: false, error: classifyFailure(res.status, res.text) ?? `parse:no_tiles (${res.status}, ${res.text.length} chars, title "${pageTitle(res.text)}")` };
     return { ok: true, products };
   }
   if (src.type === 'mindfactory-search') {
     const res = await fetchText(fetchImpl, { url: src.url, headers: BROWSER_HEADERS }, { timeoutMs: 15000 });
     if (res.error) return { ok: false, error: res.error };
     const { tiles, products } = parseMindfactorySearch(res.text, src.model, src.cardPattern);
-    if (!tiles) return { ok: false, error: classifyFailure(res.status, res.text) ?? `parse:no_tiles (${res.status})` };
+    if (!tiles) return { ok: false, error: classifyFailure(res.status, res.text) ?? `parse:no_tiles (${res.status}, ${res.text.length} chars, title "${pageTitle(res.text)}")` };
     return { ok: true, products };
   }
   if (src.type === 'nvidia') {
@@ -330,7 +332,7 @@ export function noteSource(db, cfg, src, r, nowMs) {
     const inStock = r.products.filter((p) => p.inStock && p.price != null);
     Object.assign(s, { lastOkAt: at, streak: 0, cards: r.products.length, inStock: inStock.length, cheapest: inStock.length ? Math.min(...inStock.map((p) => p.price)) : null });
   } else {
-    Object.assign(s, { lastErrorAt: at, lastError: String(r.error ?? 'unknown').slice(0, 120), streak: (s.streak ?? 0) + 1 });
+    Object.assign(s, { lastErrorAt: at, lastError: String(r.error ?? 'unknown').slice(0, 160), streak: (s.streak ?? 0) + 1 });
   }
   db.limits ??= {};
   for (const [model, m] of Object.entries(cfg.models)) {
