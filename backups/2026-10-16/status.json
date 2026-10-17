@@ -1,0 +1,149 @@
+{
+ "v": 1,
+ "updatedAt": "2026-10-15T22:12:36.592Z",
+ "last": {
+  "v": 1,
+  "at": "2026-10-15T22:12:36.592Z",
+  "mode": "watch",
+  "profile": "free",
+  "durationMs": 28359,
+  "ok": true,
+  "checks": {
+   "total": 27,
+   "ok": 26,
+   "failed": 1,
+   "scrape": 27,
+   "feed": 0
+  },
+  "alerts": {
+   "detected": 0,
+   "accepted": 0,
+   "sent": 0,
+   "queued": 0,
+   "failed": 0,
+   "skipped": 0
+  },
+  "errors": [
+   {
+    "retailer": "psdirect",
+    "error": "blocked:akamai",
+    "n": 1
+   }
+  ],
+  "feeds": [],
+  "shops": {
+   "active": 80,
+   "disabled": 99
+  },
+  "state": {
+   "keys": 108,
+   "bytes": 51811,
+   "pushed": true,
+   "reset": false
+  },
+  "run": {
+   "id": "38814246817",
+   "attempt": "1",
+   "event": "workflow_dispatch",
+   "sha": "65d520d",
+   "idleDays": 2,
+   "code": "65d520d"
+  },
+  "notes": [],
+  "byRetailer": {
+   "psdirect": [
+    0,
+    1
+   ],
+   "nvidia": [
+    1,
+    0
+   ],
+   "mueller": [
+    1,
+    0
+   ],
+   "alternate": [
+    24,
+    0
+   ]
+  },
+  "channel": "staging",
+  "breakers": {
+   "open": [],
+   "telegram": "closed",
+   "surge": false,
+   "quarantined": 3,
+   "events": []
+  },
+  "posts": {
+   "held": 0,
+   "released": 0,
+   "duplicates": 0,
+   "linkFallbacks": 0
+  },
+  "admin": {
+   "sent": 0,
+   "pending": 0,
+   "failed": 0
+  }
+ },
+ "last24h": {
+  "runs": 148,
+  "byMode": {
+   "watch": 124,
+   "all": 24
+  },
+  "failedRuns": 0,
+  "checks": 3283,
+  "checksFailed": 4,
+  "alertsDetected": 1,
+  "alertsSent": 2,
+  "feedDownloads": 0,
+  "feedBytes": 0
+ },
+ "lastOkAt": "2026-10-15T22:12:36.592Z",
+ "minutesSinceLastRun": 0,
+ "health": "degraded",
+ "channel": "staging",
+ "version": "65d520d",
+ "heartbeat": {
+  "lastRun": {
+   "at": "2026-10-15T22:12:36.592Z",
+   "ok": true,
+   "runId": "38814246817",
+   "mode": "watch",
+   "checked": 27,
+   "checksOk": 26,
+   "errors": 1,
+   "alertsSent": 0,
+   "code": "65d520d"
+  },
+  "lastGood": {
+   "at": "2026-10-15T22:12:36.592Z",
+   "ok": true,
+   "runId": "38814246817",
+   "mode": "watch",
+   "checked": 27,
+   "checksOk": 26,
+   "errors": 1,
+   "alertsSent": 0,
+   "code": "65d520d"
+  },
+  "lastCheckOkAt": "2026-10-15T22:12:36.592Z",
+  "minutesSinceGood": 0
+ },
+ "breakers": {
+  "retailersOpen": [],
+  "telegram": "closed",
+  "telegramKind": null,
+  "surgeLatched": [],
+  "quarantined": 3
+ },
+ "held": 0,
+ "posts24h": {
+  "held": 0,
+  "duplicates": 0,
+  "linkFallbacks": 0
+ }
+}
