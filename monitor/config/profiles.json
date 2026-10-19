@@ -6,7 +6,7 @@
       "description": "EUR 0. Runs from GitHub Actions datacenter IPs. No residential proxy, no paid unblocker, no bot-wall evasion. Scraped: the shops that answered plain HTTP from a GitHub runner (verified by the first real run, 2026-10-06: PlayStation Direct, NVIDIA, Mueller, ALTERNATE) and, on trial, the PC shops nobody has tried yet (Proshop, computeruniverse, Caseking). A trial shop gets one canary request per run, rests for hours after a block and never degrades health. Shops behind a bot wall are fed by affiliate product feeds once approved, or stay off.",
       "proxy": "never",
       "retailers": {
-        "psdirect": { "scrape": true, "feed": false, "note": "SAP Commerce JSON API, 5 KB. Answered a GitHub runner on 2026-10-06 (first real run, 12 of 12 checks ok)." },
+        "psdirect": { "scrape": true, "feed": false, "trial": true, "note": "SAP Commerce JSON API, 5 KB. Answered a GitHub runner on 2026-10-06 (first real run, 12 of 12 checks ok); blocked by Akamai from GitHub runners since mid-October 2026 (breaker open, promotion gate failed on 2026-10-19). Back on trial: one canary request per run, a block rests it 6 h, 24 h, 72 h, 7 days, no breaker; it is an ordinary shop again when it answers." },
         "nvidia": { "scrape": true, "feed": false, "note": "Search JSON API, 2 KB. No bot wall seen. Answered a GitHub runner on 2026-10-06." },
         "mueller": { "scrape": true, "feed": false, "note": "JSON-LD page, no bot wall seen. Answered a GitHub runner on 2026-10-06." },
         "alternate": { "scrape": true, "feed": true, "note": "JSON-LD page, no bot wall seen. Answered a GitHub runner on 2026-10-06 (9 pages). Awin feed (11731) is the fallback if the page gets blocked: set prefer to feed." },

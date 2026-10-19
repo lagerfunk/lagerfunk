@@ -145,6 +145,22 @@ export function updateRetailers(b, results, now, cfg) {
   return events;
 }
 
+/**
+ * Shops the profile has put on trial or switched off rest by their own rules (trial: canary and rest periods; off: not
+ * checked at all), so their old breaker must not stay open and block the promotion gate. Closes and forgets them.
+ * @returns {{ type: 'released', retailer: string, was: string }[]}
+ */
+export function releaseRetailers(b, ids) {
+  const events = [];
+  for (const id of ids) {
+    const r = b.retailers[id];
+    if (!r) continue;
+    if (r.state !== 'closed') events.push({ type: 'released', retailer: id, was: r.state });
+    delete b.retailers[id];
+  }
+  return events;
+}
+
 export const openRetailers = (b) => Object.entries(b.retailers).filter(([, r]) => r.state !== 'closed').map(([id]) => id).sort();
 
 // ---------- surge ----------

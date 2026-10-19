@@ -18,7 +18,7 @@ import { readFileSync, existsSync, mkdirSync, writeFileSync, appendFileSync } fr
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createMonitor } from '../../monitor/src/monitor.js';
-import { resolveProfile } from '../../monitor/src/profile.js';
+import { resolveProfile, decide as decideProfile } from '../../monitor/src/profile.js';
 import { feedsFromEnv } from '../../monitor/src/feeds/index.js';
 import { historyKey } from '../../monitor/src/history.js';
 import { stateKey } from '../../monitor/src/rules.js';
@@ -39,7 +39,7 @@ import { createAdmin, loadAdminState } from './admin.mjs';
 import { resolveChannel } from './stage.mjs';
 import { readBranch, OPS_BRANCH } from './opsbranch.mjs';
 import {
-  BREAKERS_KEY, LEDGER_KEY, HELD_KEY, loadBreakers, retailerPlan, pickProbe, collectRetailerResults, updateRetailers, openRetailers,
+  BREAKERS_KEY, LEDGER_KEY, HELD_KEY, loadBreakers, retailerPlan, pickProbe, collectRetailerResults, updateRetailers, openRetailers, releaseRetailers,
   surgeCheck, priceVerdict, telegramPlan, telegramAfterProbe, telegramUpdate, dedupe, ledgerRecord, ledgerMarkSent, ledgerPrune,
   holdAlerts, releasable,
 } from './breakers.mjs';
@@ -345,6 +345,12 @@ export async function runOnce(opts = {}) {
     }
   };
 
+  // A shop the profile now runs on trial or switches off rests by its own rules; its old breaker must not stay open.
+  const releasedShops = releaseRetailers(breakers, Object.keys(breakers.retailers).filter((id) => {
+    const d = decideProfile(profile, id);
+    return !d.active || d.trial === true;
+  }));
+  for (const ev of releasedShops) note('notice', `breaker: ${ev.retailer} released (${ev.was}): the profile runs it on trial or switches it off`);
   const plan = retailerPlan(breakers, t0);
   if (plan.skip.size) note('notice', `paused by the circuit breaker: ${[...plan.skip].join(', ')}`);
 
