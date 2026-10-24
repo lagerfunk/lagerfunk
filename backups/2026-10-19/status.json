@@ -1,0 +1,146 @@
+{
+ "v": 1,
+ "updatedAt": "2026-10-18T23:03:59.591Z",
+ "last": {
+  "v": 1,
+  "at": "2026-10-18T23:03:59.591Z",
+  "mode": "watch",
+  "profile": "free",
+  "durationMs": 17783,
+  "ok": true,
+  "checks": {
+   "total": 18,
+   "ok": 18,
+   "failed": 0,
+   "scrape": 18,
+   "feed": 0
+  },
+  "alerts": {
+   "detected": 0,
+   "accepted": 0,
+   "sent": 0,
+   "queued": 0,
+   "failed": 0,
+   "skipped": 0
+  },
+  "errors": [],
+  "feeds": [],
+  "shops": {
+   "active": 80,
+   "disabled": 99
+  },
+  "state": {
+   "keys": 109,
+   "bytes": 67504,
+   "pushed": true,
+   "reset": false
+  },
+  "run": {
+   "id": "39172452661",
+   "attempt": "1",
+   "event": "schedule",
+   "sha": "65d520d",
+   "idleDays": 5,
+   "code": "65d520d"
+  },
+  "notes": [
+   "notice: paused by the circuit breaker: psdirect",
+   "warning: psdirect is blocked (blocked:akamai). It stays on, paused with backoff; see monitor/RECON.md."
+  ],
+  "byRetailer": {
+   "mueller": [
+    1,
+    0
+   ],
+   "alternate": [
+    16,
+    0
+   ],
+   "nvidia": [
+    1,
+    0
+   ]
+  },
+  "channel": "staging",
+  "breakers": {
+   "open": [
+    "psdirect"
+   ],
+   "telegram": "closed",
+   "surge": false,
+   "quarantined": 3,
+   "events": []
+  },
+  "posts": {
+   "held": 0,
+   "released": 0,
+   "duplicates": 0,
+   "linkFallbacks": 0
+  },
+  "admin": {
+   "sent": 0,
+   "pending": 0,
+   "failed": 0
+  }
+ },
+ "last24h": {
+  "runs": 131,
+  "byMode": {
+   "all": 22,
+   "watch": 109
+  },
+  "failedRuns": 0,
+  "checks": 2709,
+  "checksFailed": 6,
+  "alertsDetected": 0,
+  "alertsSent": 0,
+  "feedDownloads": 0,
+  "feedBytes": 0
+ },
+ "lastOkAt": "2026-10-18T23:03:59.591Z",
+ "minutesSinceLastRun": 0,
+ "health": "degraded",
+ "channel": "staging",
+ "version": "65d520d",
+ "heartbeat": {
+  "lastRun": {
+   "at": "2026-10-18T23:03:59.591Z",
+   "ok": true,
+   "runId": "39172452661",
+   "mode": "watch",
+   "checked": 18,
+   "checksOk": 18,
+   "errors": 0,
+   "alertsSent": 0,
+   "code": "65d520d"
+  },
+  "lastGood": {
+   "at": "2026-10-18T23:03:59.591Z",
+   "ok": true,
+   "runId": "39172452661",
+   "mode": "watch",
+   "checked": 18,
+   "checksOk": 18,
+   "errors": 0,
+   "alertsSent": 0,
+   "code": "65d520d"
+  },
+  "lastCheckOkAt": "2026-10-18T23:03:59.591Z",
+  "minutesSinceGood": 0
+ },
+ "breakers": {
+  "retailersOpen": [
+   "psdirect"
+  ],
+  "telegram": "closed",
+  "telegramKind": null,
+  "surgeLatched": [],
+  "quarantined": 3
+ },
+ "held": 0,
+ "posts24h": {
+  "held": 0,
+  "duplicates": 0,
+  "linkFallbacks": 0
+ }
+}
