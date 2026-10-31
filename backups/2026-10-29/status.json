@@ -1,0 +1,141 @@
+{
+ "v": 1,
+ "updatedAt": "2026-10-29T00:52:51.331Z",
+ "last": {
+  "v": 1,
+  "at": "2026-10-29T00:52:51.331Z",
+  "mode": "watch",
+  "profile": "free",
+  "durationMs": 23384,
+  "ok": true,
+  "checks": {
+   "total": 23,
+   "ok": 23,
+   "failed": 0,
+   "scrape": 23,
+   "feed": 0
+  },
+  "alerts": {
+   "detected": 0,
+   "accepted": 0,
+   "sent": 0,
+   "queued": 0,
+   "failed": 0,
+   "skipped": 0
+  },
+  "errors": [],
+  "feeds": [],
+  "shops": {
+   "active": 80,
+   "disabled": 99
+  },
+  "state": {
+   "keys": 110,
+   "bytes": 95866,
+   "pushed": true,
+   "reset": false
+  },
+  "run": {
+   "id": "40791682920",
+   "attempt": "1",
+   "event": "schedule",
+   "sha": "c4d6c74",
+   "idleDays": 9,
+   "code": "c4d6c74"
+  },
+  "notes": [
+   "warning: psdirect is blocked (blocked:akamai). It stays on, paused with backoff; see monitor/RECON.md."
+  ],
+  "byRetailer": {
+   "mueller": [
+    1,
+    0
+   ],
+   "alternate": [
+    21,
+    0
+   ],
+   "nvidia": [
+    1,
+    0
+   ]
+  },
+  "channel": "staging",
+  "breakers": {
+   "open": [],
+   "telegram": "closed",
+   "surge": false,
+   "quarantined": 1,
+   "events": []
+  },
+  "posts": {
+   "held": 0,
+   "released": 0,
+   "duplicates": 0,
+   "linkFallbacks": 0
+  },
+  "admin": {
+   "sent": 0,
+   "pending": 0,
+   "failed": 0
+  }
+ },
+ "last24h": {
+  "runs": 148,
+  "byMode": {
+   "watch": 124,
+   "all": 24
+  },
+  "failedRuns": 0,
+  "checks": 3120,
+  "checksFailed": 4,
+  "alertsDetected": 0,
+  "alertsSent": 0,
+  "feedDownloads": 0,
+  "feedBytes": 0
+ },
+ "lastOkAt": "2026-10-29T00:52:51.331Z",
+ "minutesSinceLastRun": 0,
+ "health": "degraded",
+ "channel": "staging",
+ "version": "c4d6c74",
+ "heartbeat": {
+  "lastRun": {
+   "at": "2026-10-29T00:52:51.331Z",
+   "ok": true,
+   "runId": "40791682920",
+   "mode": "watch",
+   "checked": 23,
+   "checksOk": 23,
+   "errors": 0,
+   "alertsSent": 0,
+   "code": "c4d6c74"
+  },
+  "lastGood": {
+   "at": "2026-10-29T00:52:51.331Z",
+   "ok": true,
+   "runId": "40791682920",
+   "mode": "watch",
+   "checked": 23,
+   "checksOk": 23,
+   "errors": 0,
+   "alertsSent": 0,
+   "code": "c4d6c74"
+  },
+  "lastCheckOkAt": "2026-10-29T00:52:51.331Z",
+  "minutesSinceGood": 0
+ },
+ "breakers": {
+  "retailersOpen": [],
+  "telegram": "closed",
+  "telegramKind": null,
+  "surgeLatched": [],
+  "quarantined": 1
+ },
+ "held": 0,
+ "posts24h": {
+  "held": 0,
+  "duplicates": 0,
+  "linkFallbacks": 0
+ }
+}
