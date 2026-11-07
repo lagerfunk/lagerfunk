@@ -1,0 +1,51 @@
+{
+ "v": 1,
+ "status": "up",
+ "firstSeenAt": "2026-10-07T01:33:01.384Z",
+ "downSince": null,
+ "lastAlertAt": "2026-11-04T17:18:28.861Z",
+ "blind": false,
+ "blindSince": null,
+ "blindAlertAt": null,
+ "telegramAuthAlertAt": null,
+ "lastRunAt": "2026-11-07T16:27:06.707Z",
+ "digestSentFor": "2026-11-07",
+ "backups": {
+  "lastDate": "2026-11-07",
+  "dates": [
+   "2026-11-01",
+   "2026-11-02",
+   "2026-11-03",
+   "2026-11-04",
+   "2026-11-05",
+   "2026-11-06",
+   "2026-11-07"
+  ]
+ },
+ "keepalive": {
+  "lastAt": null,
+  "method": null
+ },
+ "schedule": {
+  "lagerfunk.yml": "active",
+  "watchdog.yml": "active"
+ },
+ "redAt": null,
+ "admin": {
+  "sent": {
+   "digest:2026-11-01": 1793518413158,
+   "digest:2026-11-02": 1793644533196,
+   "digest:2026-11-03": 1793718532257,
+   "digest:2026-11-04": 1793783664158,
+   "deadman:2026-11-04T16:04:30.756Z": 1793812713147,
+   "deadman-recover:2026-11-04T16:04:30.756Z": 1793835630847,
+   "digest:2026-11-05": 1793892505548,
+   "digest:2026-11-06": 1793962413205,
+   "digest:2026-11-07": 1794046293158
+  },
+  "outbox": [],
+  "pauseUntil": 0,
+  "lastError": "0 network: fetch failed",
+  "lastOkAt": "2026-11-07T10:11:33.158Z"
+ }
+}
