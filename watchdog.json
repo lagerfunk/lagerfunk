@@ -1,0 +1,53 @@
+{
+ "v": 1,
+ "status": "up",
+ "firstSeenAt": "2026-10-07T01:33:01.384Z",
+ "downSince": null,
+ "lastAlertAt": "2026-11-12T11:12:31.407Z",
+ "blind": false,
+ "blindSince": null,
+ "blindAlertAt": null,
+ "telegramAuthAlertAt": null,
+ "lastRunAt": "2026-11-14T10:39:21.581Z",
+ "digestSentFor": "2026-11-14",
+ "backups": {
+  "lastDate": "2026-11-14",
+  "dates": [
+   "2026-11-08",
+   "2026-11-09",
+   "2026-11-10",
+   "2026-11-11",
+   "2026-11-12",
+   "2026-11-13",
+   "2026-11-14"
+  ]
+ },
+ "keepalive": {
+  "lastAt": null,
+  "method": null
+ },
+ "schedule": {
+  "lagerfunk.yml": "active",
+  "watchdog.yml": "active"
+ },
+ "redAt": null,
+ "admin": {
+  "sent": {
+   "digest:2026-11-08": 1794122528201,
+   "digest:2026-11-09": 1794245401812,
+   "digest:2026-11-10": 1794304287626,
+   "digest:2026-11-11": 1794409998410,
+   "deadman:2026-11-11T20:53:07.470Z": 1794434328688,
+   "deadman-recover:2026-11-11T20:53:07.470Z": 1794452388526,
+   "deadman:2026-11-12T09:49:38.069Z": 1794481952901,
+   "digest:2026-11-12": 1794481952901,
+   "deadman-recover:2026-11-12T09:49:38.069Z": 1794509819957,
+   "digest:2026-11-13": 1794556753155,
+   "digest:2026-11-14": 1794652763675
+  },
+  "outbox": [],
+  "pauseUntil": 0,
+  "lastError": "0 network: fetch failed",
+  "lastOkAt": "2026-11-14T10:39:23.675Z"
+ }
+}
